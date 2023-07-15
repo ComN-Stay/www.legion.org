@@ -2,16 +2,69 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: auto
+        App\Entity\Team:
+            algorithm: auto
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: users_in_memory
+        app_admin_provider:
+            entity:
+                class: App\Entity\Team
+                property: email
+            app_customer_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+            chain_provider:
+            chain:
+                providers: [app_admin_provider, app_customer_provider]
+
+    # we have make 2 firewall to separate admin application and user application.
+    admin_secure_area:
+        pattern: ^/admin
+        provider: app_admin_provider
+        form_login:
+            login_path: admin_login
+            check_path: admin_login
+            default_target_path: app_admin
+            username_parameter: login[email]
+            password_parameter: login[password]
+            enable_csrf: true
+        logout:
+            path: admin_logout
+            # where to redirect after logout
+            target: admin_login
+            invalidate_session: true
+        # configuring the maximum login attempts (per minute)
+        login_throttling:
+            max_attempts: 3
+
+    customer_secure_area:
+        pattern: ^/customer
+        provider: app_customer_provider
+        form_login:
+            login_path: customer_login
+            check_path: customer_login
+            default_target_path: app_customer
+            username_parameter: login[email]
+            password_parameter: login[password]
+        enable_csrf: true
+        logout:
+            path: customer_logout
+            # where to redirect after logout
+            target: customer_login
+            invalidate_session: true
+        # configuring the maximum login attempts (per minute)
+        login_throttling:
+            max_attempts: 3
+
+    main:
+      lazy: true
+      pattern: ^/
+      provider: app_customer_provider
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,8 +75,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: PUBLIC_ACCESS }
+        - { path: ^/profile, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

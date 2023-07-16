@@ -5,12 +5,15 @@ Pré requis :
 
 Pour dupliquer le projet :
 
-- créer un dossier sur votre machine et se positionner dedans avec la console
-- dans la console : git clone https://github.com/ComN-Stay/www.legion.org.git
-- dans la console : composer update
-- créer à la racine un fichier .env.local
+- dans la console :
+    - cd /path/to/root/folder
+    - git clone https://github.com/ComN-Stay/www.legion.org.git
+    - composer update
+    - npm install
+- créer à la racine du dossier de projet un fichier .env.local
 - copier/coller le bloc ci dessous et modifier les paramètres de la ligne DATABASE_URL
 
+<code>
 ###> symfony/framework-bundle ###
 APP_ENV=dev
 APP_SECRET=2aaf6054be383cd87ab04629b59d2a71
@@ -31,5 +34,6 @@ MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
 ###> symfony/mailer ###
 # MAILER_DSN=null://null
 ###< symfony/mailer ###
+</code>
 
 - Dans la console : php bin/console d:d:c (création de la BDD en local)

@@ -13,57 +13,58 @@ security:
             entity:
                 class: App\Entity\Team
                 property: email
-            app_customer_provider:
+        app_customer_provider:
             entity:
                 class: App\Entity\User
                 property: email
-            chain_provider:
+        all_users:
             chain:
                 providers: [app_admin_provider, app_customer_provider]
 
     # we have make 2 firewall to separate admin application and user application.
-    admin_secure_area:
-        pattern: ^/admin
-        provider: app_admin_provider
-        form_login:
-            login_path: admin_login
-            check_path: admin_login
-            default_target_path: app_admin
-            username_parameter: login[email]
-            password_parameter: login[password]
-            enable_csrf: true
-        logout:
-            path: admin_logout
-            # where to redirect after logout
-            target: admin_login
-            invalidate_session: true
-        # configuring the maximum login attempts (per minute)
-        login_throttling:
-            max_attempts: 3
+    firewalls:
+        admin_secure_area:
+            pattern: ^/admin
+            provider: app_admin_provider
+            form_login:
+                login_path: admin_login
+                check_path: admin_login
+                default_target_path: app_admin
+                username_parameter: login[email]
+                password_parameter: login[password]
+                enable_csrf: true
+            logout:
+                path: admin_logout
+                # where to redirect after logout
+                target: admin_login
+                invalidate_session: true
+            # configuring the maximum login attempts (per minute)
+            login_throttling:
+                max_attempts: 3
 
-    customer_secure_area:
-        pattern: ^/customer
-        provider: app_customer_provider
-        form_login:
-            login_path: customer_login
-            check_path: customer_login
-            default_target_path: app_customer
-            username_parameter: login[email]
-            password_parameter: login[password]
-        enable_csrf: true
-        logout:
-            path: customer_logout
-            # where to redirect after logout
-            target: customer_login
-            invalidate_session: true
-        # configuring the maximum login attempts (per minute)
-        login_throttling:
-            max_attempts: 3
+        customer_secure_area:
+            pattern: ^/customer
+            provider: app_customer_provider
+            form_login:
+                login_path: customer_login
+                check_path: customer_login
+                default_target_path: app_customer
+                username_parameter: login[email]
+                password_parameter: login[password]
+                enable_csrf: true
+            logout:
+                path: customer_logout
+                # where to redirect after logout
+                target: customer_login
+                invalidate_session: true
+            # configuring the maximum login attempts (per minute)
+            login_throttling:
+                max_attempts: 3
 
-    main:
-      lazy: true
-      pattern: ^/
-      provider: app_customer_provider
+        main:
+            lazy: true
+            pattern: ^/
+            provider: app_customer_provider
 
 
             # activate different ways to authenticate

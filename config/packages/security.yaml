@@ -41,9 +41,17 @@ security:
             # configuring the maximum login attempts (per minute)
             login_throttling:
                 max_attempts: 3
+            custom_authenticator: App\Security\TeamAuthenticator
+            entry_point: form_login
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
 
         customer_secure_area:
-            pattern: ^/customer
+            pattern: ^/account
             provider: app_customer_provider
             form_login:
                 login_path: customer_login
@@ -60,6 +68,14 @@ security:
             # configuring the maximum login attempts (per minute)
             login_throttling:
                 max_attempts: 3
+            custom_authenticator: App\Security\CustomerAuthenticator
+            entry_point: form_login
+
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                always_remember_me: true
 
         main:
             lazy: true
@@ -75,9 +91,17 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+    role_hierarchy:
+        ROLE_CUSTOMER:  ROLE_USER
+        ROLE_ADMIN_CUSTOMER:    ROLE_CUSTOMER
+        ROLE_ADMIN:       ROLE_ADMIN_CUSTOMER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     access_control:
-        - { path: ^/admin, roles: PUBLIC_ACCESS }
-        - { path: ^/profile, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/account/login, roles: PUBLIC_ACCESS }
+        - { path: ^/account, roles: ROLE_CUSTOMER }
 
 when@test:
     security:

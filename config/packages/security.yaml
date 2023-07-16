@@ -63,7 +63,7 @@ security:
             logout:
                 path: customer_logout
                 # where to redirect after logout
-                target: customer_login
+                target: app_home
                 invalidate_session: true
             # configuring the maximum login attempts (per minute)
             login_throttling:

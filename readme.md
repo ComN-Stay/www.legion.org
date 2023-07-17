@@ -1,7 +1,8 @@
 Pré requis :
 - serveur web installé en local avec php 8.1, mySql
-- avoir installé composer en global
-- avoir installé NPM en global
+- avoir installé composer en global [link text itself]: https://getcomposer.org/download/
+- avoir installé NPM en global [link text itself]: https://www.npmjs.com/package/npm-install-global
+- avoir installé la CLI de Symfony [link text itself]: https://symfony.com/download
 
 Pour dupliquer le projet :
 
@@ -35,3 +36,6 @@ création de la BDD en local
 <pre><code>php bin/console make:migration</code></pre>
 <pre><code>php bin/console doctrine:migration:migrate</code></pre>
 <pre><code>php bin/console doctrine:fixtures:load</code></pre>
+
+lancement du serveur de symfony
+<pre><code>symfony server:start -d</code></pre>

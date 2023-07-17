@@ -1,8 +1,8 @@
 Pré requis :
 - serveur web installé en local avec php 8.1, mySql
-- avoir installé composer en global [link text itself]: https://getcomposer.org/download/
-- avoir installé NPM en global [link text itself]: https://www.npmjs.com/package/npm-install-global
-- avoir installé la CLI de Symfony [link text itself]: https://symfony.com/download
+- avoir installé composer en global : https://getcomposer.org/download/
+- avoir installé NPM en global : https://www.npmjs.com/package/npm-install-global
+- avoir installé la CLI de Symfony : https://symfony.com/download
 
 Pour dupliquer le projet :
 

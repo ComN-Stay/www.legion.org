@@ -1,7 +1,7 @@
 Pré requis :
-    - serveur web installé en local avec php 8.1, mySql
-    - avoir installé composer en global
-    - avoir installé NPM en global
+- serveur web installé en local avec php 8.1, mySql
+- avoir installé composer en global
+- avoir installé NPM en global
 
 Pour dupliquer le projet :
 

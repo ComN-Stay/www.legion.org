@@ -18,14 +18,15 @@ body {
     background-size: cover;
 }
 
-.card-block-text {
+.card-boby {
     padding: 1.25rem 0 !important;
 }
 
 .bg-login-image {
     background: url(/assets/img/logo.png);
     background-position: center;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .form-group {
@@ -36,4 +37,19 @@ form.user .form-control-user {
     font-size: .8rem;
     border-radius: 10rem;
     padding: 1.5rem 1rem;
+}
+
+.modal-header .close {
+    padding: 1rem;
+    margin: -1rem -1rem -1rem auto;
+    background-color: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    float: right;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    opacity: .5;
 }

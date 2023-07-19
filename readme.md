@@ -27,7 +27,9 @@ MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
 ###< symfony/messenger ###
 
 ###> symfony/mailer ###
-
+MAILER_DSN=mailjet+smtp://efe25655374955cac6c8decf83e3f028:1a07b2e881abcbead3d516783e57ebbf@default
+MAILER_SENDER=xavier.tezza@comnstay.fr
+MAILER_FROM='Légion <xavier.tezza@comnstay.fr>'
 ###< symfony/mailer ###
 </code></pre>
 - Dans la console :

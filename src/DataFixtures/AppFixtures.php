@@ -7,6 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
 use App\Entity\Team;
+use App\Entity\Gender;
 
 class AppFixtures extends Fixture
 {
@@ -18,6 +19,22 @@ class AppFixtures extends Fixture
     }
     public function load(ObjectManager $manager): void
     {
+        // Gender fixtures
+        $gender = new Gender;
+        $gender->setName('Madame');
+        $gender->setShortName('Mme');
+        $manager->persist($gender);
+
+        $gender = new Gender;
+        $gender->setName('Monsieur');
+        $gender->setShortName('M.');
+        $manager->persist($gender);
+
+        $gender = new Gender;
+        $gender->setName('Sexe neutre');
+        $gender->setShortName('');
+        $manager->persist($gender);
+
         // admin account for admins (Angie and Xavier)
         $team = new Team;
         $team->setEmail('xavier.tezza@comnstay.fr');

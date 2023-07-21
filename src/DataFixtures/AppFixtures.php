@@ -2,7 +2,6 @@
 
 namespace App\DataFixtures;
 
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
@@ -11,66 +10,34 @@ use App\Entity\Gender;
 
 class AppFixtures extends Fixture
 {
-    private $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
-    {
-        $this->passwordHasher = $passwordHasher;
-    }
     public function load(ObjectManager $manager): void
     {
-        // Gender fixtures
-        $gender = new Gender;
-        $gender->setName('Madame');
-        $gender->setShortName('Mme');
-        $manager->persist($gender);
+        /** @var Connection db */
+        $db = $manager->getConnection();
 
-        $gender = new Gender;
-        $gender->setName('Monsieur');
-        $gender->setShortName('M.');
-        $manager->persist($gender);
+        // start new transaction
+        $db->beginTransaction();
 
-        $gender = new Gender;
-        $gender->setName('Sexe neutre');
-        $gender->setShortName('');
-        $manager->persist($gender);
+        $sql = 'TRUNCATE gender; TRUNCATE team; TRUNCATE user';
+        $db->prepare($sql);
+        $db->executeQuery($sql);
 
-        // admin account for admins (Angie and Xavier)
-        $team = new Team;
-        $team->setEmail('xavier.tezza@comnstay.fr');
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $team,
-            'Legion@2023'
-        );
-        $team->setPassword($hashedPassword);
-        $team->setRoles(['ROLE_SUPER_ADMIN']);
-        $manager->persist($team);
+        // commit and re-start new transaction
+        $db->commit();
+        // work-around bug "There is no active transaction" in data-fixtures in php8
+        $db->beginTransaction();
+    }
 
-        $team = new Team;
-        $team->setEmail('angie.racca.munoz@gmail.com');
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $team,
-            'Legion@2023'
-        );
-        $team->setPassword($hashedPassword);
-        $team->setRoles(['ROLE_SUPER_ADMIN']);
-        $manager->persist($team);
+    public function getSqlResult()
+    {   
+        $sql = 'TRUNCATE gender; TRUNCATE team; TRUNCATE user';
 
-        $manager->flush();
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->executeQuery()->fetchAllAssociative();
+    }   
 
-        // create fake customers
-        for($i=1; $i<=5; $i++) {
-            $user = new User;
-            $user->setEmail('user' . $i . '@comnstay.fr');
-            $hashedPassword = $this->passwordHasher->hashPassword(
-                $user,
-                'Legion@2023'
-            );
-            $user->setPassword($hashedPassword);
-            $role = ($i == 1) ? 'ROLE_ADMIN_CUSTOMER' : 'ROLE_CUSTOMER';
-            $user->setRoles([$role]);
-            $manager->persist($user);
-        }
-        $manager->flush();
+    public static function getReferencedObject($className, $id, $manager) {
+        return $manager->find($className, $id);
     }
 }

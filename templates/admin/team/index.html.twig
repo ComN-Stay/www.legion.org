@@ -1,0 +1,42 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Gestion des administrateurs{% endblock %}
+
+{% block body %}
+    <h1>Gestion des administrateurs</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Phone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for team in teams %}
+            <tr>
+                <td>{{ team.firstname }}</td>
+                <td>{{ team.lastname }}</td>
+                <td>{{ team.email }}</td>
+                <td>
+                    {% for role in team.roles %}
+                        {% if role != 'ROLE_USER' %}    
+                            {{ role }}
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ team.phone }}</td>
+                <td>
+                    <a href="{{ path('app_team_edit', {'id': team.id}) }}"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_team_new') }}" class="btn btn-info btn-lg">Nouvel administrateur</a>
+{% endblock %}

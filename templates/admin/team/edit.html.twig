@@ -1,0 +1,13 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Edition  d'un administrateur{% endblock %}
+
+{% block body %}
+    <h1>Edition  d'un administrateur</h1>
+
+    {{ include('admin/team/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_team_index') }}" class="btn btn-info mr-3">Retour</a>
+        {{ include('admin/team/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

@@ -53,3 +53,8 @@ form.user .form-control-user {
     text-shadow: 0 1px 0 #fff;
     opacity: .5;
 }
+
+label.required:after {
+    content: "* ";
+    color: #ff0000;
+}

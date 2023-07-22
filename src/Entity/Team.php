@@ -6,6 +6,7 @@ use App\Repository\TeamRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 class Team implements UserInterface, PasswordAuthenticatedUserInterface
@@ -15,6 +16,12 @@ class Team implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(
+        message: 'L\'adresse email est obligatoire'
+    )]
+    #[Assert\Email(
+        message: 'L\'adresse email {{ value }} n\'est pas une adresse email valide.',
+    )]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -24,12 +31,45 @@ class Team implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
+    #[Assert\Regex(
+        pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/',
+        match: true,
+        message: 'Le mot de passe doit comporter au moins 1 majuscule, 1 minuscule, 1 chiffre et un caractère spécial parmis @$!%*?&'
+    )]
     #[ORM\Column]
     private ?string $password = null;
 
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le prénom doit contenir au minimum {{ limit }} caracteres',
+        maxMessage: 'C\'est un peu long pour un prénom !'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z][\' \p{L}-]*$/',
+        match: true,
+        message: 'Un prénom ne peut être composé que de lettres, d\'espaces, de tirets et d\'apostrophes'
+    )]
+    #[Assert\NotBlank(
+        message: 'Le prénom est obligatoire'
+    )]
     #[ORM\Column(length: 50)]
     private ?string $firstname = null;
 
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: 'Le Nom doit contenir au minimum {{ limit }} caracteres',
+        maxMessage: 'C\'est un peu long pour un Nom !'
+    )]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z][\' \p{L}-]*$/',
+        match: true,
+        message: 'Un Nom ne peut être composé que de lettres, d\'espaces, de tirets et d\'apostrophes'
+    )]
+    #[Assert\NotBlank(
+        message: 'Le Nom est obligatoire'
+    )]
     #[ORM\Column(length: 50)]
     private ?string $lastname = null;
 
@@ -37,7 +77,12 @@ class Team implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Gender $fk_gender = null;
 
-    #[ORM\Column(length: 15, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}/',
+        match: true,
+        message: 'Merci de renseigner un N° de téléphone valide'
+    )]
+    #[ORM\Column(length: 25, nullable: true)]
     private ?string $phone = null;
 
     public function getId(): ?int
@@ -117,7 +162,7 @@ class Team implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setFirstname(string $firstname): static
     {
-        $this->firstname = $firstname;
+        $this->firstname = strtoupper($firstname);
 
         return $this;
     }

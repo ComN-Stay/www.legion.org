@@ -42,14 +42,6 @@ class TeamAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_team_show', methods: ['GET'])]
-    public function show(Team $team): Response
-    {
-        return $this->render('admin/team/show.html.twig', [
-            'team' => $team,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_team_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Team $team, EntityManagerInterface $entityManager): Response
     {

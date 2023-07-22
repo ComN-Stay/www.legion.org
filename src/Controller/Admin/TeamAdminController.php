@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/team')]
-class TeamController extends AbstractController
+class TeamAdminController extends AbstractController
 {
     #[Route('/', name: 'app_team_index', methods: ['GET'])]
     public function index(TeamRepository $teamRepository): Response

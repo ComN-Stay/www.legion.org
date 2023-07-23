@@ -58,3 +58,23 @@ label.required:after {
     content: "* ";
     color: #ff0000;
 }
+
+/************ fontawesome ***************/
+.fa-trash-can {
+    color: #ff0000;
+}
+/*********** tables ***********/
+
+.action_cell {
+    width: 9vw;
+    align-items: center;
+}
+
+.form_list {
+    float: left;
+    display: block;
+}
+
+.neg-1 {
+    margin-top: -.66vh;
+}

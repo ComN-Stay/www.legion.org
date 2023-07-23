@@ -5,33 +5,29 @@
 {% block body %}
     <h1>Gestion des administrateurs</h1>
 
-    <table class="table">
+    <table class="table _datatable table-striped table-bordered">
         <thead>
             <tr>
                 <th>Firstname</th>
                 <th>Lastname</th>
                 <th>Email</th>
-                <th>Roles</th>
                 <th>Phone</th>
                 <th>actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
         {% for team in teams %}
             <tr>
                 <td>{{ team.firstname }}</td>
                 <td>{{ team.lastname }}</td>
                 <td>{{ team.email }}</td>
-                <td>
-                    {% for role in team.roles %}
-                        {% if role != 'ROLE_USER' %}    
-                            {{ role }}
-                        {% endif %}
-                    {% endfor %}
-                </td>
                 <td>{{ team.phone }}</td>
-                <td>
-                    <a href="{{ path('app_team_edit', {'id': team.id}) }}"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                <td class="action_cell">
+                    <a class="form_list" href="{{ path('app_team_edit', {'id': team.id}) }}"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                    <form class="form_list" method="post" action="{{ path('app_team_delete', {'id': team.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ team.id) }}">
+                        <button class="btn neg-1 _deleteBtn"><i class="fa-solid fa-trash-can fa-lg"></i></button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}

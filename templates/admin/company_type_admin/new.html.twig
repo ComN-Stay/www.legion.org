@@ -1,0 +1,12 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Nouveau type de client{% endblock %}
+
+{% block body %}
+    <h1>Nouveau type de client</h1>
+
+    {{ include('admin/company_type_admin/_form.html.twig', {'button_label': 'Créer le type de client'}) }}
+<div class="d-flex mt-3">
+    <a href="{{ path('app_company_type_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+</div>
+{% endblock %}

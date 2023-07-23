@@ -1,0 +1,31 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Types de clients{% endblock %}
+
+{% block body %}
+    <h1>CompanyType index</h1>
+
+    <table class="table _datatable table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Type de client</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        {% for company_type in company_types %}
+            <tr>
+                <td>{{ company_type.name }}</td>
+                <td class="action_cell">
+                    <a class="form_list" href="{{ path('app_company_type_admin_edit', {'id': company_type.id}) }}"><i class="fa-solid fa-pen-to-square fa-lg ml-3"></i></a>
+                    <form class="form_list" method="post" action="{{ path('app_company_type_admin_delete', {'id': company_type.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ company_type.id) }}">
+                        <button class="btn neg-1 _deleteBtn"><i class="fa-solid fa-trash-can fa-lg"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_company_type_admin_new') }}" class="btn btn-info btn-lg">Nouveau type</a>
+{% endblock %}

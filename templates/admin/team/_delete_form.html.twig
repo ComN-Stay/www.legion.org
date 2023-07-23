@@ -1,4 +1,4 @@
-<form method="post" action="{{ path('app_team_delete', {'id': team.id}) }}" onsubmit="return confirm('Voulez vous vraiment supprimer cet administrateur ?');">
+<form method="post" action="{{ path('app_team_delete', {'id': team.id}) }}">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ team.id) }}">
-    <button class="btn btn-danger btn-xl">Supprimer cet administrateur</button>
+    <button class="btn btn-danger btn-xl _deleteBtn">Supprimer cet administrateur</button>
 </form>

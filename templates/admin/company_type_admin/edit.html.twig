@@ -1,0 +1,13 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Edition type de client{% endblock %}
+
+{% block body %}
+    <h1>Edition type de client</h1>
+
+    {{ include('admin/company_type_admin/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_company_type_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+        {{ include('admin/company_type_admin/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

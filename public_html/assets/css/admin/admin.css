@@ -78,3 +78,8 @@ label.required:after {
 .neg-1 {
     margin-top: -.66vh;
 }
+
+/********** colors *********/
+.text-red {
+    color: #ff0000;
+}

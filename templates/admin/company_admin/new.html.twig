@@ -1,0 +1,12 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Créer {{ typeName|lower }}{% endblock %}
+
+{% block body %}
+    <h1>Créer {{ typeName|lower }}</h1>
+
+    {{ include('admin/company_admin/_form.html.twig') }}
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_company_admin_index', {'idType': idType}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+    </div>
+{% endblock %}

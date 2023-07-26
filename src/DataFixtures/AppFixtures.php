@@ -14,8 +14,7 @@ use App\Entity\Company;
 
 class AppFixtures extends Fixture
 {
-    private $manager;
-    protected $this->faker;
+    private $faker;
     private $passwordHasher;
     
     public function __construct(UserPasswordHasherInterface $passwordHasher)
@@ -109,7 +108,7 @@ class AppFixtures extends Fixture
             $company->setZipCode($this->faker->postcode());
             $company->setTown($this->faker->city());
             $company->setStatus(false);
-            $company->setFkCompanyType($this->getRandomReference('Company', $manager));
+            $company->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
             $company->setLogo($this->faker->imageUrl(640, 480, 'animals', true));
             $manager->persist($company);
         }

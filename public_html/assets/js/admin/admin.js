@@ -15,7 +15,7 @@ $(document).on('click', '._deleteBtn', function(e) {
     let parent = $(this).parent('form');
     $.confirm({
         theme: 'supervan',
-        icon: 'fa fa-warning',
+        icon: 'fa-solid fa-triangle-exclamation fa-2xl text-red',
         title: '',
         content: 'Supprimer cette donnée ?<br />Attention cette action est irréversible',
         buttons: {

@@ -44,7 +44,7 @@ class Company
     #[ORM\Column(nullable: true)]
     private ?float $longitude = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?float $latitude = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -172,12 +172,12 @@ class Company
         return $this;
     }
 
-    public function getlongitude(): ?float
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }
 
-    public function setlongitude(?float $longitude): static
+    public function setLongitude(?float $longitude): static
     {
         $this->longitude = $longitude;
 

@@ -1,0 +1,72 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Fiche client{% endblock %}
+
+{% block body %}
+    <div class="d-flex align-self-center">
+        {% if company.logo != '' %}
+            <img src="{{ company.logo }}" class="img-responsive mr-3" height="150px" width="auto">
+        {% endif %}
+        <h1>{{ company.name }}</h1>
+    </div>
+
+    <table class="table">
+        <tbody>
+            
+            <tr>
+                <th>Addresse</th>
+                <td>
+                    {{ company.address }}
+                    {% if company.additionalAddress != '' %}
+                         {{ company.additionalAddress }}
+                    {% endif %}
+                     {{ company.zipCode }} {{ company.town }}
+                </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>{{ company.email }}</td>
+            </tr>
+            <tr>
+                <th>Téléphone</th>
+                <td>{{ company.phone }}</td>
+            </tr>
+            
+            <tr>
+                <th>Status</th>
+                <td>{{ company.status ? 'Activée' : 'Désactivée' }}</td>
+            </tr>
+            <tr>
+                <th>Longitude</th>
+                <td>{{ company.longitude }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ company.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Logo</th>
+                <td>{{ company.logo }}</td>
+            </tr>
+            <tr>
+                <th>Facebook</th>
+                <td>{{ company.facebook }}</td>
+            </tr>
+            <tr>
+                <th>Tweeter</th>
+                <td>{{ company.tweeter }}</td>
+            </tr>
+            <tr>
+                <th>Instagram</th>
+                <td>{{ company.instagram }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_company_admin_index', {'idType': idType}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_company_admin_edit', {'id': company.id}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-pen-to-square fa-lg mr-3"></i>Editer</a>
+
+        {{ include('admin/company_admin/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

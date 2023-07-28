@@ -5,6 +5,7 @@ namespace App\Form;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -50,6 +51,32 @@ class CompanyType extends AbstractType
                 'label' => 'N° de téléphone',
                 'required' => false,
                 ])
+            ->add('short_description', TextareaType::class, [
+                'label' => 'Résumé',
+                'required' => false,
+                'attr' => [
+                    'class' => 'tinymce',
+                    ],
+                ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Description',
+                'required' => false,
+                'attr' => [
+                    'class' => 'tinymce',
+                    ],
+                ])
+            ->add('facebook', TextType::class, [
+                'label' => 'Facebook',
+                'required' => false,
+                ])
+            ->add('tweeter', TextType::class, [
+                'label' => 'Tweeter',
+                'required' => false,
+                ])
+            ->add('instagram', TextType::class, [
+                'label' => 'instagram',
+                'required' => false,
+                ])
             ->add('latitude', TextType::class, [
                 'label' => 'Latitude',
                 'required' => false,
@@ -67,17 +94,20 @@ class CompanyType extends AbstractType
                 'required' => true
             ])
             ->add('logo', FileType::class, [
+                'data_class' => null,
                 'label' => 'Logo',
                 'required' => false,
                 'help' => 'Fichier jpg, jpeg, png ou webp ne dépassant pas 1 Mo',
                 'constraints' => [
                     new File([ 
-                      'mimeTypes' => [
-                        'image/jpeg',
-                        'image/png',
-                        'image/webp'
-                      ],
-                      'mimeTypesMessage' => "This document isn't valid.",
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'Votre fichier ne doit pas dépasser les 1 M0',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp'
+                        ],
+                        'mimeTypesMessage' => "Merci de télécharger une image valide.",
                     ]),
                 ]
             ])

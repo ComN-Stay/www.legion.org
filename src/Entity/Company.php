@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
@@ -58,6 +59,12 @@ class Company
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $instagram = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $short_description = null;
 
     public function getId(): ?int
     {
@@ -240,6 +247,30 @@ class Company
     public function setInstagram(?string $instagram): static
     {
         $this->instagram = $instagram;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->short_description;
+    }
+
+    public function setShortDescription(?string $short_description): static
+    {
+        $this->short_description = $short_description;
 
         return $this;
     }

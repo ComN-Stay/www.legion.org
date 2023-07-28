@@ -45,20 +45,26 @@
                 <td>{{ company.latitude }}</td>
             </tr>
             <tr>
-                <th>Logo</th>
-                <td>{{ company.logo }}</td>
-            </tr>
-            <tr>
-                <th>Facebook</th>
-                <td>{{ company.facebook }}</td>
-            </tr>
-            <tr>
-                <th>Tweeter</th>
-                <td>{{ company.tweeter }}</td>
-            </tr>
-            <tr>
-                <th>Instagram</th>
-                <td>{{ company.instagram }}</td>
+                <th>Réseaux sociaux</th>
+                <td>
+                    <div class="d-flex">
+                        <span>
+                            {% if company.facebook != '' %}
+                                <a href="{{ company.facebook }}" target="_blank"><i class="fa-brands fa-facebook fa-2xl mr-3"></i></a>
+                            {% endif %}
+                        </span>
+                        <span>
+                            {% if company.tweeter != '' %}
+                                <a href="{{ company.tweeter }}" target="_blank"><i class="fa-brands fa-twitter fa-2xl mr-3"></i></a>
+                            {% endif %}
+                        </span>
+                        <span>
+                            {% if company.instagram != '' %}
+                                <a href="{{ company.instagram }}" target="_blank"><i class="fa-brands fa-instagram fa-2xl"></i></a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>

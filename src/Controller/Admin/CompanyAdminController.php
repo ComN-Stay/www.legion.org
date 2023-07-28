@@ -111,7 +111,7 @@ class CompanyAdminController extends AbstractController
             $idType = $company->getFkCompanyType()->getId();
             return $this->redirectToRoute('app_company_admin_index', ['idType' => $idType], Response::HTTP_SEE_OTHER);
         }
-        
+       
         return $this->render('admin/company_admin/edit.html.twig', [
             'company' => $company,
             'form' => $form,

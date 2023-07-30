@@ -1,0 +1,14 @@
+{% extends 'bundles/TwigBundle/Exception/base_errors.html.twig' %}
+
+{% block body %}
+    <div class="text-center">
+        <h1 class="h4 text-gray-900 mb-4 alert alert-danger">Erreur technique</h1>
+    </div>
+    <p class="text-center">
+        Une erreur est survenue lors de l'affichege de la page.<br /><br />
+        Nos équipes techniques ont été prévenues et font tout leur possible pour régler ce problème dans les plus brefs délais.
+    </p>
+    <p class="text-center">
+        <a class="btn btn-info btn-lg" href="{{ path('app_home') }}">Retour à la page d'accueil</a>
+    </p>
+{% endblock %}

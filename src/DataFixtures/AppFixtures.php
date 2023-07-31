@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
 use App\Entity\Team;
 use App\Entity\Gender;
+use App\Entity\Customer;
 use App\Entity\CompanyType;
 use App\Entity\Company;
 
@@ -30,6 +31,7 @@ class AppFixtures extends Fixture
         $this->teamFixtures($manager);
         $this->companyTypeFixtures($manager);
         $this->companyFixtures($manager);
+        $this->customersFixtures($manager);
         $this->usersFixtures($manager);
     }
 
@@ -71,10 +73,7 @@ class AppFixtures extends Fixture
 
         $team = new Team;
         $team->setEmail('angie.racca.munoz@gmail.com');
-        $hashedPassword = $this->passwordHasher->hashPassword(
-            $team,
-            'Legion@2023'
-        );
+        $hashedPassword = $this->passwordHasher->hashPassword($team, 'Legion@2023');
         $team->setPassword($hashedPassword);
         $team->setRoles(['ROLE_SUPER_ADMIN']);
         $team->setFkGender($this->getReferencedObject(Gender::class, 1, $manager));
@@ -115,18 +114,38 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    protected function customersFixtures($manager): void
+    {
+        for($i=1; $i<=5; $i++) {
+            $customer = new Customer;
+            $customer->setEmail('customer' . $i . '@comnstay.fr');
+            $gender = ($i++ & 1) ? 1 : 2;
+            $customer->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
+            $customer->setFirstname($this->faker->firstname());
+            $customer->setLastname($this->faker->lastname());
+            $customer->setStatus(($i++ & 1) ? true : false);
+            $customer->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
+            $hashedPassword = $this->passwordHasher->hashPassword($customer, 'Legion@2023');
+            $customer->setPassword($hashedPassword);
+            $role = ($i++ & 1) ? 'ROLE_ADMIN_CUSTOMER' : 'ROLE_CUSTOMER';
+            $customer->setRoles([$role]);
+            $manager->persist($customer);
+        }
+        $manager->flush();
+    }
+
     protected function usersFixtures($manager): void
     {
         for($i=1; $i<=5; $i++) {
             $user = new User;
             $user->setEmail('user' . $i . '@comnstay.fr');
-            $hashedPassword = $this->passwordHasher->hashPassword(
-                $user,
-                'Legion@2023'
-            );
+            $gender = ($i++ & 1) ? 1 : 2;
+            $user->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
+            $user->setFirstname($this->faker->firstname());
+            $user->setLastname($this->faker->lastname());
+            $hashedPassword = $this->passwordHasher->hashPassword($user, 'Legion@2023');
             $user->setPassword($hashedPassword);
-            $role = ($i == 1) ? 'ROLE_ADMIN_CUSTOMER' : 'ROLE_CUSTOMER';
-            $user->setRoles([$role]);
+            $user->setRoles(['ROLE_IDENTIFIED']);
             $manager->persist($user);
         }
         $manager->flush();
@@ -154,6 +173,7 @@ class AppFixtures extends Fixture
             TRUNCATE company_type;
             TRUNCATE team; 
             TRUNCATE user;
+            TRUNCATE customer;
             TRUNCATE gender;
             TRUNCATE company; 
             SET FOREIGN_KEY_CHECKS=1;
@@ -163,8 +183,5 @@ class AppFixtures extends Fixture
 
         $db->commit();
         $db->beginTransaction();
-
-        $this->manager = $manager;
-        $this->faker = Factory::create();
     }
 }

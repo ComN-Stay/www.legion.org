@@ -10,13 +10,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route(path: '/account')]
-class SecurityCustomerController extends AbstractController
+class SecurityAccountController extends AbstractController
 {
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
     }
     
-    #[Route(path: '/login', name: 'customer_login')]
+    #[Route(path: '/login', name: 'account_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
@@ -28,10 +28,10 @@ class SecurityCustomerController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('account/account_login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
-    #[Route(path: '/logout', name: 'customer_logout')]
+    #[Route(path: '/logout', name: 'account_logout')]
     public function logout(): Response
     {
         return new RedirectResponse($this->urlGenerator->generate('app_home'));

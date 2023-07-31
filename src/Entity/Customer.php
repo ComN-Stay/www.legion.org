@@ -27,6 +27,23 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Gender $fk_gender = null;
+
+    #[ORM\ManyToOne(inversedBy: 'customers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Company $fk_company = null;
+
+    #[ORM\Column(length: 75)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(length: 75)]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    private ?bool $status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -95,5 +112,65 @@ class Customer implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFkGender(): ?Gender
+    {
+        return $this->fk_gender;
+    }
+
+    public function setFkGender(?Gender $fk_gender): static
+    {
+        $this->fk_gender = $fk_gender;
+
+        return $this;
+    }
+
+    public function getFkCompany(): ?Company
+    {
+        return $this->fk_company;
+    }
+
+    public function setFkCompany(?Company $fk_company): static
+    {
+        $this->fk_company = $fk_company;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(string $firstname): static
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function isStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): static
+    {
+        $this->status = $status;
+
+        return $this;
     }
 }

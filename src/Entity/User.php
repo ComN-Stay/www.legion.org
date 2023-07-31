@@ -33,6 +33,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 75)]
     private ?string $lastname = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Gender $fk_gender = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,6 +127,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getFkGender(): ?Gender
+    {
+        return $this->fk_gender;
+    }
+
+    public function setFkGender(?Gender $fk_gender): static
+    {
+        $this->fk_gender = $fk_gender;
 
         return $this;
     }

@@ -108,7 +108,7 @@ class AppFixtures extends Fixture
             $company->setTown($this->faker->city());
             $company->setStatus(false);
             $company->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
-            $company->setLogo($this->faker->imageUrl(640, 480, 'animals', true));
+            $company->setLogo('https://loremflickr.com/640/480/pets');
             $manager->persist($company);
         }
         $manager->flush();

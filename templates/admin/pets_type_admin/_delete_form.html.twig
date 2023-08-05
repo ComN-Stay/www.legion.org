@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_pets_type_admin_delete', {'id': pets_type.id}) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ pets_type.id) }}">
+    <button class="btn btn-danger btn-xl _deleteBtn mr-3"><i class="fa-solid fa-trash-can fa-lg text-white mr-3"></i>Supprimer ce type d'animal</button>
+</form>

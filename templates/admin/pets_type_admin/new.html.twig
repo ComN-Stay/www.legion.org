@@ -1,0 +1,12 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Nouveau type d'animal{% endblock %}
+
+{% block body %}
+    <h1>Nouveau type d'animal</h1>
+
+    {{ include('admin/pets_type_admin/_form.html.twig', {'button_label': 'Créer le type d\'animal'}) }}
+<div class="d-flex mt-3">
+    <a href="{{ path('app_pets_type_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+</div>
+{% endblock %}

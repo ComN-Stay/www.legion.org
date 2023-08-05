@@ -12,6 +12,7 @@ use App\Entity\Gender;
 use App\Entity\Customer;
 use App\Entity\CompanyType;
 use App\Entity\Company;
+use App\Entity\PetsType;
 
 class AppFixtures extends Fixture
 {
@@ -33,6 +34,7 @@ class AppFixtures extends Fixture
         $this->companyFixtures($manager);
         $this->customersFixtures($manager);
         $this->usersFixtures($manager);
+        $this->petsTypeFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -99,54 +101,66 @@ class AppFixtures extends Fixture
 
     protected function companyFixtures($manager): void
     {
-        for($i=1; $i<=3; $i++) {
-            $company = new Company;
-            $company->setName($this->faker->company());
-            $company->setEmail('company' . $i . '@comnstay.fr');
-            $company->setAddress($this->faker->streetAddress());
-            $company->setZipCode($this->faker->postcode());
-            $company->setTown($this->faker->city());
-            $company->setStatus(false);
-            $company->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
-            $company->setLogo('https://loremflickr.com/640/480/pets');
-            $manager->persist($company);
+        for($i=1; $i<=10; $i++) {
+            $company[$i] = new Company;
+            $company[$i]->setName($this->faker->company());
+            $company[$i]->setEmail('company' . $i . '@comnstay.fr');
+            $company[$i]->setAddress($this->faker->streetAddress());
+            $company[$i]->setZipCode($this->faker->postcode());
+            $company[$i]->setTown($this->faker->city());
+            $company[$i]->setStatus(false);
+            $company[$i]->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
+            $company[$i]->setLogo('https://loremflickr.com/640/480/pets');
+            $manager->persist($company[$i]);
         }
         $manager->flush();
     }
 
     protected function customersFixtures($manager): void
     {
-        for($i=1; $i<=5; $i++) {
-            $customer = new Customer;
-            $customer->setEmail('customer' . $i . '@comnstay.fr');
-            $gender = ($i++ & 1) ? 1 : 2;
-            $customer->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
-            $customer->setFirstname($this->faker->firstname());
-            $customer->setLastname($this->faker->lastname());
-            $customer->setStatus(($i++ & 1) ? true : false);
-            $customer->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
-            $hashedPassword = $this->passwordHasher->hashPassword($customer, 'Legion@2023');
-            $customer->setPassword($hashedPassword);
-            $role = ($i++ & 1) ? 'ROLE_ADMIN_CUSTOMER' : 'ROLE_CUSTOMER';
-            $customer->setRoles([$role]);
-            $manager->persist($customer);
+        for($i=1; $i<=50; $i++) {
+            $customer[$i] = new Customer;
+            $customer[$i]->setEmail('customer' . $i . '@comnstay.fr');
+            $gender = ($i % 2 == 0) ? 1 : 2;
+            $customer[$i]->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
+            $customer[$i]->setFirstname($this->faker->firstname());
+            $customer[$i]->setLastname($this->faker->lastname());
+            $customer[$i]->setStatus(($i % 2 == 0) ? true : false);
+            $customer[$i]->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
+            $hashedPassword = $this->passwordHasher->hashPassword($customer[$i], 'Legion@2023');
+            $customer[$i]->setPassword($hashedPassword);
+            $role = ($i % 2 == 0) ? 'ROLE_ADMIN_CUSTOMER' : 'ROLE_CUSTOMER';
+            $customer[$i]->setRoles([$role]);
+            $manager->persist($customer[$i]);
         }
         $manager->flush();
     }
 
     protected function usersFixtures($manager): void
     {
-        for($i=1; $i<=5; $i++) {
-            $user = new User;
-            $user->setEmail('user' . $i . '@comnstay.fr');
-            $gender = ($i++ & 1) ? 1 : 2;
-            $user->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
-            $user->setFirstname($this->faker->firstname());
-            $user->setLastname($this->faker->lastname());
-            $hashedPassword = $this->passwordHasher->hashPassword($user, 'Legion@2023');
-            $user->setPassword($hashedPassword);
-            $user->setRoles(['ROLE_IDENTIFIED']);
-            $manager->persist($user);
+        for($i=1; $i<=100; $i++) {
+            $user[$i] = new User;
+            $user[$i]->setEmail('user' . $i . '@comnstay.fr');
+            $gender = ($i % 2 == 0) ? 1 : 2;
+            $user[$i]->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
+            $user[$i]->setFirstname($this->faker->firstname());
+            $user[$i]->setLastname($this->faker->lastname());
+            $hashedPassword = $this->passwordHasher->hashPassword($user[$i], 'Legion@2023');
+            $user[$i]->setPassword($hashedPassword);
+            $user[$i]->setRoles(['ROLE_IDENTIFIED']);
+            $manager->persist($user[$i]);
+        }
+        $manager->flush();
+    }
+
+    protected function petsTypeFixtures($manager)
+    {
+        $types = ['Chats', 'Chiens', 'Oiseaux', 'Tortues', 'NAC'];
+        $i = 1;
+        foreach($types as $type) {
+            $pet[$i] = new PetsType;
+            $pet[$i]->setName($type);
+            $manager->persist($pet[$i]);
         }
         $manager->flush();
     }
@@ -176,6 +190,7 @@ class AppFixtures extends Fixture
             TRUNCATE customer;
             TRUNCATE gender;
             TRUNCATE company; 
+            TRUNCATE pets_type
             SET FOREIGN_KEY_CHECKS=1;
             ';
         $db->prepare($sql);

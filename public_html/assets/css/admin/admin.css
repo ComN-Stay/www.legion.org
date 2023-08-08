@@ -83,3 +83,64 @@ label.required:after {
 .text-red {
     color: #ff0000;
 }
+
+/************* alertes ************/
+.alert {
+    position: absolute;
+    z-index: 10000;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-flow: row;
+    margin: 10px 0;
+    width: 250px;
+    min-height: 90px;
+    height: auto;
+    background-color: #cecece;
+    border-radius: 4px;
+    color: #fff;
+    box-shadow: 0px 10px 46px -21px rgba(0, 0, 0, 0.75);
+    transition: all 0.3s cubic-bezier(0, 0, 0.3, 1);
+    cursor: pointer;
+}
+.alert:hover {
+    box-shadow: 0px 10px 60px -21px rgba(0, 0, 0, 0.80);
+}
+.alert.success {
+    background-color: #3db56e;
+}
+.alert.notice {
+    background-color: #67a4c0;
+}
+.alert.wait {
+    background-color: #c3d2d9;
+}
+.alert.error {
+    background-color: #c84346;
+}
+.alert-icon {
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.alert-content {
+    position: relative;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-flow: column;
+    width: 100%;
+}
+.alert-content .alert-close {
+    position: absolute;
+    font-size: 0.7em;
+    top: 7px;
+    right: 10px;
+    cursor: pointer;
+}

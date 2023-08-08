@@ -38,3 +38,9 @@ tinymce.init({
     a_plugin_option: true,
     a_configuration_option: 400
   });
+
+$(document).ready(function () {
+    $( '.alert-close' ).click(function() {
+        $( this ).parent().parent().fadeOut();
+    });
+});

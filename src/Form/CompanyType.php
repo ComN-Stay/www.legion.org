@@ -34,8 +34,7 @@ class CompanyType extends AbstractType
                 'label' => 'Code postal',
                 'required' => true
             ])
-            ->add('town'
-            , TextType::class, [
+            ->add('town' , TextType::class, [
                 'label' => 'Ville',
                 'required' => true
             ])

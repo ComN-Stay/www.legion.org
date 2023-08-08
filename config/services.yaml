@@ -8,7 +8,7 @@ parameters:
     app.email_from: '%env(MAILER_FROM)%'
     default_base_url: 'http://127.0.0.1'
     router.request_context.base_url: '%env(default:default_base_url:SYMFONY_DEFAULT_ROUTE_URL)%'
-    upload_directory: '%kernel.project_dir%/public_html/uploads'
+    kernel_upload_directory: '%kernel.project_dir%/public_html/uploads'
     public_upload_directory: '/uploads'
     google_api_key: '%env(GOOGLE_API_KEY)%'
 
@@ -19,6 +19,7 @@ services:
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
         bind:
             $publicUploadDir: '%public_upload_directory%'
+            $kernelUploadDir: '%kernel_upload_directory%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

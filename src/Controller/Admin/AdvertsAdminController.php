@@ -51,12 +51,14 @@ class AdvertsAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_adverts_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Adverts $advert, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Adverts $advert, EntityManagerInterface $entityManager, MediasRepository $mediasRepository): Response
     {
         $parameters = ($advert->isStatus() == true) ? [] : ['status' => 1];
+        $medias = $mediasRepository->findBy(['fk_company' => $advert->getFkCompany()]);
         if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
             $entityManager->remove($advert);
             $entityManager->flush();
+            
             $this->addFlash('success', 'Annonce Supprimée');
         }
 

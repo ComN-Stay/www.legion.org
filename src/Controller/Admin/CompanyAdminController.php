@@ -48,7 +48,7 @@ class CompanyAdminController extends AbstractController
             if ($file) {
                 $file_name = $file_uploader->upload($file);
                 if (null !== $file_name) {
-                    $full_path = $publicUploadDir.'/'.$file_name;
+                    $full_path = $file_name;
                 }
                 $company->setLogo($full_path);
             }
@@ -71,6 +71,7 @@ class CompanyAdminController extends AbstractController
             'idType' => $idType,
             'typeName' => $companyType->getName(),
             'form' => $form,
+            'logoDir' => $publicUploadDir
         ]);
     }
 
@@ -84,7 +85,7 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_company_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Company $company, EntityManagerInterface $entityManager, FileUploaderService $file_uploader, CallGoogleApiService $callGoogleApiService, $publicUploadDir): Response
+    public function edit(Request $request, Company $company, EntityManagerInterface $entityManager, FileUploaderService $file_uploader, CallGoogleApiService $callGoogleApiService): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
@@ -94,7 +95,7 @@ class CompanyAdminController extends AbstractController
             if ($file) {
                 $file_name = $file_uploader->upload($file);
                 if (null !== $file_name) {
-                    $full_path = $publicUploadDir.'/'.$file_name;
+                    $full_path = $file_name;
                 }
                 $company->setLogo($full_path);
             }
@@ -122,13 +123,14 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Company $company, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Company $company, EntityManagerInterface $entityManager, $kernelUploadDir): Response
     {
         $idType = $company->getFkCompanyType()->getId();
-
+        $logo = $company->getLogo();
         if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
             $entityManager->remove($company);
             $entityManager->flush();
+            @unlink($kernelUploadDir . '/' . $logo);
             $this->addFlash('success', 'Suppression effectuée');
         }
 

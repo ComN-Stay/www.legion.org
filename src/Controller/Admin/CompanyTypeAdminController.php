@@ -32,6 +32,7 @@ class CompanyTypeAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($companyType);
             $entityManager->flush();
+            $this->addFlash('success', 'Création effectuée');
 
             return $this->redirectToRoute('app_company_type_admin_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -58,6 +59,7 @@ class CompanyTypeAdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            $this->addFlash('success', 'Modification effectuée');
 
             return $this->redirectToRoute('app_company_type_admin_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -74,6 +76,7 @@ class CompanyTypeAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$companyType->getId(), $request->request->get('_token'))) {
             $entityManager->remove($companyType);
             $entityManager->flush();
+            $this->addFlash('success', 'Suppression effectuée');
         }
 
         return $this->redirectToRoute('app_company_type_admin_index', [], Response::HTTP_SEE_OTHER);

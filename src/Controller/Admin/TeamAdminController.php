@@ -36,6 +36,7 @@ class TeamAdminController extends AbstractController
             $team->setPassword($hashedPassword);
             $entityManager->persist($team);
             $entityManager->flush();
+            $this->addFlash('success', 'Création effectuée');
 
             return $this->redirectToRoute('app_team_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -59,6 +60,7 @@ class TeamAdminController extends AbstractController
             }
             $team->setPassword($hashedPassword);
             $entityManager->flush();
+            $this->addFlash('success', 'Modification effectuée');
 
             return $this->redirectToRoute('app_team_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -75,6 +77,7 @@ class TeamAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$team->getId(), $request->request->get('_token'))) {
             $entityManager->remove($team);
             $entityManager->flush();
+            $this->addFlash('success', 'Suppression effectuée');
         }
 
         return $this->redirectToRoute('app_team_index', [], Response::HTTP_SEE_OTHER);

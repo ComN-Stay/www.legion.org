@@ -61,6 +61,7 @@ class CompanyAdminController extends AbstractController
             $company->setFkCompanyType($companyType);
             $entityManager->persist($company);
             $entityManager->flush();
+            $this->addFlash('success', 'Création effectuée');
 
             return $this->redirectToRoute('app_company_admin_index', ['idType' => $idType], Response::HTTP_SEE_OTHER);
         }
@@ -107,6 +108,7 @@ class CompanyAdminController extends AbstractController
             }
             $entityManager->persist($company);
             $entityManager->flush();
+            $this->addFlash('success', 'Mise à jour effectuée');
 
             $idType = $company->getFkCompanyType()->getId();
             return $this->redirectToRoute('app_company_admin_index', ['idType' => $idType], Response::HTTP_SEE_OTHER);
@@ -127,6 +129,7 @@ class CompanyAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
             $entityManager->remove($company);
             $entityManager->flush();
+            $this->addFlash('success', 'Suppression effectuée');
         }
 
         return $this->redirectToRoute('app_company_admin_index', ['idType' => $idType], Response::HTTP_SEE_OTHER);

@@ -32,6 +32,7 @@ class PetsTypeAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($petsType);
             $entityManager->flush();
+            $this->addFlash('success', 'Création effectuée');
 
             return $this->redirectToRoute('app_pets_type_admin_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -58,6 +59,7 @@ class PetsTypeAdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            $this->addFlash('success', 'Modification effectuée');
 
             return $this->redirectToRoute('app_pets_type_admin_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -74,6 +76,7 @@ class PetsTypeAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$petsType->getId(), $request->request->get('_token'))) {
             $entityManager->remove($petsType);
             $entityManager->flush();
+            $this->addFlash('success', 'Suppression effectuée');
         }
 
         return $this->redirectToRoute('app_pets_type_admin_index', [], Response::HTTP_SEE_OTHER);

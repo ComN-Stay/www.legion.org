@@ -1,0 +1,99 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Fiche annonce{% endblock %}
+
+{% block body %}
+    <h1>Fiche annonce</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Annonce Pro</th>
+                <td>{{ advert.isPro ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Annonceur</th>
+                <td>{{ advert.Fkcompany.name }}</td>
+            </tr>
+            <tr>
+                <th>Type d'animal</th>
+                <td>{{ advert.FkPetsType.name }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ advert.Title }}</td>
+            </tr>
+            <tr>
+                <th>Résumé</th>
+                <td>{{ advert.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ advert.description }}</td>
+            </tr>
+            <tr>
+                <th>Lof</th>
+                <td>{{ advert.lof ? 'Oui' : 'Non' }}</td>
+            </tr>
+            {% if advert.lof == true %}
+                <tr>
+                    <th>N° LOFr</th>
+                    <td>{{ advert.lofNumber }}</td>
+                </tr>
+                <tr>
+                    <th>Identifiant LOF</th>
+                    <td>{{ advert.lofIdentifier }}</td>
+                </tr>
+                <tr>
+                    <th>Père</th>
+                    <td>{{ advert.lofFatherName }}</td>
+                </tr>
+                <tr>
+                    <th>Identifiant LOF du père</th>
+                    <td>{{ advert.lofFatherIdentifier }}</td>
+                </tr>
+                <tr>
+                    <th>Mère</th>
+                    <td>{{ advert.lofMotherName }}</td>
+                </tr>
+                <tr>
+                    <th>Identifiant LOF de la mère</th>
+                    <td>{{ advert.lofMotherIdentifier }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Nom de l'animal</th>
+                <td>{{ advert.name }}</td>
+            </tr>
+            <tr>
+                <th>Date de naissance</th>
+                <td>{{ advert.birthDate ? advert.birthDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Tatoué / pucé</th>
+                <td>{{ advert.identified ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Vacciné</th>
+                <td>{{ advert.vaccinated ? 'Oui' : 'Non' }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>
+                    {% if advert.price > 0 %}
+                        {{ advert.price }} €
+                    {% else %}
+                        Don
+                    {% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_adverts_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+    <div class="d-flex mt-3">
+        {% if advert.status == false %}
+            <a href="{{ path('app_adverts_admin_update', {'id': advert.id }) }}" class="btn btn-success mr-3"><i class="fa-solid fa-check fa-xl mr-3"></i>Valider l'annonce</a>
+        {% endif %}
+        {{ include('admin/adverts_admin/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

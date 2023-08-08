@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Adverts;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
@@ -35,6 +36,7 @@ class AppFixtures extends Fixture
         $this->customersFixtures($manager);
         $this->usersFixtures($manager);
         $this->petsTypeFixtures($manager);
+        $this->adsFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -165,6 +167,27 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    protected function adsFixtures($manager): void
+    {
+        for($i=1; $i<=500; $i++) {
+            $ad[$i] = new Adverts;
+            $ad[$i]->setName($this->faker->firstName());
+            $ad[$i]->setTitle($this->faker->catchPhrase());
+            $ad[$i]->setShortDescription($this->faker->paragraphs(1, true));
+            $ad[$i]->setDescription($this->faker->paragraphs(rand(2, 4), true));
+            $ad[$i]->setFkPetsType($this->getRandomReference('App\Entity\PetsType', $manager));
+            $company = $this->getRandomReference('App\Entity\Company', $manager);
+            $ad[$i]->setFkCompany($company);
+            $ad[$i]->setIsPro(($company->getFkCompanyType()->getId() == 2) ? true : false);
+            $ad[$i]->setIdentified(($i % 3 == 0) ? false : true);
+            $ad[$i]->setVaccinated(($i % 3 == 0) ? false : true);
+            $ad[$i]->setStatus(($i % 3 == 0) ? true : false);
+            $ad[$i]->setLof(false);
+            $manager->persist($ad[$i]);
+        }
+        $manager->flush();
+    }
+
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);
     }
@@ -191,6 +214,7 @@ class AppFixtures extends Fixture
             TRUNCATE gender;
             TRUNCATE company; 
             TRUNCATE pets_type
+            TRUNCATE adverts
             SET FOREIGN_KEY_CHECKS=1;
             ';
         $db->prepare($sql);

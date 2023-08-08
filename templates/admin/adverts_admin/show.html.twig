@@ -86,6 +86,16 @@
                         Don
                     {% endif %}</td>
             </tr>
+            <tr>
+                <th>Photos</th>
+                <td>
+                    <div class="d-flex">
+                        {% for photo in medias %}
+                            <img src="{{ photo.filename }}" alt="{{ photo.title }}" height="150px" width="auto" />
+                        {% endfor %}
+                    </div>
+                </td>
+            </tr> 
         </tbody>
     </table>
 

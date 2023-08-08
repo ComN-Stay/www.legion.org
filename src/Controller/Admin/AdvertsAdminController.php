@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Adverts;
 use App\Form\AdvertsType;
 use App\Repository\AdvertsRepository;
+use App\Repository\MediasRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,10 +30,11 @@ class AdvertsAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_adverts_admin_show', methods: ['GET'])]
-    public function show(Adverts $advert): Response
+    public function show(Adverts $advert, MediasRepository $mediasRepository): Response
     {
         return $this->render('admin/adverts_admin/show.html.twig', [
             'advert' => $advert,
+            'medias' => $mediasRepository->findBy(['fk_advert' => $advert->getId()])
         ]);
     }
 

@@ -2,18 +2,19 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Adverts;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
 use App\Entity\Team;
+use App\Entity\PetsType;
+use App\Entity\Medias;
 use App\Entity\Gender;
 use App\Entity\Customer;
 use App\Entity\CompanyType;
 use App\Entity\Company;
-use App\Entity\PetsType;
+use App\Entity\Adverts;
 
 class AppFixtures extends Fixture
 {
@@ -37,6 +38,7 @@ class AppFixtures extends Fixture
         $this->usersFixtures($manager);
         $this->petsTypeFixtures($manager);
         $this->adsFixtures($manager);
+        $this->mediasFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -169,7 +171,7 @@ class AppFixtures extends Fixture
 
     protected function adsFixtures($manager): void
     {
-        for($i=1; $i<=500; $i++) {
+        for($i=1; $i<=1000; $i++) {
             $ad[$i] = new Adverts;
             $ad[$i]->setName($this->faker->firstName());
             $ad[$i]->setTitle($this->faker->catchPhrase());
@@ -184,6 +186,18 @@ class AppFixtures extends Fixture
             $ad[$i]->setStatus(($i % 3 == 0) ? true : false);
             $ad[$i]->setLof(false);
             $manager->persist($ad[$i]);
+        }
+        $manager->flush();
+    }
+
+    protected function mediasFixtures($manager): void
+    {
+        for($i=1; $i<=500; $i++) {
+            $media[$i] = new Medias;
+            $media[$i]->setTitle($this->faker->catchPhrase());
+            $media[$i]->setFilename('https://loremflickr.com/640/480/pets');
+            $media[$i]->setFkAdvert($this->getRandomReference('App\Entity\Adverts', $manager));
+            $manager->persist($media[$i]);
         }
         $manager->flush();
     }
@@ -213,8 +227,9 @@ class AppFixtures extends Fixture
             TRUNCATE customer;
             TRUNCATE gender;
             TRUNCATE company; 
-            TRUNCATE pets_type
-            TRUNCATE adverts
+            TRUNCATE pets_type;
+            TRUNCATE adverts;
+            TRUNCATE medias;
             SET FOREIGN_KEY_CHECKS=1;
             ';
         $db->prepare($sql);

@@ -2,8 +2,8 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fa-solid fa-laugh-wink"></i>
+                <div class="sidebar-brand-icon">
+                    <img src="/assets/img/logo.png" />
                 </div>
                 <div class="sidebar-brand-text mx-3">Légion</div>
             </a>
@@ -19,60 +19,81 @@
 
             <hr class="sidebar-divider">
 
-            <div class="sidebar-heading">
-                <i class="fa-solid fa-users"></i> Utilisateurs
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_company_admin_index', {'idType': 1}) }}"><span>Associations</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_company_admin_index', {'idType': 2}) }}"><span>Eleveurs</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href=""><span>Utilisateurs</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_team_index') }}"><span>Administrateurs</span></a>
-            </li>
-
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <div class="sidebar-heading">
-                <i class="fa-solid fa-bullhorn"></i> Annonces
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_adverts_admin_index') }}/1"><span>En attente de validation</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_adverts_admin_index') }}"><span>Toutes les annonces</span></a>
-            </li>
-
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <li class="nav-item dropdown">
-                <a class="nav-link  dropdown-toggle" href="#" id="paramsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>Paramètres</span>
+            <li class="nav-item has-submenu">
+                <a class="nav-link has-icon" href="#">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Utilisateurs</span>
+                    <span class="caretIcon caretIconClose"></span>
                 </a>
-                <ul class="dropdown-menu bg-white ml-3 collapse-inner rounded" aria-labelledby="paramsDropdown">
-                    <li><a class="dropdown-item" href="{{ path('app_company_type_admin_index') }}">Types d'utilisateurs</a></li>
-                    <li><a class="dropdown-item" href="{{ path('app_pets_type_admin_index') }}">Types d'animaux</a></li>
+                <ul class="submenu collapse">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_company_admin_index', {'idType': 1}) }}"><span>Associations</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_company_admin_index', {'idType': 2}) }}"><span>Eleveurs</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""><span>Utilisateurs</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_team_index') }}"><span>Administrateurs</span></a>
+                    </li>
                 </ul>
             </li>
 
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider">
+
+            <li class="nav-item has-submenu">
+                <a class="nav-link has-icon" href="#">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Annonces</span>
+                    <span class="caretIcon caretIconClose"></span>
+                </a>
+                <ul class="submenu collapse">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_adverts_admin_index') }}/1"><span>En attente de validation</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_adverts_admin_index') }}"><span>Toutes les annonces</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item has-submenu">
+                <a class="nav-link has-icon" href="#">
+                    <i class="fas fa-fw fa-wrench"></i>
+                    <span>Paramètres</span>
+                    <span class="caretIcon caretIconClose"></span>
+                </a>
+                <ul class="submenu collapse">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_company_type_admin_index') }}"><span>Types d'utilisateurs</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_pets_type_admin_index') }}"><span>Types d'animaux</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <hr class="sidebar-divider">
 
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_team_edit', {'id': app.user.id })}}"><span>Mon profil</span></a>
+                <a class="nav-link" href="{{ path('app_team_edit', {'id': app.user.id })}}">
+                    <i class="fa-solid fa-user"></i> 
+                    <span>Mon profil</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ path('admin_logout') }}"><span>Déconnexion</span></a>
+                <a class="nav-link" href="{{ path('admin_logout') }}">
+                    <i class="fa-solid fa-right-from-bracket"></i> 
+                    <span>Déconnexion</span>
+                </a>
             </li>
 
             <li class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                <button class="rounded-circle border-0 mt-3" id="sidebarToggle"></button>
             </li>
 
         </ul>

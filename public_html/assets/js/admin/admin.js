@@ -1,3 +1,4 @@
+/********* Datatable ************/
 new DataTable('._datatable', {
     order: [[1, 'asc']],
     language: {
@@ -5,11 +6,20 @@ new DataTable('._datatable', {
     },
     rowReorder: true,
     columnDefs: [ {
-        'targets': [$('thead tr th').length -1], // column index (start from 0)
-        'orderable': false, // set orderable false for selected columns
+        'targets': [$('thead tr th').length -1],
+        'orderable': false, 
     }]
 });
 
+/********* TinyMCE ************/
+tinymce.init({
+    selector: '.tinymce',
+    plugins: 'a_tinymce_plugin',
+    a_plugin_option: true,
+    a_configuration_option: 400
+  });
+
+/********* Delete alert ************/
 $(document).on('click', '._deleteBtn', function(e) {
     e.preventDefault();
     let parent = $(this).parent('form');
@@ -32,15 +42,30 @@ $(document).on('click', '._deleteBtn', function(e) {
     });
 });
 
-tinymce.init({
-    selector: '.tinymce',  // change this value according to your HTML
-    plugins: 'a_tinymce_plugin',
-    a_plugin_option: true,
-    a_configuration_option: 400
-  });
-
+/********* Close alerts ************/
 $(document).ready(function () {
     $( '.alert-close' ).click(function() {
         $( this ).parent().parent().fadeOut();
+    });
+});
+
+/****** sidebar dropdown *********/
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+        element.addEventListener('click', function (e) {
+            let nextEl = element.nextElementSibling;
+            let parentEl  = element.parentElement;	
+            if(nextEl) {
+                e.preventDefault();
+                new bootstrap.Collapse(nextEl);
+                element.querySelectorAll('.caretIcon').forEach(function(caret){
+                    if(caret.getAttribute('class') == 'caretIcon caretIconOpen'){
+                        caret.setAttribute('class', 'caretIcon caretIconClose');
+                    } else {
+                        caret.setAttribute('class', 'caretIcon caretIconOpen');
+                    } 
+                });
+            }
+        }); 
     });
 });

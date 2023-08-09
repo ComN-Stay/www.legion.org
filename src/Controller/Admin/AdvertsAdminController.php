@@ -54,7 +54,7 @@ class AdvertsAdminController extends AbstractController
     public function delete(Request $request, Adverts $advert, EntityManagerInterface $entityManager, MediasRepository $mediasRepository, $kernelUploadDir): Response
     {
         $parameters = ($advert->isStatus() == true) ? [] : ['status' => 1];
-        $medias = $mediasRepository->findBy(['fk_advert' => $advert->getFkCompany()]);
+        $medias = $mediasRepository->findBy(['fk_advert' => $advert->getId()]);
         if ($this->isCsrfTokenValid('delete'.$advert->getId(), $request->request->get('_token'))) {
             $entityManager->remove($advert);
             $entityManager->flush();

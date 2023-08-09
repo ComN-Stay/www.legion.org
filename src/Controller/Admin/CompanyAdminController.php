@@ -9,10 +9,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\FileUploaderService;
 use App\Service\CallGoogleApiService;
+use App\Repository\MediasRepository;
 use App\Repository\CompanyTypeRepository;
 use App\Repository\CompanyRepository;
 use App\Form\CompanyType;
 use App\Entity\Company;
+use App\Repository\AdvertsRepository;
 
 #[Route('/admin/company')]
 class CompanyAdminController extends AbstractController
@@ -85,7 +87,13 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_company_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Company $company, EntityManagerInterface $entityManager, FileUploaderService $file_uploader, CallGoogleApiService $callGoogleApiService): Response
+    public function edit(
+        Request $request, 
+        Company $company, 
+        EntityManagerInterface $entityManager, 
+        FileUploaderService $file_uploader, 
+        CallGoogleApiService $callGoogleApiService
+        ): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
@@ -123,14 +131,32 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Company $company, EntityManagerInterface $entityManager, $kernelUploadDir): Response
+    public function delete(
+        Request $request, 
+        Company $company, 
+        EntityManagerInterface $entityManager, 
+        MediasRepository $mediasRepository, 
+        AdvertsRepository $advertsRepository, 
+        $kernelUploadDir
+        ): Response
     {
         $idType = $company->getFkCompanyType()->getId();
         $logo = $company->getLogo();
+        $adverts = $advertsRepository->findBy(['fk_company' => $company->getId()]);
         if ($this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token'))) {
             $entityManager->remove($company);
             $entityManager->flush();
             @unlink($kernelUploadDir . '/' . $logo);
+            foreach($adverts as $advert) {
+                $medias = $mediasRepository->findBy(['fk_advert' => $advert->getId()]);
+                foreach($medias as $media) {
+                    @unlink($kernelUploadDir . '/' . $media->getFilename());
+                    $mediasRepository->remove($media);
+                    $mediasRepository->flush();
+                }
+                $advertsRepository->remove($advert);
+                $advertsRepository->flush();
+            }
             $this->addFlash('success', 'Suppression effectuée');
         }
 

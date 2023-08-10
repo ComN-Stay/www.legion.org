@@ -20,14 +20,18 @@ use App\Entity\Company;
 #[Route('/admin/company')]
 class CompanyAdminController extends AbstractController
 {
-    #[Route('/list/{idType}', name: 'app_company_admin_index', methods: ['GET'])]
-    public function index(CompanyRepository $companyRepository, CompanyTypeRepository $companyTypeRepository, $idType): Response
+    #[Route('/list/{idType}/{status?}', name: 'app_company_admin_index', methods: ['GET'])]
+    public function index(CompanyRepository $companyRepository, CompanyTypeRepository $companyTypeRepository, $idType, $status): Response
     {
         $type = $companyTypeRepository->find($idType);
+        $conditions = ['fk_company_type' => $type];
+        if($status !== null) {
+            $conditions['status'] = 0;
+        }
         return $this->render('admin/company_admin/index.html.twig', [
             'company_type' => $type->getName(),
             'idType' => $idType,
-            'companies' => $companyRepository->findBy(['fk_company_type' => $type]),
+            'companies' => $companyRepository->findBy($conditions),
         ]);
     }
 

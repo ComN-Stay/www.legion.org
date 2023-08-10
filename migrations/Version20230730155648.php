@@ -20,14 +20,10 @@ final class Version20230730155648 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D64966517770 FOREIGN KEY (fk_gender_id) REFERENCES gender (id)');
-        $this->addSql('CREATE INDEX IDX_8D93D64966517770 ON user (fk_gender_id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D64966517770');
-        $this->addSql('DROP INDEX IDX_8D93D64966517770 ON user');
     }
 }

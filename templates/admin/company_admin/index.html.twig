@@ -23,7 +23,9 @@
                 <td>{{ company.email }}</td>
                 <td>{{ company.phone }}</td>
                 <td>{{ company.zipCode }} {{ company.town }}</td>
-                <td>{{ company.status ? 'Activé' : 'Désactivé' }}</td>
+                <td>
+                    <input type="checkbox" class="_activeButton" data-id="{{ company.id }}" data-entity="company" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="Activée" data-off="En attente" {{ company.status ? 'checked' : '' }}>
+                </td>
                 <td class="action_cell">
                     <a class="form_list" href="{{ path('app_company_admin_show', {'id': company.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>
                     <a class="form_list" href="{{ path('app_company_admin_edit', {'id': company.id}) }}"><i class="fa-solid fa-pen-to-square fa-lg ml-3"></i></a>

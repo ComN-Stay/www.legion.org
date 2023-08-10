@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Service\FileUploaderService;
@@ -12,9 +13,9 @@ use App\Service\CallGoogleApiService;
 use App\Repository\MediasRepository;
 use App\Repository\CompanyTypeRepository;
 use App\Repository\CompanyRepository;
+use App\Repository\AdvertsRepository;
 use App\Form\CompanyType;
 use App\Entity\Company;
-use App\Repository\AdvertsRepository;
 
 #[Route('/admin/company')]
 class CompanyAdminController extends AbstractController
@@ -78,12 +79,29 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_admin_show', methods: ['GET'])]
-    public function show(Company $company): Response
+    public function show(Company $company, $publicUploadDir): Response
     {
         return $this->render('admin/company_admin/show.html.twig', [
             'idType' => $company->getFkCompanyType()->getId(),
             'company' => $company,
+            'mediaFolder' => $publicUploadDir
         ]);
+    }
+
+    #[Route('/activation', name: 'app_company_admin_activation', methods: ['GET', 'POST'])]
+    public function activation(Request $request, CompanyRepository $companyRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($request->isXMLHttpRequest()) {
+            $res['result'] = 'error';
+            $company = $companyRepository->find($request->request->get('id'));
+            $company->setStatus($request->request->get('status'));
+            $entityManager->persist($company);
+            $res['result'] = 'success';
+            $entityManager->flush();
+            return new JsonResponse(json_encode($res));
+        }
+    
+        return new Response('This is not ajax !', 400);
     }
 
     #[Route('/{id}/edit', name: 'app_company_admin_edit', methods: ['GET', 'POST'])]
@@ -91,7 +109,7 @@ class CompanyAdminController extends AbstractController
         Request $request, 
         Company $company, 
         EntityManagerInterface $entityManager, 
-        FileUploaderService $file_uploader, 
+        FileUploaderService $fileUploader, 
         CallGoogleApiService $callGoogleApiService
         ): Response
     {
@@ -101,7 +119,7 @@ class CompanyAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form['logo']->getData();
             if ($file) {
-                $file_name = $file_uploader->upload($file);
+                $file_name = $fileUploader->upload($file);
                 if (null !== $file_name) {
                     $full_path = $file_name;
                 }
@@ -151,15 +169,12 @@ class CompanyAdminController extends AbstractController
                 $medias = $mediasRepository->findBy(['fk_advert' => $advert->getId()]);
                 foreach($medias as $media) {
                     @unlink($kernelUploadDir . '/' . $media->getFilename());
-                    $mediasRepository->remove($media);
-                    $mediasRepository->flush();
                 }
-                $advertsRepository->remove($advert);
-                $advertsRepository->flush();
             }
             $this->addFlash('success', 'Suppression effectuée');
         }
 
         return $this->redirectToRoute('app_company_admin_index', ['idType' => $idType], Response::HTTP_SEE_OTHER);
     }
+
 }

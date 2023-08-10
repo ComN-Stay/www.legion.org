@@ -34,7 +34,7 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Service\FileUploaderService:
         arguments:
-            $targetDirectory: '%upload_directory%'
+            $kernelUploadDir: '%kernel_upload_directory%'
     App\Service\CallGoogleApiService:
         arguments:
             $googleApiKey: '%google_api_key%'

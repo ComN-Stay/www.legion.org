@@ -8,12 +8,12 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class FileUploaderService
 {
-    private $targetDirectory;
+    private $kernelUploadDir;
     private $slugger;
 
-    public function __construct($targetDirectory, SluggerInterface $slugger)
+    public function __construct($kernelUploadDir, SluggerInterface $slugger)
     {
-        $this->targetDirectory = $targetDirectory;
+        $this->kernelUploadDir = $kernelUploadDir;
         $this->slugger = $slugger;
     }
 
@@ -32,6 +32,6 @@ class FileUploaderService
     
     public function getTargetDirectory()
     {
-        return $this->targetDirectory;
+        return $this->kernelUploadDir;
     }
 }

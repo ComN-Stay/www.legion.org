@@ -105,7 +105,7 @@ class AppFixtures extends Fixture
 
     protected function companyFixtures($manager): void
     {
-        for($i=1; $i<=10; $i++) {
+        for($i=1; $i<=30; $i++) {
             $company[$i] = new Company;
             $company[$i]->setName($this->faker->company());
             $company[$i]->setEmail('company' . $i . '@comnstay.fr');
@@ -122,7 +122,7 @@ class AppFixtures extends Fixture
 
     protected function customersFixtures($manager): void
     {
-        for($i=1; $i<=50; $i++) {
+        for($i=1; $i<=100; $i++) {
             $customer[$i] = new Customer;
             $customer[$i]->setEmail('customer' . $i . '@comnstay.fr');
             $gender = ($i % 2 == 0) ? 1 : 2;
@@ -142,7 +142,7 @@ class AppFixtures extends Fixture
 
     protected function usersFixtures($manager): void
     {
-        for($i=1; $i<=100; $i++) {
+        for($i=1; $i<=300; $i++) {
             $user[$i] = new User;
             $user[$i]->setEmail('user' . $i . '@comnstay.fr');
             $gender = ($i % 2 == 0) ? 1 : 2;
@@ -192,7 +192,7 @@ class AppFixtures extends Fixture
 
     protected function mediasFixtures($manager): void
     {
-        for($i=1; $i<=500; $i++) {
+        for($i=1; $i<=2000; $i++) {
             $media[$i] = new Medias;
             $media[$i]->setTitle($this->faker->catchPhrase());
             $media[$i]->setFilename('https://loremflickr.com/640/480/pets');

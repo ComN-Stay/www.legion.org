@@ -2,15 +2,16 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Adverts;
-use App\Form\AdvertsType;
-use App\Repository\AdvertsRepository;
-use App\Repository\MediasRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\MediasRepository;
+use App\Repository\AdvertsRepository;
+use App\Form\AdvertsType;
+use App\Entity\Adverts;
 
 #[Route('/admin/adverts')]
 class AdvertsAdminController extends AbstractController
@@ -30,12 +31,29 @@ class AdvertsAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_adverts_admin_show', methods: ['GET'])]
-    public function show(Adverts $advert, MediasRepository $mediasRepository): Response
+    public function show(Adverts $advert, MediasRepository $mediasRepository, $publicUploadDir): Response
     {
         return $this->render('admin/adverts_admin/show.html.twig', [
             'advert' => $advert,
-            'medias' => $mediasRepository->findBy(['fk_advert' => $advert->getId()])
+            'medias' => $mediasRepository->findBy(['fk_advert' => $advert->getId()]),
+            'mediaFolder' => $publicUploadDir
         ]);
+    }
+
+    #[Route('/activation', name: 'app_adverts_admin_activation', methods: ['GET', 'POST'])]
+    public function activation(Request $request, AdvertsRepository $advertsRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
+        if ($request->isXMLHttpRequest()) {
+            $res['result'] = 'error';
+            $advert = $advertsRepository->find($request->request->get('id'));
+            $advert->setStatus($request->request->get('status'));
+            $entityManager->persist($advert);
+            $res['result'] = 'success';
+            $entityManager->flush();
+            return new JsonResponse(json_encode($res));
+        }
+    
+        return new Response('This is not ajax !', 400);
     }
 
     #[Route('/update/{id}', name: 'app_adverts_admin_update', methods: ['GET'])]
@@ -60,8 +78,6 @@ class AdvertsAdminController extends AbstractController
             $entityManager->flush();
             foreach($medias as $media) {
                 @unlink($kernelUploadDir . '/' . $media->getFilename());
-                $mediasRepository->remove($media);
-                $mediasRepository->flush();
             }
             $this->addFlash('success', 'Annonce Supprimée');
         }

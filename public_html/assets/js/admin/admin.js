@@ -69,3 +69,40 @@ document.addEventListener("DOMContentLoaded", function(){
         }); 
     });
 });
+
+/********* entities activation ***********/
+
+$('body').on('change', '._activeButton', function (e) {
+    let id = $(this).data('id');
+    let entity = $(this).data('entity');
+    if($(this).prop("checked") == true){
+        var status = 1;
+    } else {
+        var status = 0;
+    }
+    let message = (status == 1) ? 'Activation effectuée' : 'Désactivation effectuée';
+    $.ajax({
+        url: '/admin/' + entity + '/activation',
+        type: 'POST',
+        data: 'id=' + id + '&status=' + status,
+        dataType: false,
+        cache: false
+    })
+    .done(function(s) {
+        $('#jsAlertBox').removeClass('success');
+        $('#jsAlertBox').removeClass('error');
+        $('#jsAlertBox').removeClass('notice');
+        $('#jsAlertBox').removeClass('wait');
+        var res = jQuery.parseJSON(s);
+        if (res.result == 'success') {
+            $('#successIcon').show();
+            $('#alertMessage').html(message);
+            $('#jsAlertBox').addClass('success');
+        } else {
+            $('#errorIcon').show();
+            $('#alertMessage').html('Une erreur s\'est produite');
+            $('#jsAlertBox').addClass('error');
+        }
+        $('#jsAlertBox').show();
+    });
+});

@@ -5,7 +5,7 @@
 {% block body %}
     <div class="d-flex align-self-center">
         {% if company.logo != '' %}
-            <img src="{{ company.logo }}" class="img-responsive mr-3" height="150px" width="auto">
+            <img src="{{ mediaFolder }}/{{ company.logo }}" class="img-responsive mr-3" height="150px" width="auto">
         {% endif %}
         <h1>{{ company.name }}</h1>
     </div>

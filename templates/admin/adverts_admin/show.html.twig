@@ -91,7 +91,7 @@
                 <td>
                     <div class="d-flex">
                         {% for photo in medias %}
-                            <img src="{{ photo.filename }}" alt="{{ photo.title }}" height="150px" width="auto" />
+                            <img src="{{ mediaFolder }}/{{ photo.filename }}" alt="{{ photo.title }}" height="150px" width="auto" />
                         {% endfor %}
                     </div>
                 </td>

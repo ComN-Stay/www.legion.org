@@ -15,6 +15,7 @@ use App\Entity\Customer;
 use App\Entity\CompanyType;
 use App\Entity\Company;
 use App\Entity\Adverts;
+use App\Entity\Statistics;
 
 class AppFixtures extends Fixture
 {
@@ -39,6 +40,7 @@ class AppFixtures extends Fixture
         $this->petsTypeFixtures($manager);
         $this->adsFixtures($manager);
         $this->mediasFixtures($manager);
+        $this->statisticsFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -202,6 +204,24 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    protected function statisticsFixtures($manager): void
+    {
+        $i = 1;
+        $begin = new \DateTime('2012-01-01');
+        $end = new \DateTime(date('Y-m-d'));
+        $end->modify('+1 day');
+        $interval = new \DateInterval('P1D');
+        $daterange = new \DatePeriod($begin, $interval, $end);
+        foreach($daterange as $date){
+            $stat[$i] = new Statistics;
+            $stat[$i]->setDay($date);
+            $stat[$i]->setVisits(rand(2, 457));
+            $manager->persist($stat[$i]);
+            $i++;
+        }
+        $manager->flush();
+    }
+
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);
     }
@@ -230,6 +250,8 @@ class AppFixtures extends Fixture
             TRUNCATE pets_type;
             TRUNCATE adverts;
             TRUNCATE medias;
+            TRUNCATE statistics;
+            TRUNCATE visitors;
             SET FOREIGN_KEY_CHECKS=1;
             ';
         $db->prepare($sql);

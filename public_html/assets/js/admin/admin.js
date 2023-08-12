@@ -8,7 +8,10 @@ new DataTable('._datatable', {
     columnDefs: [ {
         'targets': [$('thead tr th').length -1],
         'orderable': false, 
-    }]
+    }],
+    fnDrawCallback: function() {
+        $('._activeButton').bootstrapToggle();
+    }
 });
 
 /********* TinyMCE ************/
@@ -104,5 +107,31 @@ $('body').on('change', '._activeButton', function (e) {
             $('#jsAlertBox').addClass('error');
         }
         $('#jsAlertBox').show();
+    });
+});
+
+/************ stats visitess dashboard ****************/
+$(document).on('click', '._changeStats', function(){
+    let start = ($(this).data('start') != undefined) ? $(this).data('start') : $('#startStats').val();
+    let datas = 'start=' + start; 
+    if($(this).data('start') == undefined){
+        datas = datas + '&end=' + $('#endStats').val();
+    }
+    $.ajax({
+        url: '/admin/statistics',
+        type: 'POST',
+        data: datas,
+        dataType: false,
+        cache: false
+    })
+    .done(function(s) {
+        var res = jQuery.parseJSON(s);
+        if (res.result == 'success') {
+            statChart.data.labels = res.labels;
+            statChart.data.datasets[0].data = res.datas;
+            statChart.update();
+        } else {
+            $('#chartStat').html('Une erreur s\'est produite');
+        }
     });
 });

@@ -1,0 +1,30 @@
+
+<canvas id="chartsBlock"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="text/javascript">
+    const statChart = new Chart(document.getElementById("chartsBlock"), {
+      type: 'bar',
+      data: {
+        labels: [{% for label in labels %}"{{ label }}",{% endfor %}],
+        datasets: [
+          {
+            label: "Visites du {{ startDate|date('d/m/Y') }} au {{ endDate|date('d/m/Y') }}",
+            backgroundColor: ['rgb(153, 102, 255, 0.5)'],
+            borderColor: ['rgb(153, 102, 255)'],
+            borderWidth: 2,
+            borderRadius: 5,
+            borderSkipped: false,
+            data: [{% for data in datas %}{{ data }},{% endfor %}]
+          }
+        ]
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: false,
+          text: ''
+        }
+      }
+  });
+</script>

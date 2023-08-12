@@ -223,3 +223,8 @@ label.required:after {
 .sidebar.toggled .nav-item .nav-link span.caretIcon {
     margin-top: -1rem;
 }
+/************** forms ******************/
+.form-label {
+    margin-bottom: 0.5rem;
+    min-width: fit-content;
+}

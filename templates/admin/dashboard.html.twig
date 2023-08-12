@@ -3,32 +3,37 @@
 {% block title %}Hello AdminController!{% endblock %}
 
 {% block body %}
-    <h1>Tableau de bord</h1>
-
     <div class="card mb-3">
         <div class="card-header bg-gradient-primary text-white">
             <h3>Statistiques</h3>
         </div>
-        <div class="card-body d-flex justify-content-between">
-            <div>
-                <p class="card-text">{{ associations }} association{% if associations > 1 %}s{% endif %} actives</p>
-                <p class="card-text">{{ eleveurs }} éleveur{% if eleveurs > 1 %}s{% endif %} actifs</p>
-                <p class="card-text">{{ adverts }} annonce{% if adverts > 1 %}s{% endif %} en ligne</p>
-            </div>
-            <div>
-                <p class="card-text">{{ day_visitors }} visite{% if day_visitors > 1 %}s{% endif %} aujourd'hui</p>
-                <p class="card-text">{{ week_vivitors }} visite{% if week_vivitors > 1 %}s{% endif %} cette semaine</p>
-                <p class="card-text">{{ month_visitors }} visite{% if month_visitors > 1 %}s{% endif %} ce mois ci</p>
-            </div>
-            <div>
-                <p class="card-text">Autre statistique</p>
-                <p class="card-text">Autre statistique</p>
-                <p class="card-text">Autre statistique</p>
-            </div>
-            <div>
-                <p class="card-text">Autre statistique</p>
-                <p class="card-text">Autre statistique</p>
-                <p class="card-text">Autre statistique</p>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <p class="card-text">{{ associations }} association{% if associations > 1 %}s{% endif %} actives</p>
+                    <p class="card-text">{{ eleveurs }} éleveur{% if eleveurs > 1 %}s{% endif %} actifs</p>
+                    <p class="card-text">{{ adverts }} annonce{% if adverts > 1 %}s{% endif %} en ligne</p>
+                    <p class="card-text">Autre statistique</p>
+                    <p class="card-text">Autre statistique</p>
+                    <p class="card-text">Autre statistique</p>
+                </div>
+                <div class="col-9">
+                    <div class="text-end mb-2">
+                        <div class="form-row d-flex justify-content-end align-items-center">
+                            <button type="button" class="btn btn-info btn-sm _changeStats" data-start="{{ week }}">Semaine</button>
+                            <button type="button" class="btn btn-info btn-sm mx-2 _changeStats" data-start="{{ month }}">Mois</button>
+                            <button type="button" class="btn btn-info btn-sm mr-2 _changeStats" data-start="{{ year }}">Année</button>
+                            <label class="form-label" for="startStats">Statistiques du</label> 
+                            <input class="form-control mx-2" type="date" id="startStats" value="{{ lastMounth }}"> 
+                            <label class="form-label" for="endStats">au</label> 
+                            <input class="form-control mx-2" type="date" id="endStats" value="{{ today }}">
+                            <button type="button" class="btn btn-info btn-sm _changeStats">Voir</button>
+                        </div>
+                    </div>
+                    <div id="chartStat">
+                        {{ render(path('app_statistics_admin')) }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

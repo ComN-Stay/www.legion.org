@@ -14,7 +14,7 @@ class AdminController extends AbstractController
     #[Route('/', name: 'app_admin')]
     public function index(
         CompanyRepository $companyRepository,
-        AdvertsRepository $advertsRepository
+        AdvertsRepository $advertsRepository,
     ): Response
     {
         $boxes = [];
@@ -35,9 +35,11 @@ class AdminController extends AbstractController
             'adverts' => count($advertsRepository->findBy(['status' => 1])),
             'associations' => count($companyRepository->findBy(['status' => 1, 'fk_company_type' => 1])),
             'eleveurs' => count($companyRepository->findBy(['status' => 1, 'fk_company_type' => 2])),
-            'day_visitors' => 25,
-            'week_vivitors' => 698,
-            'month_visitors' => 6351
+            'today' => date('Y-m-d'),
+            'lastMounth' => date('Y-m-d', strtotime('-1 month')),
+            'week' => date("Y-m-d", strtotime('monday this week')),
+            'month' => date('01-m-Y'),
+            'year' => date('01-01-Y')
         ]);
     }
 }

@@ -23,6 +23,8 @@
                 <td>
                     {% if petition.picture is not null %}
                         <img src="{{ mediaFolder }}/{{ petition.picture }}" height="50px" width="auto" />
+                    {% else %}
+                        <img src="/assets/img/logo.png" height="50px" width="auto" />
                     {% endif %}
                 </td>
                 <td>{{ petition.title }}</td>

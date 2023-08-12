@@ -10,9 +10,9 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-3">
-                    <p class="card-text">{{ associations }} association{% if associations > 1 %}s{% endif %} actives</p>
-                    <p class="card-text">{{ eleveurs }} éleveur{% if eleveurs > 1 %}s{% endif %} actifs</p>
-                    <p class="card-text">{{ adverts }} annonce{% if adverts > 1 %}s{% endif %} en ligne</p>
+                    <p class="card-text"><b>{{ associations }}</b> association{% if associations > 1 %}s{% endif %} active{% if associations > 1 %}s{% endif %}</p>
+                    <p class="card-text"><b>{{ eleveurs }}</b> éleveur{% if eleveurs > 1 %}s{% endif %} actif{% if eleveurs > 1 %}s{% endif %}</p>
+                    <p class="card-text"><b>{{ adverts }}</b> annonce{% if adverts > 1 %}s{% endif %} en ligne</p>
                     <p class="card-text">Autre statistique</p>
                     <p class="card-text">Autre statistique</p>
                     <p class="card-text">Autre statistique</p>
@@ -38,7 +38,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-between">
-        {% if boxes.associations %}
+        {% if boxes.associations is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Associations</h3>
@@ -53,7 +53,7 @@
             </div>
         {% endif %}
 
-        {% if boxes.eleveurs %}
+        {% if boxes.eleveurs is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Eleveurs</h3>
@@ -68,7 +68,7 @@
             </div>
         {% endif %}
 
-        {% if boxes.adverts %}
+        {% if boxes.adverts is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Annonces</h3>
@@ -79,6 +79,21 @@
                 <div class="card-body text-center">
                     <h4>{{ boxes.adverts }}</h4>
                     <p class="card-text"> annonce{% if boxes.adverts > 1 %}s{% endif %} en attente de validation</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if boxes.petitions is not null %}
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
+                    <h3>Pétitions</h3>
+                    <a href="{{ path('app_petitions_admin_index') }}/1">
+                        <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
+                    </a>
+                </div>
+                <div class="card-body text-center">
+                    <h4>{{ boxes.petitions }}</h4>
+                    <p class="card-text"> pétition{% if boxes.petitions > 1 %}s{% endif %} en attente de validation</p>
                 </div>
             </div>
         {% endif %}

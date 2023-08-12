@@ -63,6 +63,24 @@
 
             <li class="nav-item has-submenu">
                 <a class="nav-link has-icon" href="#">
+                    <i class="fa-solid fa-signature"></i>
+                    <span>Pétitions</span>
+                    <span class="caretIcon caretIconClose"></span>
+                </a>
+                <ul class="submenu collapse">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_petitions_admin_index') }}/1"><span>En attente de validation</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_petitions_admin_index') }}"><span>Toutes les pétitions</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item has-submenu">
+                <a class="nav-link has-icon" href="#">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Paramètres</span>
                     <span class="caretIcon caretIconClose"></span>

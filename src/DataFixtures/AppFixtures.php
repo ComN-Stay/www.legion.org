@@ -8,14 +8,15 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
 use App\Entity\Team;
+use App\Entity\Statistics;
 use App\Entity\PetsType;
+use App\Entity\Petitions;
 use App\Entity\Medias;
 use App\Entity\Gender;
 use App\Entity\Customer;
 use App\Entity\CompanyType;
 use App\Entity\Company;
 use App\Entity\Adverts;
-use App\Entity\Statistics;
 
 class AppFixtures extends Fixture
 {
@@ -41,6 +42,7 @@ class AppFixtures extends Fixture
         $this->adsFixtures($manager);
         $this->mediasFixtures($manager);
         $this->statisticsFixtures($manager);
+        $this->petitionsFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -222,6 +224,29 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
 
+    protected function petitionsFixtures($manager): void
+    {
+        $links = [
+            'https://chng.it/WsyDDYK9L6',
+            'https://chng.it/swGpbcXGQs',
+            'https://chng.it/hdp8dV5F2p',
+            'https://chng.it/sdrm9cPdFK'
+        ];
+        $i = 1;
+        foreach($links as $link){
+            $petiton[$i] = new Petitions;
+            $petiton[$i]->setTitle($this->faker->catchPhrase());
+            $petiton[$i]->setDescription($this->faker->paragraphs(rand(2, 4), true));
+            $petiton[$i]->setLink($link);
+            $petiton[$i]->setDateAdd(new \DateTime(date('Y-m-d')));
+            $petiton[$i]->setStatus(($i % 2 == 0) ? false : true);
+            $petiton[$i]->setFkUser($this->getRandomReference('App\Entity\User', $manager));
+            $manager->persist($petiton[$i]);
+            $i++;
+        }
+        $manager->flush();
+    }
+
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);
     }
@@ -252,6 +277,7 @@ class AppFixtures extends Fixture
             TRUNCATE medias;
             TRUNCATE statistics;
             TRUNCATE visitors;
+            TRUNCATE petitions;
             SET FOREIGN_KEY_CHECKS=1;
             ';
         $db->prepare($sql);

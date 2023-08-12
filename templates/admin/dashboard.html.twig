@@ -40,39 +40,45 @@
     <div class="d-flex justify-content-between">
         {% if boxes.associations %}
             <div class="card">
-                <div class="card-header bg-gradient-primary text-white">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Associations</h3>
+                    <a href="{{ path('app_company_admin_index', {'idType': 1, 'status': 0}) }}">
+                        <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
+                    </a>
                 </div>
                 <div class="card-body text-center">
                     <h4>{{ boxes.associations }}</h4>
                     <p class="card-text"> association{% if boxes.associations > 1 %}s{% endif %} en attente de validation</p>
-                    <a href="{{ path('app_company_admin_index', {'idType': 1, 'status': 0}) }}" class="btn btn-primary">Voir la liste</a>
                 </div>
             </div>
         {% endif %}
 
         {% if boxes.eleveurs %}
             <div class="card">
-                <div class="card-header bg-gradient-primary text-white">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Eleveurs</h3>
+                    <a href="{{ path('app_company_admin_index', {'idType': 2, 'status': 0}) }}">    
+                        <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
+                    </a>
                 </div>
                 <div class="card-body text-center">
                     <h4>{{ boxes.eleveurs }}</h4>
                     <p class="card-text"> éleveur{% if boxes.eleveurs > 1 %}s{% endif %} en attente de validation</p>
-                    <a href="{{ path('app_company_admin_index', {'idType': 2, 'status': 0}) }}" class="btn btn-primary">Voir la liste</a>
                 </div>
             </div>
         {% endif %}
 
         {% if boxes.adverts %}
             <div class="card">
-                <div class="card-header bg-gradient-primary text-white">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
                     <h3>Annonces</h3>
+                    <a href="{{ path('app_adverts_admin_index') }}/1">
+                        <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
+                    </a>
                 </div>
                 <div class="card-body text-center">
                     <h4>{{ boxes.adverts }}</h4>
                     <p class="card-text"> annonce{% if boxes.adverts > 1 %}s{% endif %} en attente de validation</p>
-                    <a href="{{ path('app_adverts_admin_index') }}/1" class="btn btn-primary">Voir la liste</a>
                 </div>
             </div>
         {% endif %}

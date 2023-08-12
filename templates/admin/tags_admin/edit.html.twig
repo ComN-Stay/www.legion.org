@@ -1,0 +1,15 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Edition Tag{% endblock %}
+
+{% block body %}
+    <h1>Edit Tags</h1>
+
+    {{ include('admin/tags_admin/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_tags_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+
+        {{ include('admin/tags_admin/_delete_form.html.twig') }}
+    </div>
+{% endblock %}

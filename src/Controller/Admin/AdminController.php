@@ -41,6 +41,7 @@ class AdminController extends AbstractController
             'adverts' => count($advertsRepository->findBy(['status' => 1])),
             'associations' => count($companyRepository->findBy(['status' => 1, 'fk_company_type' => 1])),
             'eleveurs' => count($companyRepository->findBy(['status' => 1, 'fk_company_type' => 2])),
+            'petitions' => count($petitionsRepository->findBy(['status' => 1])),
             'today' => date('Y-m-d'),
             'lastMounth' => date('Y-m-d', strtotime('-1 month')),
             'week' => date("Y-m-d", strtotime('monday this week')),

@@ -1,0 +1,40 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Tags{% endblock %}
+
+{% block body %}
+    <h1>Tags</h1>
+
+    <table class="table _datatable table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Articles taggués</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for tag in tags %}
+            <tr>
+                <td>{{ tag.title }}</td>
+                <td>{{ tag.articleQte }}</td>
+                <td class="action_cell">
+                    <a class="form_list" href="{{ path('app_tags_admin_edit', {'id': tag.id}) }}"><i class="fa-solid fa-pen-to-square fa-lg ml-3"></i></a>
+                    <form class="form_list" method="post" action="{{ path('app_tags_admin_delete', {'id': tag.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tag.id) }}">
+                        <button class="btn neg-1 _deleteBtn"><i class="fa-solid fa-trash-can fa-lg"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun résultat</td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_tags_admin_new') }}" class="btn btn-info btn-lg">Nouveau tag</a>
+{% endblock %}

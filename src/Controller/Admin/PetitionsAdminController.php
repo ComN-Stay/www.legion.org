@@ -72,6 +72,7 @@ class PetitionsAdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$petition->getId(), $request->request->get('_token'))) {
             $entityManager->remove($petition);
             $entityManager->flush();
+            $this->addFlash('success', 'Pétition supprimée');
         }
 
         return $this->redirectToRoute('app_petitions_admin_index', [], Response::HTTP_SEE_OTHER);

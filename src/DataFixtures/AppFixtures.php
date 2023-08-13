@@ -2,12 +2,14 @@
 
 namespace App\DataFixtures;
 
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Entity\User;
 use App\Entity\Team;
+use App\Entity\Tags;
 use App\Entity\Statistics;
 use App\Entity\PetsType;
 use App\Entity\Petitions;
@@ -22,11 +24,13 @@ class AppFixtures extends Fixture
 {
     private $faker;
     private $passwordHasher;
+    private $slugger;
     
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface)
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create('fr_FR');
+        $this->slugger = $sluggerInterface;
     }
     
     public function load(ObjectManager $manager): void
@@ -43,6 +47,7 @@ class AppFixtures extends Fixture
         $this->mediasFixtures($manager);
         $this->statisticsFixtures($manager);
         $this->petitionsFixtures($manager);
+        $this->tagsFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -189,6 +194,7 @@ class AppFixtures extends Fixture
             $ad[$i]->setVaccinated(($i % 3 == 0) ? false : true);
             $ad[$i]->setStatus(($i % 3 == 0) ? true : false);
             $ad[$i]->setLof(false);
+            $ad[$i]->setVisits(rand(4, 1521));
             $manager->persist($ad[$i]);
         }
         $manager->flush();
@@ -242,6 +248,23 @@ class AppFixtures extends Fixture
             $petiton[$i]->setStatus(($i % 2 == 0) ? false : true);
             $petiton[$i]->setFkUser($this->getRandomReference('App\Entity\User', $manager));
             $manager->persist($petiton[$i]);
+            $i++;
+        }
+        $manager->flush();
+    }
+
+    public function tagsFixtures($manager): void
+    {
+        $tags = ['Chats', 'Chiens', 'Oiseaux', 'Tortues', 'NAC', 'Soins', 'Bien-être animal'];
+        $i = 1;
+        foreach($tags as $tag) {
+            $t[$i] = new Tags;
+            $t[$i]->setTitle($tag);
+            $t[$i]->setSlug($this->slugger->slug($tag));
+            $t[$i]->setMetaName($tag);
+            $t[$i]->setMetaDescription($this->faker->catchPhrase());
+            $t[$i]->setMetaKeyword($this->faker->words(rand(2, 7), true));
+            $manager->persist($t[$i]);
             $i++;
         }
         $manager->flush();

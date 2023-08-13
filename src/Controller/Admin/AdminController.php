@@ -32,6 +32,10 @@ class AdminController extends AbstractController
         if($adverts > 0) {
             $boxes['adverts'] = $adverts;
         }
+        $bestAdverts = $advertsRepository->findBy(['status' => true], ['visits' => 'DESC'], 5);
+        if($bestAdverts > 0) {
+            $boxes['bestAdverts'] = $bestAdverts;
+        }
         $petitions = count($petitionsRepository->findBy(['status' => 0]));
         if($petitions > 0) {
             $boxes['petitions'] = $petitions;

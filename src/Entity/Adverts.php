@@ -78,6 +78,9 @@ class Adverts
     #[ORM\OneToMany(mappedBy: 'fk_advert', targetEntity: Medias::class, orphanRemoval: true)]
     private Collection $medias;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $visits = null;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
@@ -342,6 +345,18 @@ class Adverts
                 $media->setFkAdvert(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVisits(): ?int
+    {
+        return $this->visits;
+    }
+
+    public function setVisits(int $visits): static
+    {
+        $this->visits = $visits;
 
         return $this;
     }

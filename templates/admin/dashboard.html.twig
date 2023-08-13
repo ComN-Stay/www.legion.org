@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mb-3">
         {% if boxes.associations is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
@@ -94,6 +94,27 @@
                 <div class="card-body text-center">
                     <h4>{{ boxes.petitions }}</h4>
                     <p class="card-text"> pétition{% if boxes.petitions > 1 %}s{% endif %} en attente de validation</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-between">
+        {% if boxes.bestAdverts is not null %}
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
+                    <h3>Meilleures annonces</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        {% for ads in boxes.bestAdverts %}
+                            <tr>
+                                <td>{{ ads.visits }}</td>
+                                <td>{{ ads.title }}</td>
+                                <td>{{ ads.getFkCompany().name }}
+                            </tr>
+                        {% endfor %}
+                    </table>
                 </div>
             </div>
         {% endif %}

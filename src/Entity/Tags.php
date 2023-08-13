@@ -20,6 +20,18 @@ class Tags
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $article_qte = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
+
+    #[ORM\Column(length: 75, nullable: true)]
+    private ?string $meta_name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $meta_description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $meta_keyword = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +57,54 @@ class Tags
     public function setArticleQte(int $article_qte): static
     {
         $this->article_qte = $article_qte;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getMetaName(): ?string
+    {
+        return $this->meta_name;
+    }
+
+    public function setMetaName(?string $meta_name): static
+    {
+        $this->meta_name = $meta_name;
+
+        return $this;
+    }
+
+    public function getMetaDescription(): ?string
+    {
+        return $this->meta_description;
+    }
+
+    public function setMetaDescription(?string $meta_description): static
+    {
+        $this->meta_description = $meta_description;
+
+        return $this;
+    }
+
+    public function getMetaKeyword(): ?string
+    {
+        return $this->meta_keyword;
+    }
+
+    public function setMetaKeyword(?string $meta_keyword): static
+    {
+        $this->meta_keyword = $meta_keyword;
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/admin/tags')]
 class TagsAdminController extends AbstractController
@@ -23,7 +24,7 @@ class TagsAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_tags_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $tag = new Tags();
         $form = $this->createForm(TagsType::class, $tag);
@@ -31,6 +32,10 @@ class TagsAdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $tag->setArticleQte(0);
+            $tag->setSlug($slugger->slug($tag->getTitle()));
+            if($tag->getMetaName() == '') {
+                $tag->setMetaName($tag->getTitle());
+            }
             $entityManager->persist($tag);
             $entityManager->flush();
             $this->addFlash('success', 'Tag ajouté');
@@ -45,12 +50,16 @@ class TagsAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_tags_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Tags $tag, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Tags $tag, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(TagsType::class, $tag);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tag->setSlug($slugger->slug($tag->getTitle()));
+            if($tag->getMetaName() == '') {
+                $tag->setMetaName($tag->getTitle());
+            }
             $entityManager->flush();
             $this->addFlash('success', 'Tag modifié');
 

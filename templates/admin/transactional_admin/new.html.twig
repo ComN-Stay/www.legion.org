@@ -1,0 +1,13 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Nouvel email transactionnel{% endblock %}
+
+{% block body %}
+    <h1>Nouvel email transactionnel</h1>
+
+    {{ include('admin/transactional_admin/_form.html.twig') }}
+
+    <div class="d-flex mt-3">
+        <a href="{{ path('app_transactional_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+    </div>
+{% endblock %}

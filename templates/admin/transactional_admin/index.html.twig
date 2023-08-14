@@ -1,0 +1,37 @@
+{% extends 'admin/base_admin.html.twig' %} 
+
+{% block title %}Gestion mails transactionnels{% endblock %}
+
+{% block body %}
+    <h1>Gestion mails transactionnels</h1>
+
+    <table class="table _datatable table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Sujet</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for transactional in transactionals %}
+            <tr>
+                <td>{{ transactional.subject }}</td>
+                <td>{{ transactional.description }}</td>
+                <td>
+                    <a href="{{ path('app_transactional_admin_show', {'id': transactional.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>
+                    <a href="{{ path('app_transactional_admin_edit', {'id': transactional.id}) }}"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun résultat</td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_transactional_admin_new') }}" class="btn btn-info btn-lg">Nouvel email transactionnel</a>
+{% endblock %}

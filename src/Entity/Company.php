@@ -68,9 +68,6 @@ class Company
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $short_description = null;
 
-    #[ORM\OneToMany(mappedBy: 'fk_company', targetEntity: Customer::class, orphanRemoval: true)]
-    private Collection $customers;
-
     #[ORM\OneToMany(mappedBy: 'fk_company', targetEntity: Adverts::class)]
     private Collection $adverts;
 
@@ -285,36 +282,6 @@ class Company
     public function setShortDescription(?string $short_description): static
     {
         $this->short_description = $short_description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Customer>
-     */
-    public function getCustomers(): Collection
-    {
-        return $this->customers;
-    }
-
-    public function addCustomer(Customer $customer): static
-    {
-        if (!$this->customers->contains($customer)) {
-            $this->customers->add($customer);
-            $customer->setFkCompany($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCustomer(Customer $customer): static
-    {
-        if ($this->customers->removeElement($customer)) {
-            // set the owning side to null (unless already changed)
-            if ($customer->getFkCompany() === $this) {
-                $customer->setFkCompany(null);
-            }
-        }
 
         return $this;
     }

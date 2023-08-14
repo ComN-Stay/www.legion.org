@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col-6">
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+        {{ form_end(form) }}
+    </div>
+    <div class="col-6">
+        <h4>Liste des variables disponibles</h4>
+
+        <div class="accordion" id="accordionVariables">
+            {% for table in variables %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="{{ table.table }}">
+                    <button class="accordion-button {% if loop.index != 1 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ table.table }}" aria-expanded="true" aria-controls="collapse{{ table.table }}">
+                        {{ table.name }}
+                    </button>
+                    </h2>
+                    <div id="collapse{{ table.table }}" class="accordion-collapse collapse {% if loop.index == 1 %}show{% endif %}" aria-labelledby="{{ table.table }}" data-bs-parent="#accordionVariables">
+                        <div class="accordion-body">
+                            <table>
+                                {% for column in table.columns %}
+                                    <tr>
+                                        <td><span class="pr-3">{{ column.comment }}</span></td>
+                                        <td>&#123;&#123; {{ table.table }}.{{ column.columnName }} &#125;&#125;</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

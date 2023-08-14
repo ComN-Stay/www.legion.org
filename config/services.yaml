@@ -11,6 +11,7 @@ parameters:
     kernel_upload_directory: '%kernel.project_dir%/public_html/uploads'
     public_upload_directory: '/uploads'
     google_api_key: '%env(GOOGLE_API_KEY)%'
+    transac_folder: '%kernel.project_dir%/templates/emails'
 
 services:
     # default configuration for services in *this* file
@@ -20,6 +21,9 @@ services:
         bind:
             $publicUploadDir: '%public_upload_directory%'
             $kernelUploadDir: '%kernel_upload_directory%'
+            $mailSender: '%app.email_sender%'
+            $mailFrom: '%app.email_from%'
+            $transacFolder: '%transac_folder%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -38,3 +42,6 @@ services:
     App\Service\CallGoogleApiService:
         arguments:
             $googleApiKey: '%google_api_key%'
+    App\Service\MailService:
+        arguments:
+            $mailFrom: '%app.email_from%'

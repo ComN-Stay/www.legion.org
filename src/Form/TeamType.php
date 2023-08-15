@@ -46,7 +46,7 @@ class TeamType extends AbstractType
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'help' => 'Le mot de passe doit contenir au minimum 10 caractères avec au minimum 1 minuscule, 1 majuscule, 1 chiffre et un caractère spécial parmis @ ! ? * + - _ ~',
-                'required' => is_null($builder->getData()->getId()) ? true : false,
+                'required' => false,
                 'empty_data' => '',
                 'attr' => [
                     'autocomplete' => 'new-password'

@@ -44,6 +44,11 @@ class TransactionalAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($transactional);
             $this->em->flush();
+            $file = fopen($this->transacFolder . '/' . $transactional->getTemplate() . '.html.twig', 'w+');
+            $sanitizedText = str_replace('%20', ' ', $transactional->getContent());
+            $text = '{% extends "emails/base_email.html.twig" %}{% block content %}' . $sanitizedText . '{% endblock %}';
+            fwrite($file, $text);
+            fclose($file);
 
             return $this->redirectToRoute('app_transactional_admin_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -77,7 +82,8 @@ class TransactionalAdminController extends AbstractController
             $this->em->flush();
 
             $file = fopen($this->transacFolder . '/' . $transactional->getTemplate() . '.html.twig', 'w+');
-            $text = '{% extends "emails/base_email.html.twig" %}{% block content %}' . $transactional->getContent() . '{% endblock %}';
+            $sanitizedText = str_replace('%20', ' ', $transactional->getContent());
+            $text = '{% extends "emails/base_email.html.twig" %}{% block content %}' . $sanitizedText . '{% endblock %}';
             fwrite($file, $text);
             fclose($file);
 

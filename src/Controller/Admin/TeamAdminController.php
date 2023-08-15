@@ -7,10 +7,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TeamRepository;
 use App\Form\TeamType;
 use App\Entity\Team;
+use App\Service\MailService;
 
 #[Route('/admin/team')]
 class TeamAdminController extends AbstractController
@@ -24,7 +26,13 @@ class TeamAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_team_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        UserPasswordHasherInterface $passwordHasher, 
+        ResetPasswordHelperInterface $resetPasswordHelper,
+        MailService $mail
+        ): Response
     {
         $team = new Team();
         $form = $this->createForm(TeamType::class, $team);
@@ -32,10 +40,24 @@ class TeamAdminController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plaintextPassword = $team->getPassword();
-            $hashedPassword = $passwordHasher->hashPassword($team, $plaintextPassword);
-            $team->setPassword($hashedPassword);
+            if($plaintextPassword != '') {
+                $hashedPassword = $passwordHasher->hashPassword($team, $plaintextPassword);
+                $team->setPassword($hashedPassword);
+            } 
             $entityManager->persist($team);
             $entityManager->flush();
+            if($plaintextPassword == '')  {
+                $resetToken = $resetPasswordHelper->generateResetToken($team);
+                $mail->sendMail([
+                    'to' => $team->getEmail(),
+                    'tpl' => 'admin_password_create',
+                    'vars' => [
+                        'team' => $team,
+                        'resetToken' => $resetToken,
+                    ]
+                ]);
+            }
+
             $this->addFlash('success', 'Création effectuée');
 
             return $this->redirectToRoute('app_team_index', [], Response::HTTP_SEE_OTHER);

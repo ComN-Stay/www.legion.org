@@ -34,11 +34,11 @@ class MailService
     * $datas Array
     * to : recipient email : required
     * tpl : email transactionnal template
-    * entities : Array of objects for message variables (['user' => User object, ...])
+    * vars : Array of objects and vars for message variables (['mavar1' => 'var1 content', ..., 'user' => User object, ...])
     * usage eg. : $mailService->sendMail([
     *               'to' => 'email@domain.tld',
     *               'tpl' => 'template_name',
-    *               'entities' => ['user' => $userRepository->find($id), ...]
+    *               'entities' => ['user' => User object, ...]
     *              ]);
     */
     public function sendMail($datas)
@@ -48,7 +48,7 @@ class MailService
             return false;
         }
 
-        $htmlMsg = $this->twig->render('emails/' . $datas['tpl'] . '.html.twig', $datas['entities']);
+        $htmlMsg = $this->twig->render('emails/' . $datas['tpl'] . '.html.twig', $datas['vars']);
         dd($htmlMsg);
 
         $email = new Email();

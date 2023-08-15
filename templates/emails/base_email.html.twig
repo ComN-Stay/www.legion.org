@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
     </head>
     <body>
-        <img src="/assets/img/logo.png" height="150px" width="auto">
+        <img src="{{ app.request.schemeAndHttpHost }}/assets/img/logo.png" height="150px" width="auto">
         <div>{% block content %}{{ content|raw }}{% endblock %}</div>
         <div>© 2023 - Légion</div>
     </body>

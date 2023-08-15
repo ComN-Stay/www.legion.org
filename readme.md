@@ -27,9 +27,9 @@ MESSENGER_TRANSPORT_DSN=doctrine://default?auto_setup=0
 ###< symfony/messenger ###
 
 ###> symfony/mailer ###
-MAILER_DSN=mailjet+smtp://efe25655374955cac6c8decf83e3f028:1a07b2e881abcbead3d516783e57ebbf@default
-MAILER_SENDER=xavier.tezza@comnstay.fr
-MAILER_FROM='Légion <xavier.tezza@comnstay.fr>'
+MAILER_DSN=smtp://localhost:1025
+MAILER_SENDER=contact@legion.local
+MAILER_FROM='Légion <contact@legion.local>'
 ###< symfony/mailer ###
 </code></pre>
 - Dans la console :
@@ -41,3 +41,7 @@ création de la BDD en local
 
 lancement du serveur de symfony
 <pre><code>symfony server:start -d</code></pre>
+
+Pour pouvoir tester les envois de mail :
+- installer Mailcatcher en local : https://mailcatcher.me/
+- modifier le php.ini : rechercher, décommenter et modifier la ligne "sendmail_path" et mettre sendmail_path = /usr/bin/env catchmail -f contact@legion.local

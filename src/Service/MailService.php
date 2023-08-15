@@ -5,6 +5,7 @@ namespace App\Service;
 use Twig\Environment;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
+use Exception;
 use App\Repository\TransactionalRepository;
 
 
@@ -34,11 +35,15 @@ class MailService
     * to : recipient email : required
     * tpl : email transactionnal template
     * vars : Array of objects and vars for message variables (['mavar1' => 'var1 content', ..., 'user' => User object, ...])
-    * usage eg. : $mailService->sendMail([
-    *               'to' => 'email@domain.tld',
-    *               'tpl' => 'template_name',
-    *               'entities' => ['user' => User object, ...]
-    *              ]);
+    * usage eg. : $datas = [
+                    'to' => 'recipient@domain.tld',
+                    'tpl' => 'template_name',
+                    'vars' => [
+                        'user' => $userRepository->find(1), // object
+                        'url' => 'https://www.mydomain.tld', // var
+                        ...
+                    ]
+                ];
     */
     public function sendMail($datas)
     {
@@ -48,7 +53,6 @@ class MailService
         }
 
         $htmlMsg = $this->twig->render('emails/' . $datas['tpl'] . '.html.twig', $datas['vars']);
-        dd($htmlMsg);
 
         $email = new Email();
         $email->from($this->mailFrom)
@@ -57,10 +61,14 @@ class MailService
             ->priority(Email::PRIORITY_HIGH)
             ->subject($template->getSubject())
             ->html($htmlMsg);
-
-        $this->mailer->send($email);
         
-        return true;
+        try {
+            $this->mailer->send($email);
+        } catch (Exception $e) {
+            dd('Exception reçue : ',  $e->getMessage());
+        }
+        
+        
     }
     
 }

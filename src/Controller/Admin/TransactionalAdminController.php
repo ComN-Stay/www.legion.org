@@ -29,7 +29,6 @@ class TransactionalAdminController extends AbstractController
     #[Route('/', name: 'app_transactional_admin_index', methods: ['GET'])]
     public function index(TransactionalRepository $transactionalRepository, MailService $mailService, UserRepository $userRepository): Response
     {
-    
         return $this->render('admin/transactional_admin/index.html.twig', [
             'transactionals' => $transactionalRepository->findAll(),
         ]);

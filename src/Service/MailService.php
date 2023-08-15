@@ -2,11 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Transactional;
-use App\Repository\TransactionalRepository;
 use Twig\Environment;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Mailer\MailerInterface;
+use App\Repository\TransactionalRepository;
 
 
 class MailService

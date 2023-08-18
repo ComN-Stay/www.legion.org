@@ -27,10 +27,10 @@ class StatisticsAdminController extends AbstractController
             $end = new \DateTime(date('Y-m-d', strtotime('+1 day')));
             $endDate = $end->format('Y-m-d');
             $endAff = new \DateTime(date('Y-m-d'));
-            $endAffDate = $endAff->format('Y-m-d');
         } else {
             $end = new \DateTime($request->request->get('end'));
             $endDate = $end->format('Y-m-d');
+            $endAff = new \DateTime($request->request->get('end'));
         }
         $stats = $statisticsRepository->findVisitsBetween($startDate, $endDate);
         $datas = [];

@@ -9,6 +9,7 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/migrations": "*",
         "doctrine/orm": "^2.15",
         "geoip2/geoip2": "~2.0",
         "mailjet/mailjet-bundle": "*",

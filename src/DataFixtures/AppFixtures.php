@@ -28,6 +28,7 @@ use App\Entity\Medias;
 use App\Entity\Gender;
 use App\Entity\CompanyType;
 use App\Entity\Company;
+use App\Entity\Articles;
 use App\Entity\Adverts;
 
 class AppFixtures extends Fixture
@@ -65,6 +66,7 @@ class AppFixtures extends Fixture
         $this->petitionsFixtures($manager);
         $this->tagsFixtures($manager);
         $this->transactionalFixtures($manager);
+        $this->mediasArticles($manager, 200);
     }
 
     protected function genderFixtures($manager): void 
@@ -149,6 +151,7 @@ class AppFixtures extends Fixture
         $progressBar->setProgressCharacter("<fg=green>➤</>");
         
         $progressBar->setRedrawFrequency(10);
+        $progressBar->setMessage("Starting...", 'status');
         $progressBar->start();
 
         for($i=1; $i<=$nb; $i++) {
@@ -185,6 +188,7 @@ class AppFixtures extends Fixture
         $progressBar->setBarCharacter('<fg=green>⚬</>');
         $progressBar->setEmptyBarCharacter("<fg=red>⚬</>");
         $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setMessage("Starting...", 'status');
         $progressBar->start();
 
         for($i=1; $i<=$nb; $i++) {
@@ -237,6 +241,7 @@ class AppFixtures extends Fixture
         $progressBar->setBarCharacter('<fg=green>⚬</>');
         $progressBar->setEmptyBarCharacter("<fg=red>⚬</>");
         $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setMessage("Starting...", 'status');
         $progressBar->start();
 
         for($i=1; $i<=$nb; $i++) {
@@ -311,6 +316,7 @@ class AppFixtures extends Fixture
         $progressBar->setBarCharacter('<fg=green>⚬</>');
         $progressBar->setEmptyBarCharacter("<fg=red>⚬</>");
         $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setMessage("Starting...", 'status');
         $progressBar->start();
 
         $i = 1;
@@ -407,6 +413,55 @@ class AppFixtures extends Fixture
         $this->output->writeln('<info>Transactionals fixtures loaded</info>');
     }
 
+    public function mediasArticles($manager, $nb)
+    {
+        $this->output->writeln('<info>Loading Articles fixtures ...</info>');
+        $progressBar = new ProgressBar($this->output, $nb);
+        $progressBar->setFormat("<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n🏁  %estimated:-21s% %memory:21s%");
+        $progressBar->setBarCharacter('<fg=green>⚬</>');
+        $progressBar->setEmptyBarCharacter("<fg=red>⚬</>");
+        $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setMessage("Starting...", 'status');
+        $progressBar->start();
+
+        for($i=1; $i<=$nb; $i++) {
+            $article[$i] = new Articles;
+            $title = $this->faker->catchPhrase();
+            $article[$i]->setTitle($title);
+            $article[$i]->setShortDescription($this->faker->paragraphs(1, true));
+            $article[$i]->setContent($this->faker->paragraphs(rand(2, 4), true));
+            $article[$i]->setDateAdd(new \DateTime(date('Y-m-d')));
+            $article[$i]->setVisits(rand(3,658));
+            $article[$i]->setStatus(($i % 2 == 0) ? false : true);
+            $article[$i]->setSlug($this->slugger->slug($title));
+            $article[$i]->setMetaName($title);
+            $article[$i]->setMetaDescription($this->faker->catchPhrase());
+            $article[$i]->setLogo('logo' . rand(1, 10) . '.jpg');
+            for($j=0;$j<=4;$j++) {
+                $article[$i]->addTag($this->getRandomReference('App\Entity\Tags', $manager));
+            }
+            $manager->persist($article[$i]);
+            if(($i % 3 == 0)) {
+                $article[$i]->setFkUser($this->getRandomReference('App\Entity\User', $manager));
+            } else {
+                $article[$i]->setFkTeam($this->getRandomReference('App\Entity\Team', $manager));
+            }
+            $manager->persist($article[$i]);
+            if ($i == round(($i/$nb)*33)) {
+                $progressBar->setMessage("All right :)", 'status');
+            } elseif($i == round(($i/$nb)*66)) {
+                $progressBar->setMessage("Almost there...", 'status');
+            }
+            $progressBar->advance();
+            usleep(1000);
+        }
+        $progressBar->setMessage("Jobs Done !", 'status');
+        $manager->flush();
+        $progressBar->finish();
+        $this->output->writeln('');
+        $this->output->writeln('<info>Articles fixtures loaded</info>');
+    }
+
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);
     }
@@ -441,6 +496,7 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `transactional`; 
             DROP TABLE IF EXISTS `user`; 
             DROP TABLE IF EXISTS `visitors`;
+            DROP TABLE IF EXISTS `articles`;
             SET FOREIGN_KEY_CHECKS=1;
             ';
 

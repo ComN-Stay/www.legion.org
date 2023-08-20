@@ -1,0 +1,58 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Article{% endblock %}
+
+{% block body %}
+    <h1>{{ article.title }}</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Résumé</th>
+                <td>{{ article.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Contenu</th>
+                <td>{{ article.content|raw }}</td>
+            </tr>
+            <tr>
+                <th>Date d'édition</th>
+                <td>{{ article.dateAdd ? article.dateAdd|date('d/m/Y') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de visites</th>
+                <td>{{ article.visits }}</td>
+            </tr>
+            <tr>
+                <th>Statut</th>
+                <td>{{ article.status ? 'En ligne' : 'En attente' }}</td>
+            </tr>
+            <tr>
+                <th>Meta title</th>
+                <td>{{ article.metaName }}</td>
+            </tr>
+            <tr>
+                <th>Meta description</th>
+                <td>{{ article.metaDescription }}</td>
+            </tr>
+            <tr>
+                <th>Meta keywords</th>
+                <td>{{ article.metaKeywords }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Tags</h4>
+    <ul>
+        {% for tag in tags %}
+            <li>{{ tag.title() }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('app_articles_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+<div class="d-flex mt-3">
+    <a href="{{ path('app_articles_admin_edit', {'id': article.id}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-pen-to-square fa-lg mr-3"></i>Editer</a>
+
+    {{ include('admin/articles_admin/_delete_form.html.twig') }}
+</div>
+{% endblock %}

@@ -202,4 +202,9 @@ class Team implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getFullname(): string
+    {
+        return (string) $this->firstname . ' ' . $this->lastname;
+    }
 }

@@ -1,0 +1,50 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+    <h1>Articles</h1>
+
+    <table class="table _datatable table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Résumé</th>
+                <th>Visites</th>
+                <th>Statut</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in articles %}
+            <tr>
+                <td>{{ article.title }}</td>
+                <td>{{ article.shortDescription }}</td>
+                <td>{{ article.visits }}</td>
+                <td>
+                    <input type="checkbox" class="_activeButton" data-id="{{ article.id }}" data-entity="articles" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="En ligne" data-off="En attente" {{ article.status ? 'checked' : '' }}>
+                </td>
+                <td class="action_cell">
+                    <a class="form_list" href="{{ path('app_articles_admin_show', {'id': article.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>
+                    <a class="form_list" href="{{ path('app_articles_admin_edit', {'id': article.id}) }}"><i class="fa-solid fa-pen-to-square fa-lg ml-3"></i></a>
+                    <form class="form_list" method="post" action="{{ path('app_articles_admin_delete', {'id': article.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id) }}">
+                        <button class="btn neg-1 _deleteBtn"><i class="fa-solid fa-trash-can fa-lg"></i></button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">Aucun résultat</td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_articles_admin_new') }}" class="btn btn-info btn-lg">Nouvel article</a>
+{% endblock %}

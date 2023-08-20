@@ -228,3 +228,11 @@ label.required:after {
     margin-bottom: 0.5rem;
     min-width: fit-content;
 }
+
+#articles_tags {
+    display: flex;
+}
+
+#articles_tags .form-check {
+    margin-right: 1.3rem;
+}

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\CompanyRepository;
 use App\Repository\AdvertsRepository;
+use App\Repository\ArticlesRepository;
 use App\Repository\PetitionsRepository;
 
 #[Route('/admin')]
@@ -16,7 +17,8 @@ class AdminController extends AbstractController
     public function index(
         CompanyRepository $companyRepository,
         AdvertsRepository $advertsRepository,
-        PetitionsRepository $petitionsRepository
+        PetitionsRepository $petitionsRepository,
+        ArticlesRepository $articlesRepository
     ): Response
     {
         $boxes = [];
@@ -35,6 +37,10 @@ class AdminController extends AbstractController
         $bestAdverts = $advertsRepository->findBy(['status' => true], ['visits' => 'DESC'], 5);
         if($bestAdverts > 0) {
             $boxes['bestAdverts'] = $bestAdverts;
+        }
+        $bestArticles = $articlesRepository->findBy(['status' => true], ['visits' => 'DESC'], 5);
+        if($bestArticles > 0) {
+            $boxes['bestArticles'] = $bestArticles;
         }
         $petitions = count($petitionsRepository->findBy(['status' => 0]));
         if($petitions > 0) {

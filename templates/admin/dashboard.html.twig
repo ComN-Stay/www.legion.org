@@ -111,7 +111,33 @@
                             <tr>
                                 <td>{{ ads.visits }}</td>
                                 <td>{{ ads.title }}</td>
-                                <td>{{ ads.getFkCompany().name }}
+                                <td>{{ ads.getFkCompany().name }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        {% if boxes.bestArticles is not null %}
+            <div class="card mr-2">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
+                    <h3>Meilleurs articles</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        {% for article in boxes.bestArticles %}
+                            <tr>
+                                <td>{{ article.visits }}</td>
+                                <td>{{ article.title }}</td>
+                                <td>
+                                    {% if article.getFkTeam() is not null %}
+                                        {{ article.getFkTeam().firstname }} {{ article.getFkTeam().lastname }}
+                                    {% elseif article.getFkUser() is not null %}
+                                        {{ article.getFkUser().firstname }} {{ article.getFkUser().lastname }}
+                                    {% else %}
+                                        Anonyme
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </table>

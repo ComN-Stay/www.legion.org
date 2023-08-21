@@ -3,7 +3,16 @@
 {% block title %}Article{% endblock %}
 
 {% block body %}
-    <h1>{{ article.title }}</h1>
+    <div class="row">
+        <div class="col-3">
+            {% if article.logo != "" %}
+                <img src="/uploads/{{ article.logo }}" class="mr-2" width="250px" height="auto">
+            {% endif %}
+        </div>
+        <div class="col-9">
+            <h1>{{ article.title }}</h1>
+        </div>
+    </div>
 
     <table class="table">
         <tbody>
@@ -43,11 +52,18 @@
     </table>
 
     <h4>Tags</h4>
-    <ul>
+    <div class="d-flex">
         {% for tag in tags %}
-            <li>{{ tag.title() }}</li>
+            {{ tag.title() }}
         {% endfor %}
-    </ul>
+    </div>
+
+    <h4>Médias</h4>
+    <div class="d-flex mb-3">
+        {% for media in medias %}
+            <img src="/uploads/{{ media.file }}" class="mr-2" width="150px" height="auto">
+        {% endfor %}
+    </div>
 
     <a href="{{ path('app_articles_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
 <div class="d-flex mt-3">

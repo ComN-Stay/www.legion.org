@@ -58,9 +58,13 @@ class Articles
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
+    #[ORM\OneToMany(mappedBy: 'fk_article', targetEntity: ArticlesMedias::class, orphanRemoval: true)]
+    private Collection $articleMedias;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->articleMedias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -244,6 +248,36 @@ class Articles
     public function setLogo(?string $logo): static
     {
         $this->logo = $logo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ArticlesMedias>
+     */
+    public function getArticleMedias(): Collection
+    {
+        return $this->articleMedias;
+    }
+
+    public function addArticleMedia(ArticlesMedias $articleMedia): static
+    {
+        if (!$this->articleMedias->contains($articleMedia)) {
+            $this->articleMedias->add($articleMedia);
+            $articleMedia->setFkArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticleMedia(ArticlesMedias $articleMedia): static
+    {
+        if ($this->articleMedias->removeElement($articleMedia)) {
+            // set the owning side to null (unless already changed)
+            if ($articleMedia->getFkArticle() === $this) {
+                $articleMedia->setFkArticle(null);
+            }
+        }
 
         return $this;
     }

@@ -53,11 +53,10 @@ class CompanyAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form['logo']->getData();
             if ($file) {
-                $file_name = $file_uploader->upload($file);
-                if (null !== $file_name) {
-                    $full_path = $file_name;
+                $fileName = $file_uploader->upload($file);
+                if (null !== $fileName) {
+                    $company->setLogo($fileName);
                 }
-                $company->setLogo($full_path);
             }
             $address = urlencode($company->getAddress() . ' ' . $company->getZipCode() . ' ' . $company->getTown());
             $geolocalization = $callGoogleApiService->getGeolocalization($address);
@@ -123,11 +122,10 @@ class CompanyAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form['logo']->getData();
             if ($file) {
-                $file_name = $fileUploader->upload($file);
-                if (null !== $file_name) {
-                    $full_path = $file_name;
+                $fileName = $fileUploader->upload($file);
+                if (null !== $fileName) {
+                    $company->setLogo($fileName);
                 }
-                $company->setLogo($full_path);
             }
             if($company->getLatitude() == '' || $company->getLatitude() == null) {
                 $address = urlencode($company->getAddress() . ' ' . $company->getZipCode() . ' ' . $company->getTown());

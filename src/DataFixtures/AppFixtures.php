@@ -5,13 +5,9 @@ namespace App\DataFixtures;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -30,6 +26,8 @@ use App\Entity\CompanyType;
 use App\Entity\Company;
 use App\Entity\Articles;
 use App\Entity\Adverts;
+use App\Entity\ArticlesMedias;
+use App\Repository\ArticlesRepository;
 
 class AppFixtures extends Fixture
 {
@@ -37,16 +35,16 @@ class AppFixtures extends Fixture
     private $passwordHasher;
     private $slugger;
     private $output;
-    private $params;
     private $kernel;
+    private $articlesRepository;
     
-    public function __construct(UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface, ParameterBagInterface $params, KernelInterface $kernel)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface, ParameterBagInterface $params, KernelInterface $kernel, ArticlesRepository $articlesRepository)
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create('fr_FR');
         $this->slugger = $sluggerInterface;
-        $this->params = $params;
         $this->kernel = $kernel;
+        $this->articlesRepository = $articlesRepository;
     }
 
     public function load(ObjectManager $manager): void
@@ -58,7 +56,7 @@ class AppFixtures extends Fixture
         $this->teamFixtures($manager);
         $this->companyTypeFixtures($manager);
         $this->companyFixtures($manager, 30);
-        $this->usersFixtures($manager, 300);
+        $this->usersFixtures($manager, 100);
         $this->petsTypeFixtures($manager);
         $this->adsFixtures($manager, 500);
         $this->mediasFixtures($manager, 2000);
@@ -66,7 +64,8 @@ class AppFixtures extends Fixture
         $this->petitionsFixtures($manager);
         $this->tagsFixtures($manager);
         $this->transactionalFixtures($manager);
-        $this->mediasArticles($manager, 200);
+        $this->ArticlesFixtures($manager, 200);
+        $this->ArticleMediasFixtures($manager);
     }
 
     protected function genderFixtures($manager): void 
@@ -118,6 +117,16 @@ class AppFixtures extends Fixture
         $team->setFkGender($this->getReferencedObject(Gender::class, 1, $manager));
         $team->setFirstname('Angie');
         $team->setLastname('RACCA');
+        $manager->persist($team);
+
+        $team = new Team;
+        $team->setEmail('contact.site.com.on@gmail.com');
+        $hashedPassword = $this->passwordHasher->hashPassword($team, 'Legion@2023');
+        $team->setPassword($hashedPassword);
+        $team->setRoles(['ROLE_SUPER_ADMIN']);
+        $team->setFkGender($this->getReferencedObject(Gender::class, 1, $manager));
+        $team->setFirstname('Muriel');
+        $team->setLastname('THOMAS');
         $manager->persist($team);
 
         $manager->flush();
@@ -320,7 +329,7 @@ class AppFixtures extends Fixture
         $progressBar->start();
 
         $i = 1;
-        $begin = new \DateTime('2012-01-01');
+        $begin = new \DateTime(date('Y-m-d'));
         $begin->modify('-600 day');
         $end = new \DateTime(date('Y-m-d'));
         $end->modify('+1 day');
@@ -413,7 +422,7 @@ class AppFixtures extends Fixture
         $this->output->writeln('<info>Transactionals fixtures loaded</info>');
     }
 
-    public function mediasArticles($manager, $nb)
+    public function ArticlesFixtures($manager, $nb)
     {
         $this->output->writeln('<info>Loading Articles fixtures ...</info>');
         $progressBar = new ProgressBar($this->output, $nb);
@@ -447,9 +456,9 @@ class AppFixtures extends Fixture
                 $article[$i]->setFkTeam($this->getRandomReference('App\Entity\Team', $manager));
             }
             $manager->persist($article[$i]);
-            if ($i == round(($i/$nb)*33)) {
+            if ($i > round(($i/$nb)*33)) {
                 $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/$nb)*66)) {
+            } elseif($i > round(($i/$nb)*66)) {
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
@@ -460,6 +469,42 @@ class AppFixtures extends Fixture
         $progressBar->finish();
         $this->output->writeln('');
         $this->output->writeln('<info>Articles fixtures loaded</info>');
+    }
+
+    public function ArticleMediasFixtures($manager)
+    {
+        $articles = $this->articlesRepository->findAll();
+        $nb = count($articles);
+        $i = 1;
+        $this->output->writeln('<info>Loading Articles medias fixtures ...</info>');
+        $progressBar = new ProgressBar($this->output, $nb);
+        $progressBar->setFormat("<fg=white;bg=cyan> %status:-45s%</>\n%current%/%max% [%bar%] %percent:3s%%\n🏁  %estimated:-21s% %memory:21s%");
+        $progressBar->setBarCharacter('<fg=green>⚬</>');
+        $progressBar->setEmptyBarCharacter("<fg=red>⚬</>");
+        $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setMessage("Starting...", 'status');
+        $progressBar->start();
+        foreach($articles as $article) {
+            for($j=1; $j<=4; $j++) {
+                $media[$i][$j] = new ArticlesMedias;
+                $media[$i][$j]->setTitle($this->faker->catchPhrase());
+                $media[$i][$j]->setFile('logo' . rand(1, 10) . '.jpg');
+                $media[$i][$j]->setFkArticle($article);
+                $manager->persist($media[$i][$j]);
+                if ($i > round(($i/$nb)*33)) {
+                    $progressBar->setMessage("All right :)", 'status');
+                } elseif($i > round(($i/$nb)*66)) {
+                    $progressBar->setMessage("Almost there...", 'status');
+                }
+                $progressBar->advance();
+                usleep(1000);
+            }
+        }
+        $progressBar->setMessage("Jobs Done !", 'status');
+        $manager->flush();
+        $progressBar->finish();
+        $this->output->writeln('');
+        $this->output->writeln('<info>Articles medias fixtures loaded</info>');
     }
 
     protected function getReferencedObject(string $className, int $id, object $manager) {

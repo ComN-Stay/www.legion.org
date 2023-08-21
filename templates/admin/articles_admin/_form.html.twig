@@ -1,4 +1,51 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+    <div class="row">
+        <div class="col-3">
+            {{ form_row(form.status) }}
+            {{ form_row(form.logo) }}
+            {% if article.logo != '' %}
+                <div>
+                    <img src="/uploads/{{ article.logo }}" class="img-responsive" width="100%" height="auto">
+                    <button type="button" class="btn btn-danger btn-sm _deleteLogo mt-2" data-entity="articles" data-id="{{ article.id }}">Supprimer le logo</button>
+                </div>
+            {% endif %}
+            {{ form_row(form.meta_name) }}
+            {{ form_row(form.meta_description) }}
+            {{ form_row(form.meta_keywords) }}
+            {{ form_row(form.fk_team) }}
+            {{ form_row(form.fk_user) }}
+        </div>
+        <div class="col-9">
+            {{ form_row(form.title) }}
+            {{ form_row(form.short_description) }}
+            {{ form_row(form.content) }}
+        </div>
+    </div>
+    <h4>Tags</h4>
+    <div class="d-flex">
+        {{ form_row(form.tags) }}
+    </div>
+    <button class="btn btn-success mt-1 mb-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
+
+<h4>Médias</h4>
+<form name="articles_medias" method="post" enctype="multipart/form-data" action="{{ path('app_articles_medias_admin_new') }}">
+    <div class="row">
+        <div class="col-6">
+            {{ form_row(formMedia.title) }}
+        </div>
+        <div class="col-6">
+            {{ form_row(formMedia.file) }}
+        </div>
+    </div>
+    <input type="hidden" name="fk_article" value="{{ article.id }}">
+    <button class="btn btn-success mb-3">Enregistrer ce média</button>
+{{ form_end(formMedia) }}    
+    <div class="d-flex">
+        {% for media in medias %}
+            <div>
+                <img src="/uploads/{{ media.file }}" class="mr-2 mb-1" width="150px" height="auto"><br />
+                <button type="button" class="btn btn-danger btn-sm _deleteLogo mt-2" data-entity="articlesMedias" data-id="{{ media.id }}">Supprimer ce média</button>
+            </div>
+        {% endfor %}
+    </div>

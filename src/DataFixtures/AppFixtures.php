@@ -206,14 +206,15 @@ class AppFixtures extends Fixture
 
         for($i=1; $i<=$nb; $i++) {
             $user[$i] = new User;
-            $user[$i]->setEmail('user' . $i . '@comnstay.fr');
+            $user[$i]->setEmail('user' . $i . '@legion.local');
             $gender = ($i % 2 == 0) ? 1 : 2;
             $user[$i]->setFkGender($this->getReferencedObject(Gender::class, $gender, $manager));
             $user[$i]->setFirstname($this->faker->firstname());
             $user[$i]->setLastname($this->faker->lastname());
             $hashedPassword = $this->passwordHasher->hashPassword($user[$i], 'Legion@2023');
             $user[$i]->setPassword($hashedPassword);
-            $user[$i]->setRoles(['ROLE_IDENTIFIED']);
+            $roles = ['ROLE_IDENTIFIED', 'ROLE_CUSTOMER', 'ROLE_ADMIN_CUSTOMER'];
+            $user[$i]->setRoles([array_rand(array_flip($roles), 1)]);
             $manager->persist($user[$i]);
             if ($i == round(($i/$nb)*33)) {
                 $progressBar->setMessage("All right :)", 'status');

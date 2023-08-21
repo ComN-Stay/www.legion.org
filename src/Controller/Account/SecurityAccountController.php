@@ -8,6 +8,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\UserType;
+use App\Entity\User;
 
 #[Route(path: '/account')]
 class SecurityAccountController extends AbstractController
@@ -28,7 +30,10 @@ class SecurityAccountController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('account/account_login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+        return $this->render('account/account_login.html.twig', [
+            'last_username' => $lastUsername, 
+            'error' => $error,
+        ]);
     }
 
     #[Route(path: '/logout', name: 'account_logout')]

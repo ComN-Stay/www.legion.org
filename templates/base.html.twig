@@ -17,10 +17,10 @@
                 <li><a href="">Les articles</a></li>
                 {% if app.user is null %}
                     <li><a href="">Créer mon compte</a></li>
-                    <li><a href="">Connexion</a></li>
+                    <li><a href="{{ path('account_login') }}">Connexion</a></li>
                 {% else %}
-                    <li><a href="">Mon compte</a></li>
-                    <li><a href="">Déconnexion</a></li>
+                    <li><a href="{{ path('app_account') }}">Mon compte</a></li>
+                    <li><a href="{{ path('account_logout') }}">Déconnexion</a></li>
                 {% endif %}
             </ul>
         </nav>

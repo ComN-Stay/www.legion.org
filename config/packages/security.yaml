@@ -13,17 +13,13 @@ security:
             entity:
                 class: App\Entity\Team
                 property: email
-        app_customer_provider:
-            entity:
-                class: App\Entity\Customer
-                property: email
         app_user_provider:
             entity:
                 class: App\Entity\User
                 property: email
         all_users:
             chain:
-                providers: [app_admin_provider, app_customer_provider, app_user_provider]
+                providers: [app_admin_provider, app_user_provider]
 
     # we have make 2 firewall to separate admin application and user application.
     firewalls:
@@ -54,35 +50,8 @@ security:
                 path: /
                 always_remember_me: true
 
-        customer_secure_area:
-            pattern: ^/customer
-            provider: app_customer_provider
-            form_login:
-                login_path: customer_login
-                check_path: customer_login
-                default_target_path: app_customer
-                username_parameter: login[email]
-                password_parameter: login[password]
-                enable_csrf: true
-            logout:
-                path: customer_logout
-                # where to redirect after logout
-                target: app_home
-                invalidate_session: true
-            # configuring the maximum login attempts (per minute)
-            login_throttling:
-                max_attempts: 3
-            custom_authenticator: App\Security\CustomerAuthenticator
-            entry_point: form_login
-
-            remember_me:
-                secret: '%kernel.secret%'
-                lifetime: 604800
-                path: /
-                always_remember_me: true
-
         user_secure_area:
-            pattern: ^/account
+            pattern: ^/
             provider: app_user_provider
             form_login:
                 login_path: account_login
@@ -111,7 +80,7 @@ security:
         main:
             lazy: true
             pattern: ^/
-            provider: app_customer_provider
+            provider: app_user_provider
 
 
             # activate different ways to authenticate
@@ -132,8 +101,6 @@ security:
     access_control:
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/customer/login, roles: PUBLIC_ACCESS }
-        - { path: ^/customer, roles: ROLE_CUSTOMER }
         - { path: ^/account/login, roles: PUBLIC_ACCESS }
         - { path: ^/account, roles: ROLE_IDENTIFIED }
 

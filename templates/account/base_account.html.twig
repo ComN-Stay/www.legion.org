@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon compte{% endblock %}
+
+{% block body %}
+<div>
+    <ul>
+        <li><a href="">Mon profil</a></li>
+        <li><a href="">Mes articles</a></li>
+        {% if 'ROLE_CUSTOMER' in app.user.roles or 'ROLE_ADMIN_CUSTOMER' in app.user.roles %}
+            <li><a href="">Mes annonces</a></li>
+            <li><a href="">Déposer une annonce</a></li>
+            <li><a href="">Mes pétitions</a></li>
+            <li><a href="">Proposer une pétition</a></li>
+        {% endif %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles %}
+            <li><a href="">Mon organisation</a></li>
+            <li><a href="">Mon abonnement</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% block content %}{% endblock %}
+
+{% endblock %}

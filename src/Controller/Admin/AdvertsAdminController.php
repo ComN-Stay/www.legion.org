@@ -26,7 +26,8 @@ class AdvertsAdminController extends AbstractController
         }
         return $this->render('admin/adverts_admin/index.html.twig', [
             'adverts' => $adverts,
-            'page_title' => ($status == null) ? 'Toutes les annonces' : 'Annonces en attente de validation'
+            'page_title' => ($status == null) ? 'Toutes les annonces' : 'Annonces en attente de validation',
+            'sidebar' => 'ads'
         ]);
     }
 
@@ -36,7 +37,8 @@ class AdvertsAdminController extends AbstractController
         return $this->render('admin/adverts_admin/show.html.twig', [
             'advert' => $advert,
             'medias' => $mediasRepository->findBy(['fk_advert' => $advert->getId()]),
-            'mediaFolder' => $publicUploadDir
+            'mediaFolder' => $publicUploadDir,
+            'sidebar' => 'ads'
         ]);
     }
 

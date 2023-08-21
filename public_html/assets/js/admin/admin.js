@@ -74,7 +74,7 @@ $(document).ready(function () {
 
 /****** sidebar dropdown *********/
 document.addEventListener("DOMContentLoaded", function(){
-    document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+    document.querySelectorAll('.sidebar .has-icon').forEach(function(element){
         element.addEventListener('click', function (e) {
             document.querySelectorAll('.show').forEach(function(openBlock){
                 new bootstrap.Collapse(openBlock);

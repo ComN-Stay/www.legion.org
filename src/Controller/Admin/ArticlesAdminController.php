@@ -29,7 +29,8 @@ class ArticlesAdminController extends AbstractController
             $articles = $articlesRepository->findBy(['status' => false]);
         }
         return $this->render('admin/articles_admin/index.html.twig', [
-            'articles' => $articles
+            'articles' => $articles,
+            'sidebar' => 'redac'
         ]);
     }
 
@@ -58,6 +59,7 @@ class ArticlesAdminController extends AbstractController
         return $this->render('admin/articles_admin/new.html.twig', [
             'article' => $article,
             'form' => $form,
+            'sidebar' => 'redac'
         ]);
     }
 
@@ -101,7 +103,8 @@ class ArticlesAdminController extends AbstractController
         return $this->render('admin/articles_admin/show.html.twig', [
             'article' => $article,
             'tags' => $article->getTags()->toArray(),
-            'medias' => $article->getArticleMedias()->toArray()
+            'medias' => $article->getArticleMedias()->toArray(),
+            'sidebar' => 'redac'
         ]);
     }
 
@@ -138,7 +141,8 @@ class ArticlesAdminController extends AbstractController
             'article' => $article,
             'form' => $form,
             'medias' => $article->getArticleMedias()->toArray(),
-            'formMedia' => $mediaForm
+            'formMedia' => $mediaForm,
+            'sidebar' => 'redac'
         ]);
     }
 

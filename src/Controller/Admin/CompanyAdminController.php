@@ -32,6 +32,7 @@ class CompanyAdminController extends AbstractController
             'company_type' => $type->getName(),
             'idType' => $idType,
             'companies' => $companyRepository->findBy($conditions),
+            'sidebar' => 'users'
         ]);
     }
 
@@ -77,7 +78,8 @@ class CompanyAdminController extends AbstractController
             'idType' => $idType,
             'typeName' => $companyType->getName(),
             'form' => $form,
-            'logoDir' => $publicUploadDir
+            'logoDir' => $publicUploadDir,
+            'sidebar' => 'users'
         ]);
     }
 
@@ -87,7 +89,8 @@ class CompanyAdminController extends AbstractController
         return $this->render('admin/company_admin/show.html.twig', [
             'idType' => $company->getFkCompanyType()->getId(),
             'company' => $company,
-            'mediaFolder' => $publicUploadDir
+            'mediaFolder' => $publicUploadDir,
+            'sidebar' => 'users'
         ]);
     }
 
@@ -146,7 +149,8 @@ class CompanyAdminController extends AbstractController
         return $this->render('admin/company_admin/edit.html.twig', [
             'company' => $company,
             'form' => $form,
-            'idType' => $company->getFkCompanyType()->getId()
+            'idType' => $company->getFkCompanyType()->getId(),
+            'sidebar' => 'users'
         ]);
     }
 

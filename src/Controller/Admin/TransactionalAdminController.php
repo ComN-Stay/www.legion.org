@@ -31,6 +31,7 @@ class TransactionalAdminController extends AbstractController
     {
         return $this->render('admin/transactional_admin/index.html.twig', [
             'transactionals' => $transactionalRepository->findAll(),
+            'sidebar' => 'params'
         ]);
     }
 
@@ -56,7 +57,8 @@ class TransactionalAdminController extends AbstractController
         return $this->render('admin/transactional_admin/new.html.twig', [
             'transactional' => $transactional,
             'form' => $form,
-            'variables' => $this->listTables()
+            'variables' => $this->listTables(),
+            'sidebar' => 'params'
         ]);
     }
 
@@ -68,7 +70,8 @@ class TransactionalAdminController extends AbstractController
         ]);
         return $this->render('admin/transactional_admin/show.html.twig', [
             'transactional' => $transactional,
-            'template' => $template
+            'template' => $template,
+            'sidebar' => 'params'
         ]);
     }
 
@@ -93,7 +96,8 @@ class TransactionalAdminController extends AbstractController
         return $this->render('admin/transactional_admin/edit.html.twig', [
             'transactional' => $transactional,
             'form' => $form,
-            'variables' => $this->listTables()
+            'variables' => $this->listTables(),
+            'sidebar' => 'params'
         ]);
     }
 

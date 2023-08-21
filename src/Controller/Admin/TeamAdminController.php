@@ -22,6 +22,7 @@ class TeamAdminController extends AbstractController
     {
         return $this->render('admin/team/index.html.twig', [
             'teams' => $teamRepository->findAll(),
+            'sidebar' => 'users'
         ]);
     }
 
@@ -66,6 +67,7 @@ class TeamAdminController extends AbstractController
         return $this->render('admin/team/new.html.twig', [
             'team' => $team,
             'form' => $form,
+            'sidebar' => 'users'
         ]);
     }
 
@@ -90,6 +92,7 @@ class TeamAdminController extends AbstractController
         return $this->render('admin/team/edit.html.twig', [
             'team' => $team,
             'form' => $form,
+            'sidebar' => 'users'
         ]);
     }
 

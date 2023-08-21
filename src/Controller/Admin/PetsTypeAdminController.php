@@ -19,6 +19,7 @@ class PetsTypeAdminController extends AbstractController
     {
         return $this->render('admin/pets_type_admin/index.html.twig', [
             'pets_types' => $petsTypeRepository->findAll(),
+            'sidebar' => 'params'
         ]);
     }
 
@@ -40,6 +41,7 @@ class PetsTypeAdminController extends AbstractController
         return $this->render('admin/pets_type_admin/new.html.twig', [
             'pets_type' => $petsType,
             'form' => $form,
+            'sidebar' => 'params'
         ]);
     }
 
@@ -48,6 +50,7 @@ class PetsTypeAdminController extends AbstractController
     {
         return $this->render('admin/pets_type_admin/show.html.twig', [
             'pets_type' => $petsType,
+            'sidebar' => 'params'
         ]);
     }
 
@@ -67,6 +70,7 @@ class PetsTypeAdminController extends AbstractController
         return $this->render('admin/pets_type_admin/edit.html.twig', [
             'pets_type' => $petsType,
             'form' => $form,
+            'sidebar' => 'params'
         ]);
     }
 

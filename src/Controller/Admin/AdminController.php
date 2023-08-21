@@ -47,6 +47,7 @@ class AdminController extends AbstractController
             $boxes['petitions'] = $petitions;
         }
         return $this->render('admin/dashboard.html.twig', [
+            'sidebar' => '',
             'boxes' => $boxes,
             'adverts' => count($advertsRepository->findBy(['status' => 1])),
             'associations' => count($companyRepository->findBy(['status' => 1, 'fk_company_type' => 1])),

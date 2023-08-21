@@ -25,7 +25,8 @@ class PetitionsAdminController extends AbstractController
         }
         return $this->render('admin/petitions_admin/index.html.twig', [
             'petitions' => $petitions,
-            'mediaFolder' => $publicUploadDir
+            'mediaFolder' => $publicUploadDir,
+            'sidebar' => 'petitions'
         ]);
     }
 
@@ -62,6 +63,7 @@ class PetitionsAdminController extends AbstractController
         return $this->render('admin/petitions_admin/new.html.twig', [
             'petition' => $petition,
             'form' => $form,
+            'sidebar' => 'petitions'
         ]);
     }
 

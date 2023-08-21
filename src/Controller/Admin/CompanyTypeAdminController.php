@@ -19,6 +19,7 @@ class CompanyTypeAdminController extends AbstractController
     {
         return $this->render('admin/company_type_admin/index.html.twig', [
             'company_types' => $companyTypeRepository->findAll(),
+            'sidebar' => 'params'
         ]);
     }
 
@@ -40,6 +41,7 @@ class CompanyTypeAdminController extends AbstractController
         return $this->render('admin/company_type_admin/new.html.twig', [
             'company_type' => $companyType,
             'form' => $form,
+            'sidebar' => 'params'
         ]);
     }
 
@@ -48,6 +50,7 @@ class CompanyTypeAdminController extends AbstractController
     {
         return $this->render('admin/company_type_admin/show.html.twig', [
             'company_type' => $companyType,
+            'sidebar' => 'params'
         ]);
     }
 
@@ -67,6 +70,7 @@ class CompanyTypeAdminController extends AbstractController
         return $this->render('admin/company_type_admin/edit.html.twig', [
             'company_type' => $companyType,
             'form' => $form,
+            'sidebar' => 'params'
         ]);
     }
 

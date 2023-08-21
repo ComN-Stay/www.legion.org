@@ -20,6 +20,7 @@ class TagsAdminController extends AbstractController
     {
         return $this->render('admin/tags_admin/index.html.twig', [
             'tags' => $tagsRepository->findAll(),
+            'sidebar' => 'redac'
         ]);
     }
 
@@ -46,6 +47,7 @@ class TagsAdminController extends AbstractController
         return $this->render('admin/tags_admin/new.html.twig', [
             'tag' => $tag,
             'form' => $form,
+            'sidebar' => 'redac'
         ]);
     }
 
@@ -69,6 +71,7 @@ class TagsAdminController extends AbstractController
         return $this->render('admin/tags_admin/edit.html.twig', [
             'tag' => $tag,
             'form' => $form,
+            'sidebar' => 'redac'
         ]);
     }
 

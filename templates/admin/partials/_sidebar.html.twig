@@ -23,9 +23,9 @@
                 <a class="nav-link has-icon" href="#">
                     <i class="fa-solid fa-users"></i>
                     <span>Utilisateurs</span>
-                    <span class="caretIcon caretIconClose"></span>
+                    <span class="caretIcon {% if sidebar == 'users' %}caretIconOpen{% else %}caretIconClose{% endif %}"></span>
                 </a>
-                <ul class="submenu collapse">
+                <ul class="submenu collapse {% if sidebar == 'users' %}show{% endif %}">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_company_admin_index', {'idType': 1}) }}"><span>Associations</span></a>
                     </li>
@@ -47,9 +47,9 @@
                 <a class="nav-link has-icon" href="#">
                     <i class="fa-solid fa-bullhorn"></i>
                     <span>Annonces</span>
-                    <span class="caretIcon caretIconClose"></span>
+                    <span class="caretIcon {% if sidebar == 'ads' %}caretIconOpen{% else %}caretIconClose{% endif %}"></span>
                 </a>
-                <ul class="submenu collapse">
+                <ul class="submenu collapse {% if sidebar == 'ads' %}show{% endif %}">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_adverts_admin_index') }}/1"><span>En attente de validation</span></a>
                     </li>
@@ -65,9 +65,9 @@
                 <a class="nav-link has-icon" href="#">
                     <i class="fa-solid fa-signature"></i>
                     <span>Pétitions</span>
-                    <span class="caretIcon caretIconClose"></span>
+                    <span class="caretIcon {% if sidebar == 'petitions' %}caretIconOpen{% else %}caretIconClose{% endif %}"></span>
                 </a>
-                <ul class="submenu collapse">
+                <ul class="submenu collapse {% if sidebar == 'petitions' %}show{% endif %}">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_petitions_admin_index') }}/1"><span>En attente de validation</span></a>
                     </li>
@@ -83,9 +83,9 @@
                 <a class="nav-link has-icon" href="#">
                     <i class="fa-solid fa-pen-to-square"></i>
                     <span>Rédactionnel</span>
-                    <span class="caretIcon caretIconClose"></span>
+                    <span class="caretIcon {% if sidebar == 'redac' %}caretIconOpen{% else %}caretIconClose{% endif %}"></span>
                 </a>
-                <ul class="submenu collapse">
+                <ul class="submenu collapse {% if sidebar == 'redac' %}show{% endif %}">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_tags_admin_index') }}"><span>Tags articles</span></a>
                     </li>
@@ -107,9 +107,9 @@
                 <a class="nav-link has-icon" href="#">
                     <i class="fas fa-fw fa-wrench"></i>
                     <span>Paramètres</span>
-                    <span class="caretIcon caretIconClose"></span>
+                    <span class="caretIcon {% if sidebar == 'params' %}caretIconOpen{% else %}caretIconClose{% endif %}"></span>
                 </a>
-                <ul class="submenu collapse">
+                <ul class="submenu collapse {% if sidebar == 'params' %}show{% endif %}">
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_company_type_admin_index') }}"><span>Types d'utilisateurs</span></a>
                     </li>

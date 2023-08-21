@@ -24,6 +24,7 @@ services:
             $mailSender: '%app.email_sender%'
             $mailFrom: '%app.email_from%'
             $transacFolder: '%transac_folder%'
+            $googleApiKey: '%env(GOOGLE_API_KEY)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+
+    {% for company in companies %}
+         <div>
+            <p>
+                {% if company.logo != '' %}
+                    <img src="/uploads/{{ company.logo }}" width="200px" height="auto" alt="{{ company.name }}">
+                {% else %}
+                    <img src="/assets/img/logo.png" width="200px" height="auto" alt="{{ company.name }}">
+                {% endif %}
+            </p>
+            <p>{{ company.name }}</p>
+            <p>{{ company.zipCode }} {{ company.town }}</p>
+            <p>{{ company.shortDescription }}</p>
+            <p>
+                <a href="{{ path('app_company_show', {'id': company.id }) }}">Voir</a>
+            </p>
+        </tr>
+        {% endfor %}
+
+{% endblock %}

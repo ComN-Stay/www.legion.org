@@ -29,13 +29,11 @@ class FrontController extends AbstractController
         $today = $date = new \DateTime(date('Y-m-d'));
         $date->format('Y-m-d');
         $visitor = $this->visitorsRepository->findOneBy(['ip' => $ip]);
-        $statLine = $this->statisticsRepository->findOneBy(['day' => date('d'), 'mounth' => date('m'), 'year' => date('Y')]);
+        $statLine = $this->statisticsRepository->findOneBy(['day' => $today]);
         $new = 0;
         if(null === $statLine) {
             $statLine = new Statistics;
-            $statLine->setDay(date('d'));
-            $statLine->setMounth(date('m'));
-            $statLine->setYear(date('Y'));
+            $statLine->setDay($today);
             $statLine->setVisits(1);
             $this->em->persist($statLine);
             $this->em->flush();

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <style>
+        #map {
+            height: 300px;
+            width: 500px;
+            }
+    </style>
+{% endblock %}
+
+{% block title %}{{ company.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ company.name }}</h1>
+
+    <div>
+        {% if company.logo != '' %}
+            <img src="/uploads/{{ company.logo }}" width="200px" height="auto" alt="{{ company.name }}">
+        {% else %}
+            <img src="/assets/img/logo.png" width="200px" height="auto" alt="{{ company.name }}">
+        {% endif %}
+        <p>{{ company.description }}</p>
+        <p>
+            {{ company.address }}<br />
+            {% if company.additionalAddress != '' %}
+                {{ company.additionalAddress }}<br />
+            {% endif %}
+            {{ company.zipCode }} {{ company.town }}
+        </p>{{ company.phone }}</p>
+        <p>{{ company.email }}</p>
+        <p>
+            {% if company.facebook != '' %}
+                <a href="{{ company.facebook }}">Facebook</a>
+            {% endif %}
+            {% if company.tweeter != '' %}
+                <a href="{{ company.tweeter }}">tweeter</a>
+            {% endif %}
+            {% if company.instagram != '' %}
+                <a href="{{ company.instagram }}">instagram</a>
+            {% endif %}
+        <p>
+        <div id="map"></div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "{{ googleKey }}", v: "beta"});
+
+        let map;
+        async function initMap() {
+            const position = { lat: {{ company.latitude }}, lng: {{ company.longitude }} };
+            const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+            map = new Map(document.getElementById("map"), {
+                zoom: 8,
+                center: position,
+                mapId: "legionMap",
+            });
+            const marker = new AdvancedMarkerView({
+            map: map,
+            position: position,
+            title: '{{ company.name }}',
+        });
+        }
+
+        initMap();
+    </script>
+{% endblock %}

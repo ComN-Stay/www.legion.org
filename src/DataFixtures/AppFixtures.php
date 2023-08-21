@@ -173,6 +173,10 @@ class AppFixtures extends Fixture
             $company[$i]->setStatus(false);
             $company[$i]->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
             $company[$i]->setLogo('logo' . rand(1, 10) . '.jpg');
+            $company[$i]->setShortDescription($this->faker->paragraphs(1, true));
+            $company[$i]->setDescription($this->faker->paragraphs(rand(2, 4), true));
+            $company[$i]->setLatitude($this->float_rand('42.37', '51.06'));
+            $company[$i]->setLongitude($this->float_rand('-4.73', '8.30'));
             $manager->persist($company[$i]);
             if ($i == round(($i/$nb)*33)) {
                 $progressBar->setMessage("All right :)", 'status');
@@ -564,6 +568,13 @@ class AppFixtures extends Fixture
         $output = new NullOutput();
         $application->run($input, $output);
 
+    }
+
+    private function float_rand($min, $max){
+        $randomfloat = $min + mt_rand() / mt_getrandmax() * ($max - $min);
+        $randomfloat = round($randomfloat, 5);
+    
+        return $randomfloat;
     }
 
 }

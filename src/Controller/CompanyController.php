@@ -7,9 +7,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\MailService;
+use App\Service\FileUploaderService;
+use App\Service\CallGoogleApiService;
+use App\Repository\UserRepository;
 use App\Repository\CompanyTypeRepository;
 use App\Repository\CompanyRepository;
-use App\Form\Company1Type;
+use App\Form\CompanyType;
 use App\Entity\Company;
 
 #[Route('/company')]
@@ -21,27 +25,70 @@ class CompanyController extends AbstractController
         $idType = ($type == 'associations') ? 1 : 2;
         $type = $companyTypeRepository->find($idType);
         return $this->render('front/company/index.html.twig', [
-            'companies' => $companyRepository->findBy(['fk_company_type' => $type]),
+            'companies' => $companyRepository->findBy(['fk_company_type' => $type, 'status' => 1]),
         ]);
     }
 
-    #[Route('/new', name: 'app_company_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{typeId}/{userToken}', name: 'app_company_new', methods: ['GET', 'POST'])]
+    public function new(
+        Request $request, 
+        CompanyTypeRepository $companyTypeRepository, 
+        EntityManagerInterface $entityManager, 
+        FileUploaderService $file_uploader,
+        CallGoogleApiService $callGoogleApiService,
+        UserRepository $userRepository,
+        MailService $mail,
+        $typeId, $userToken): Response
     {
         $company = new Company();
-        $form = $this->createForm(Company1Type::class, $company);
+        $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
+            $type = $companyTypeRepository->find($form->get('type_id')->getData());
+            $company->setstatus(false);
+            $company->setFkCompanyType($type);
+            $file = $form['logo']->getData();
+            if ($file) {
+                $fileName = $file_uploader->upload($file);
+                if (null !== $fileName) {
+                    $company->setLogo($fileName);
+                }
+            }
+            $address = urlencode($company->getAddress() . ' ' . $company->getZipCode() . ' ' . $company->getTown());
+            $geolocalization = $callGoogleApiService->getGeolocalization($address);
+            if($geolocalization['status'] == 'OK') {
+                $company->setLatitude($geolocalization['results'][0]['geometry']['location']['lat']);
+                $company->setLongitude($geolocalization['results'][0]['geometry']['location']['lng']);
+            }
             $entityManager->persist($company);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_company_index', [], Response::HTTP_SEE_OTHER);
+            $user = $userRepository->findOneBy(['token' => $form->get('userToken')->getData()]);
+            $user->setFkCompany($company);
+            $user->setIsCompanyAdmin(true);
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $mail->sendMail([
+                'to' => $user->getEmail(),
+                'tpl' => 'welcome_company',
+                'vars' => [
+                    'user' => $user,
+                    'company' => $company
+                ]
+            ]);
+
+            $this->addFlash('success', 'Le compte de votre structure a été créé, vous recevrez un email lorsque celui ci aura été validé par un administrateur');
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('company/new.html.twig', [
+        return $this->render('front/company/new.html.twig', [
             'company' => $company,
             'form' => $form,
+            'typeId' => $typeId,
+            'userToken' => $userToken
         ]);
     }
 

@@ -10,16 +10,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\AbstractType;
 use App\Entity\Company;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class CompanyType extends AbstractType
 {
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Nom du client',
+                'label' => 'Nom de la structure',
                 'required' => true
             ])
             ->add('address', TextType::class, [
@@ -41,10 +44,6 @@ class CompanyType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'required' => true
-                ])
-            ->add('phone', TextType::class, [
-                'label' => 'N° de téléphone',
-                'required' => false,
                 ])
             ->add('phone', TextType::class, [
                 'label' => 'N° de téléphone',
@@ -109,6 +108,17 @@ class CompanyType extends AbstractType
                         'mimeTypesMessage' => "Merci de télécharger une image valide.",
                     ]),
                 ]
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'En cochant cette case je reconnais avoir pris connaissance des conditions générales de Légion',
+                'required' => true
+            ])
+            ->add('type_id', IntegerType::class, [
+                'mapped' => false
+            ])
+            ->add('userToken', TextType::class, [
+                'mapped' => false
             ])
         ;
     }

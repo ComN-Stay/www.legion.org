@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\MailService;
 use App\Service\FileUploaderService;
 use App\Service\CallGoogleApiService;
 use App\Repository\MediasRepository;
@@ -16,6 +17,7 @@ use App\Repository\CompanyRepository;
 use App\Repository\AdvertsRepository;
 use App\Form\CompanyType;
 use App\Entity\Company;
+use App\Repository\UserRepository;
 
 #[Route('/admin/company')]
 class CompanyAdminController extends AbstractController
@@ -95,7 +97,13 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/activation', name: 'app_company_admin_activation', methods: ['GET', 'POST'])]
-    public function activation(Request $request, CompanyRepository $companyRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function activation(
+        Request $request, 
+        MailService $mail, 
+        CompanyRepository $companyRepository, 
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+    ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
@@ -104,6 +112,18 @@ class CompanyAdminController extends AbstractController
             $entityManager->persist($company);
             $res['result'] = 'success';
             $entityManager->flush();
+            if($request->request->get('status') == true) {
+                $user = $userRepository->findOneBy(['fk_company' => $company->getId(), 'is_company_admin' => true]);
+                $mail->sendMail([
+                    'to' => $user->getEmail(),
+                    'tpl' => 'company_activation',
+                    'vars' => [
+                        'user' => $user,
+                        'company' => $company
+                    ]
+                ]);
+            }
+
             return new JsonResponse(json_encode($res));
         }
     

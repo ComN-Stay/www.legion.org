@@ -214,7 +214,12 @@ class AppFixtures extends Fixture
             $hashedPassword = $this->passwordHasher->hashPassword($user[$i], 'Legion@2023');
             $user[$i]->setPassword($hashedPassword);
             $roles = ['ROLE_IDENTIFIED', 'ROLE_CUSTOMER', 'ROLE_ADMIN_CUSTOMER'];
-            $user[$i]->setRoles([array_rand(array_flip($roles), 1)]);
+            $role = array_rand(array_flip($roles), 1);
+            $user[$i]->setRoles([$role]);
+            if($role != 'ROLE_IDENTIFIED') {
+                $user[$i]->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
+            }
+            $user[$i]->setToken(bin2hex(random_bytes(60)));
             $manager->persist($user[$i]);
             if ($i == round(($i/$nb)*33)) {
                 $progressBar->setMessage("All right :)", 'status');
@@ -418,7 +423,10 @@ class AppFixtures extends Fixture
         $sql = "INSERT INTO `transactional` (`id`, `description`, `template`, `subject`, `content`) VALUES
         (1, 'Mail envoyé lors de l\'inscription d\'un internaute', 'welcome_user', 'Bienvenue sur Légion', '<p>Bonjour {{ user.firstname }} {{ user.lastname }},</p>\r\n<p>Bienvenue sur L&eacute;gion !</p>'),
         (2, 'Email envoyé lors de la création d\'un compte admin', 'admin_password_create', 'Création de votre compte administrateur sur Légion', '<p>Bonjour {{ team.firstname }},</p>\r\n<p>Ton compte administrateur vient d\'&ecirc;tre cr&eacute;&eacute; sur L&eacute;gion !</p>\r\n<p>Il ne te reste plus qu\'&agrave; suivre ce lien pour cr&eacute;er ton mot de passe :</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset/{{%20resetToken%20}}\">Cr&eacute;er mon mot de passe</a></p>\r\n<div>\r\n<div>Attention, ce lien n\'est valide que durant 1 heure</div>\r\n</div>'),
-        (3, 'Mail envoyé pour la réinitialisation du mot de passe (users et admins)', 'reset_password', 'Réinitialisation de votre mot de passe', '<p>Bonjour,</p>\r\n<p>vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe.</p>\r\n<p>Suivez le len ci-dessous afin de le r&eacute;initialiser</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset-password/reset/{{%20resetToken.token%20}}\">R&eacute;initialiser mon mot de passe</a></p>\r\n<p>Attention, ce lien n\'est valide que durant 1 heure</p>');";
+        (3, 'Mail envoyé pour la réinitialisation du mot de passe (users et admins)', 'reset_password', 'Réinitialisation de votre mot de passe', '<p>Bonjour,</p>\r\n<p>vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe.</p>\r\n<p>Suivez le len ci-dessous afin de le r&eacute;initialiser</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset-password/reset/{{%20resetToken.token%20}}\">R&eacute;initialiser mon mot de passe</a></p>\r\n<p>Attention, ce lien n\'est valide que durant 1 heure</p>'),
+        (4, 'Mail envoyé à l\'internaute lors de la création du compte d\'une structure', 'welcome_company', 'Bienvenue sur Légion !', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Votre compte a &eacute;t&eacute; cr&eacute;&eacute; sur L&eacute;gion, vous pouvez d&eacute;sormais vous connecter et commencer &agrave; g&eacute;rer votre structure \"{{ company.name }}\" !</p>\r\n<p>Celle ci n\'est pas encore active, vous recevrez un email lors de son activation par un administrateur.</p>'),
+        (5, 'Mail envoyé à l\'administrateur principal d\'une structure lors de son activation', 'company_activation', 'Activation de votre compte', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Nous avons le plaisir de vous informer que le compte de votre structure {{ company.name }} vient d\'&ecirc;tre activ&eacute; !</p>\r\n<p>Les internautes ont acc&egrave;s &agrave; sa fiche et peuvent voir vos annonces, p&eacute;titions et autres articles !</p>');
+        ";
         
         $db->prepare($sql);
         $db->executeQuery($sql);

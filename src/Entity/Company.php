@@ -71,10 +71,13 @@ class Company
     #[ORM\OneToMany(mappedBy: 'fk_company', targetEntity: Adverts::class)]
     private Collection $adverts;
 
+    #[ORM\OneToMany(mappedBy: 'fk_company', targetEntity: User::class)]
+    private Collection $users;
+
     public function __construct()
     {
-        $this->customers = new ArrayCollection();
         $this->adverts = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -310,6 +313,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($advert->getFkCompany() === $this) {
                 $advert->setFkCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setFkCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getFkCompany() === $this) {
+                $user->setFkCompany(null);
             }
         }
 

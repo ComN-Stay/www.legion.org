@@ -57,7 +57,8 @@ class TeamType extends AbstractType
                     'Administrateur' => 'ROLE_ADMIN', 
                     'Administrateur client' => 'ROLE_ADMIN_CUSTOMER', 
                     'Team client' => 'ROLE_CUSTOMER',
-                    'Utilisateur enregistré' => 'ROLE_IDENTIFIED'],
+                    'Utilisateur enregistré' => 'ROLE_IDENTIFIED'
+                ],
                 'label' => 'Role',
                 'required' => true
             ])

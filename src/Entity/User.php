@@ -37,6 +37,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Gender $fk_gender = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $token = null;
+
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    private ?Company $fk_company = null;
+
+    #[ORM\Column]
+    private ?bool $is_company_admin = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -146,5 +155,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullname(): string
     {
         return (string) $this->firstname . ' ' . $this->lastname;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): static
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getFkCompany(): ?Company
+    {
+        return $this->fk_company;
+    }
+
+    public function setFkCompany(?Company $fk_company): static
+    {
+        $this->fk_company = $fk_company;
+
+        return $this;
+    }
+
+    public function isIsCompanyAdmin(): ?bool
+    {
+        return $this->is_company_admin;
+    }
+
+    public function setIsCompanyAdmin(bool $is_company_admin): static
+    {
+        $this->is_company_admin = $is_company_admin;
+
+        return $this;
     }
 }

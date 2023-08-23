@@ -16,7 +16,7 @@
                 <li><a href="">Les annonces</a></li>
                 <li><a href="">Les articles</a></li>
                 {% if app.user is null %}
-                    <li><a href="">Créer mon compte</a></li>
+                    <li><a href="{{ path('app_user_new') }}">Créer mon compte</a></li>
                     <li><a href="{{ path('account_login') }}">Connexion</a></li>
                 {% else %}
                     <li><a href="{{ path('app_account') }}">Mon compte</a></li>

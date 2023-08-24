@@ -89,7 +89,7 @@ class CompanyType extends AbstractType
                     'Désactivé' => false
                     ],
                 'label' => 'Statut',
-                'required' => true
+                'required' => is_null($builder->getData()->getId()) ? true : false,
             ])
             ->add('logo', FileType::class, [
                 'data_class' => null,
@@ -112,13 +112,15 @@ class CompanyType extends AbstractType
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'En cochant cette case je reconnais avoir pris connaissance des conditions générales de Légion',
-                'required' => true
+                'required' => is_null($builder->getData()->getId()) ? true : false,
             ])
             ->add('type_id', IntegerType::class, [
-                'mapped' => false
+                'mapped' => false,
+                'required' => is_null($builder->getData()->getId()) ? true : false,
             ])
             ->add('userToken', TextType::class, [
-                'mapped' => false
+                'mapped' => false,
+                'required' => is_null($builder->getData()->getId()) ? true : false,
             ])
         ;
     }

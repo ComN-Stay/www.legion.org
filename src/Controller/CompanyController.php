@@ -34,7 +34,7 @@ class CompanyController extends AbstractController
         Request $request, 
         CompanyTypeRepository $companyTypeRepository, 
         EntityManagerInterface $entityManager, 
-        FileUploaderService $file_uploader,
+        FileUploaderService $fileUploader,
         CallGoogleApiService $callGoogleApiService,
         UserRepository $userRepository,
         MailService $mail,
@@ -51,7 +51,7 @@ class CompanyController extends AbstractController
             $company->setFkCompanyType($type);
             $file = $form['logo']->getData();
             if ($file) {
-                $fileName = $file_uploader->upload($file);
+                $fileName = $fileUploader->upload($file);
                 if (null !== $fileName) {
                     $company->setLogo($fileName);
                 }

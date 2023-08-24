@@ -43,7 +43,7 @@ class CompanyAdminController extends AbstractController
         Request $request, 
         EntityManagerInterface $entityManager, 
         CompanyTypeRepository $companyTypeRepository, 
-        FileUploaderService $file_uploader, 
+        FileUploaderService $fileUploader, 
         CallGoogleApiService $callGoogleApiService,
         $idType, $publicUploadDir
     ): Response
@@ -56,7 +56,7 @@ class CompanyAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form['logo']->getData();
             if ($file) {
-                $fileName = $file_uploader->upload($file);
+                $fileName = $fileUploader->upload($file);
                 if (null !== $fileName) {
                     $company->setLogo($fileName);
                 }

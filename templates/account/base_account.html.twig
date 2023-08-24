@@ -14,7 +14,7 @@
             <li><a href="">Proposer une pétition</a></li>
         {% endif %}
         {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles %}
-            <li><a href="">Mon organisation</a></li>
+            <li><a href="{{ path('app_company_edit')}}">Mon organisation</a></li>
             <li><a href="">Mon abonnement</a></li>
         {% endif %}
     </ul>

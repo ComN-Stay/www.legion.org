@@ -80,6 +80,7 @@ class AdvertsAdminController extends AbstractController
             $entityManager->flush();
             foreach($medias as $media) {
                 @unlink($kernelUploadDir . '/' . $media->getFilename());
+                $entityManager->remove($media);
             }
             $this->addFlash('success', 'Annonce Supprimée');
         }

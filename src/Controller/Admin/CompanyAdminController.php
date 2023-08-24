@@ -136,7 +136,8 @@ class CompanyAdminController extends AbstractController
         Company $company, 
         EntityManagerInterface $entityManager, 
         FileUploaderService $fileUploader, 
-        CallGoogleApiService $callGoogleApiService
+        CallGoogleApiService $callGoogleApiService,
+        $kernelUploadDir
         ): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
@@ -148,6 +149,9 @@ class CompanyAdminController extends AbstractController
                 $fileName = $fileUploader->upload($file);
                 if (null !== $fileName) {
                     $company->setLogo($fileName);
+                    $uow = $entityManager->getUnitOfWork();
+                    $oldValues = $uow->getOriginalEntityData($company);
+                    @unlink($kernelUploadDir . '/' . $oldValues['logo']);
                 }
             }
             if($company->getLatitude() == '' || $company->getLatitude() == null) {

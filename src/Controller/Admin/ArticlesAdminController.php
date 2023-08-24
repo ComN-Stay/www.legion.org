@@ -16,6 +16,7 @@ use App\Form\ArticlesType;
 use App\Form\ArticlesMediasType;
 use App\Entity\ArticlesMedias;
 use App\Entity\Articles;
+use App\Repository\ArticlesMediasRepository;
 
 #[Route('/admin/articles')]
 class ArticlesAdminController extends AbstractController
@@ -115,7 +116,8 @@ class ArticlesAdminController extends AbstractController
         ArticlesMedias $articlesMedias, 
         EntityManagerInterface $entityManager, 
         FileUploaderService $fileUploader, 
-        SluggerInterface $sluggerInterface
+        SluggerInterface $sluggerInterface,
+        $kernelUploadDir
     ): Response
     {
         $form = $this->createForm(ArticlesType::class, $article);
@@ -130,6 +132,9 @@ class ArticlesAdminController extends AbstractController
                 $fileName = $fileUploader->upload($file);
                 if (null !== $fileName) {
                     $article->setLogo($fileName);
+                    $uow = $entityManager->getUnitOfWork();
+                    $oldValues = $uow->getOriginalEntityData($article);
+                    @unlink($kernelUploadDir . '/' . $oldValues['logo']);
                 }
             }
             $entityManager->flush();
@@ -147,13 +152,19 @@ class ArticlesAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_articles_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Articles $article, EntityManagerInterface $entityManager, $kernelUploadDir): Response
+    public function delete(Request $request, Articles $article, EntityManagerInterface $entityManager, ArticlesMediasRepository $articlesMediasRepository, $kernelUploadDir): Response
     {
+        $medias = $articlesMediasRepository->findBy(['fk_article' => $article->getId()]);
         if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
             $logo = $article->getLogo();
             $entityManager->remove($article);
             $entityManager->flush();
             @unlink($kernelUploadDir . '/' . $logo);
+            foreach($medias as $media) {
+                @unlink($kernelUploadDir . '/' . $media->getFile());
+                $entityManager->remove($media);
+            }
+            $this->addFlash('success', 'Article Supprimé');
         }
 
         return $this->redirectToRoute('app_articles_admin_index', [], Response::HTTP_SEE_OTHER);

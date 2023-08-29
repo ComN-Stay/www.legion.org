@@ -2,13 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\Adverts;
-use App\Entity\PetsType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\AbstractType;
+use App\Entity\Status;
+use App\Entity\PetsType;
+use App\Entity\Adverts;
 
 class AdvertsType extends AbstractType
 {
@@ -108,6 +109,12 @@ class AdvertsType extends AbstractType
                 'class' => Company::class,
                 'choice_label' => 'name',
                 'label' => 'Editeur de l\'annonce',
+                'required' => true
+            ])
+            ->add('fk_status', EntityType::class, [
+                'class' => Status::class,
+                'choice_label' => 'name',
+                'label' => 'Statut',
                 'required' => true
             ])
         ;

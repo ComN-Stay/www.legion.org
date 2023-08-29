@@ -80,7 +80,7 @@ class Adverts
 
     #[ORM\ManyToOne(inversedBy: 'adverts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Status $status = null;
+    private ?Status $fk_status = null;
 
     public function __construct()
     {
@@ -350,14 +350,14 @@ class Adverts
         return $this;
     }
 
-    public function getStatus(): ?Status
+    public function getFkStatus(): ?Status
     {
-        return $this->status;
+        return $this->fk_status;
     }
 
-    public function setStatus(?Status $status): static
+    public function setFkStatus(?Status $status): static
     {
-        $this->status = $status;
+        $this->fk_status = $status;
 
         return $this;
     }

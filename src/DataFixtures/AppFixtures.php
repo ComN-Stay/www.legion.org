@@ -205,7 +205,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
         }
         $progressBar->setMessage("Jobs Done !", 'status');
         $manager->flush();
@@ -249,7 +248,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
         }
         $progressBar->setMessage("Jobs Done !", 'status');
         $manager->flush();
@@ -297,7 +295,7 @@ class AppFixtures extends Fixture
             $ad[$i]->setIsPro(($company->getFkCompanyType()->getId() == 2) ? true : false);
             $ad[$i]->setIdentified(($i % 3 == 0) ? false : true);
             $ad[$i]->setVaccinated(($i % 3 == 0) ? false : true);
-            $ad[$i]->setStatus($this->getRandomReference('App\Entity\Status', $manager));
+            $ad[$i]->setFkStatus($this->getRandomReference('App\Entity\Status', $manager));
             $ad[$i]->setLof(false);
             $ad[$i]->setVisits(rand(4, 1521));
             $manager->persist($ad[$i]);
@@ -307,7 +305,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
         }
         $progressBar->setMessage("Jobs Done !", 'status');
         $manager->flush();
@@ -339,7 +336,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
         }
         $progressBar->setMessage("Jobs Done !", 'status');
         $manager->flush();
@@ -378,7 +374,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
             $i++;
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -476,7 +471,7 @@ class AppFixtures extends Fixture
             $article[$i]->setContent($this->faker->paragraphs(rand(2, 4), true));
             $article[$i]->setDateAdd(new \DateTime(date('Y-m-d')));
             $article[$i]->setVisits(rand(3,658));
-            $article[$i]->setStatus($this->getRandomReference('App\Entity\Status', $manager));
+            $article[$i]->setFkStatus($this->getRandomReference('App\Entity\Status', $manager));
             $article[$i]->setSlug($this->slugger->slug($title));
             $article[$i]->setMetaName($title);
             $article[$i]->setMetaDescription($this->faker->catchPhrase());
@@ -497,7 +492,6 @@ class AppFixtures extends Fixture
                 $progressBar->setMessage("Almost there...", 'status');
             }
             $progressBar->advance();
-            usleep(1000);
         }
         $progressBar->setMessage("Jobs Done !", 'status');
         $manager->flush();
@@ -532,7 +526,6 @@ class AppFixtures extends Fixture
                     $progressBar->setMessage("Almost there...", 'status');
                 }
                 $progressBar->advance();
-                usleep(1000);
             }
         }
         $progressBar->setMessage("Jobs Done !", 'status');

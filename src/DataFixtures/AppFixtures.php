@@ -14,9 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Faker\Factory;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Repository\ArticlesRepository;
 use App\Entity\User;
 use App\Entity\Team;
 use App\Entity\Tags;
+use App\Entity\Status;
 use App\Entity\Statistics;
 use App\Entity\PetsType;
 use App\Entity\Petitions;
@@ -24,10 +26,9 @@ use App\Entity\Medias;
 use App\Entity\Gender;
 use App\Entity\CompanyType;
 use App\Entity\Company;
+use App\Entity\ArticlesMedias;
 use App\Entity\Articles;
 use App\Entity\Adverts;
-use App\Entity\ArticlesMedias;
-use App\Repository\ArticlesRepository;
 
 class AppFixtures extends Fixture
 {
@@ -51,22 +52,42 @@ class AppFixtures extends Fixture
     {
         $output = new ConsoleOutput();
         $this->output = $output;
-        $this->purgeDatabase($manager);
-        $this->genderFixtures($manager);
-        $this->teamFixtures($manager);
-        $this->companyTypeFixtures($manager);
-        $this->companyFixtures($manager, 30);
-        $this->usersFixtures($manager, 100);
-        $this->petsTypeFixtures($manager);
-        $this->adsFixtures($manager, 500);
-        $this->mediasFixtures($manager, 2000);
-        $this->statisticsFixtures($manager);
-        $this->petitionsFixtures($manager);
-        $this->tagsFixtures($manager);
-        $this->transactionalFixtures($manager);
-        $this->ArticlesFixtures($manager, 200);
-        $this->ArticleMediasFixtures($manager);
+        if($this->purgeDatabase($manager) == true) {
+            $this->output->writeln('<info>Database reloaded.</info>');
+            $this->statusFixtures($manager);
+            $this->genderFixtures($manager);
+            $this->teamFixtures($manager);
+            $this->companyTypeFixtures($manager);
+            $this->companyFixtures($manager, 30);
+            $this->usersFixtures($manager, 100);
+            $this->petsTypeFixtures($manager);
+            $this->adsFixtures($manager, 500);
+            $this->mediasFixtures($manager, 2000);
+            $this->statisticsFixtures($manager);
+            $this->petitionsFixtures($manager);
+            $this->tagsFixtures($manager);
+            $this->transactionalFixtures($manager);
+            $this->ArticlesFixtures($manager, 200);
+            $this->ArticleMediasFixtures($manager);
+            $this->output->writeln('<info>Done ! fixtures loaded.</info>');
+        }
     }
+
+    protected function statusFixtures($manager): void 
+    {
+        $this->output->writeln('<info>Loading Status fixtures ...</info>');
+
+        $statuses = ['En cours de rédaction', 'Proposé à l\'évaluation', 'En attente de publication', 'En ligne', 'refusé'];
+        $i = 1;
+        foreach($statuses as $status) {
+            $st[$i] = new Status;
+            $st[$i]->setName($status);
+            $manager->persist($st[$i]);
+        }
+        $manager->flush();
+        $this->output->writeln('<info>Status fixtures loaded</info>');
+    }
+
 
     protected function genderFixtures($manager): void 
     {
@@ -216,6 +237,7 @@ class AppFixtures extends Fixture
             $roles = ['ROLE_IDENTIFIED', 'ROLE_CUSTOMER', 'ROLE_ADMIN_CUSTOMER'];
             $role = array_rand(array_flip($roles), 1);
             $user[$i]->setRoles([$role]);
+            $user[$i]->setIsCompanyAdmin(($role == 'ROLE_ADMIN_CUSTOMER') ? 1 : 0);
             if($role != 'ROLE_IDENTIFIED') {
                 $user[$i]->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
             }
@@ -275,7 +297,7 @@ class AppFixtures extends Fixture
             $ad[$i]->setIsPro(($company->getFkCompanyType()->getId() == 2) ? true : false);
             $ad[$i]->setIdentified(($i % 3 == 0) ? false : true);
             $ad[$i]->setVaccinated(($i % 3 == 0) ? false : true);
-            $ad[$i]->setStatus(($i % 3 == 0) ? true : false);
+            $ad[$i]->setStatus($this->getRandomReference('App\Entity\Status', $manager));
             $ad[$i]->setLof(false);
             $ad[$i]->setVisits(rand(4, 1521));
             $manager->persist($ad[$i]);
@@ -454,7 +476,7 @@ class AppFixtures extends Fixture
             $article[$i]->setContent($this->faker->paragraphs(rand(2, 4), true));
             $article[$i]->setDateAdd(new \DateTime(date('Y-m-d')));
             $article[$i]->setVisits(rand(3,658));
-            $article[$i]->setStatus(($i % 2 == 0) ? false : true);
+            $article[$i]->setStatus($this->getRandomReference('App\Entity\Status', $manager));
             $article[$i]->setSlug($this->slugger->slug($title));
             $article[$i]->setMetaName($title);
             $article[$i]->setMetaDescription($this->faker->catchPhrase());
@@ -529,7 +551,7 @@ class AppFixtures extends Fixture
         return $list[array_rand($list)];
     }
 
-    protected function purgeDatabase($manager) : void
+    protected function purgeDatabase($manager)
     {   
         $this->output->writeln('<info>Starting purging Database ...</info>');
 
@@ -555,6 +577,9 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `user`; 
             DROP TABLE IF EXISTS `visitors`;
             DROP TABLE IF EXISTS `articles`;
+            DROP TABLE IF EXISTS `articles_medias`;
+            DROP TABLE IF EXISTS `articles_tags`;
+            DROP TABLE IF EXISTS `status`;
             SET FOREIGN_KEY_CHECKS=1;
             ';
 
@@ -565,8 +590,6 @@ class AppFixtures extends Fixture
         
         $this->output->writeln('<info>Purge OK</info>');
 
-        $this->output->writeln('<info>You are about to reload the database.</info>');
-        $this->output->writeln('<info>Type "enter" to continue !</info>');
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
@@ -574,12 +597,13 @@ class AppFixtures extends Fixture
             'command' => 'doctrine:migrations:migrate'
         ]);
 
-        $output = new NullOutput();
-        $application->run($input, $output);
-
+        //$output = new NullOutput();
+        $application->run($input, $this->output);
+        return true;
     }
 
-    private function float_rand($min, $max){
+    private function float_rand($min, $max)
+    {
         $randomfloat = $min + mt_rand() / mt_getrandmax() * ($max - $min);
         $randomfloat = round($randomfloat, 5);
     

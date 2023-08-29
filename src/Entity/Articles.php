@@ -37,9 +37,6 @@ class Articles
     #[ORM\Column]
     private ?int $visits = null;
 
-    #[ORM\Column]
-    private ?bool $status = null;
-
     #[ORM\ManyToMany(targetEntity: Tags::class, inversedBy: 'articles')]
     private Collection $tags;
 
@@ -60,6 +57,10 @@ class Articles
 
     #[ORM\OneToMany(mappedBy: 'fk_article', targetEntity: ArticlesMedias::class, orphanRemoval: true)]
     private Collection $articleMedias;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Status $status = null;
 
     public function __construct()
     {
@@ -152,18 +153,6 @@ class Articles
     public function setVisits(int $visits): static
     {
         $this->visits = $visits;
-
-        return $this;
-    }
-
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): static
-    {
-        $this->status = $status;
 
         return $this;
     }
@@ -278,6 +267,18 @@ class Articles
                 $articleMedia->setFkArticle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

@@ -72,14 +72,15 @@ class Adverts
     #[ORM\Column]
     private ?bool $is_pro = null;
 
-    #[ORM\Column]
-    private ?bool $status = null;
-
     #[ORM\OneToMany(mappedBy: 'fk_advert', targetEntity: Medias::class, orphanRemoval: true)]
     private Collection $medias;
 
     #[ORM\Column(type: Types::SMALLINT)]
     private ?int $visits = null;
+
+    #[ORM\ManyToOne(inversedBy: 'adverts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Status $status = null;
 
     public function __construct()
     {
@@ -307,18 +308,6 @@ class Adverts
         return $this;
     }
 
-    public function isStatus(): ?bool
-    {
-        return $this->status;
-    }
-
-    public function setStatus(bool $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Medias>
      */
@@ -357,6 +346,18 @@ class Adverts
     public function setVisits(int $visits): static
     {
         $this->visits = $visits;
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

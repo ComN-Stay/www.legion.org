@@ -77,7 +77,7 @@ class AppFixtures extends Fixture
     {
         $this->output->writeln('<info>Loading Status fixtures ...</info>');
 
-        $statuses = ['En cours de rédaction', 'Proposé à l\'évaluation', 'En attente de publication', 'En ligne', 'refusé'];
+        $statuses = ['En cours de rédaction', 'En attente de publication', 'En ligne', 'refusé'];
         $i = 1;
         foreach($statuses as $status) {
             $st[$i] = new Status;
@@ -191,7 +191,7 @@ class AppFixtures extends Fixture
             $company[$i]->setAddress($this->faker->streetAddress());
             $company[$i]->setZipCode($this->faker->postcode());
             $company[$i]->setTown($this->faker->city());
-            $company[$i]->setStatus(false);
+            $company[$i]->setStatus(($i % 2 == 0) ? false : true);
             $company[$i]->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
             $company[$i]->setLogo('logo' . rand(1, 10) . '.jpg');
             $company[$i]->setShortDescription($this->faker->paragraphs(1, true));
@@ -199,11 +199,7 @@ class AppFixtures extends Fixture
             $company[$i]->setLatitude($this->float_rand('42.37', '51.06'));
             $company[$i]->setLongitude($this->float_rand('-4.73', '8.30'));
             $manager->persist($company[$i]);
-            if ($i == round(($i/$nb)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/$nb)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -242,11 +238,7 @@ class AppFixtures extends Fixture
             }
             $user[$i]->setToken(bin2hex(random_bytes(60)));
             $manager->persist($user[$i]);
-            if ($i == round(($i/$nb)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/$nb)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -299,11 +291,7 @@ class AppFixtures extends Fixture
             $ad[$i]->setLof(false);
             $ad[$i]->setVisits(rand(4, 1521));
             $manager->persist($ad[$i]);
-            if ($i == round(($i/$nb)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/$nb)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -330,11 +318,7 @@ class AppFixtures extends Fixture
             $media[$i]->setFilename('logo' . rand(1, 10) . '.jpg');
             $media[$i]->setFkAdvert($this->getRandomReference('App\Entity\Adverts', $manager));
             $manager->persist($media[$i]);
-            if ($i == round(($i/$nb)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/$nb)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -368,11 +352,7 @@ class AppFixtures extends Fixture
             $stat[$i]->setDay($date);
             $stat[$i]->setVisits(rand(2, 457));
             $manager->persist($stat[$i]);
-            if ($i == round(($i/600)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i == round(($i/600)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
             $i++;
         }
@@ -388,6 +368,10 @@ class AppFixtures extends Fixture
         $this->output->writeln('<info>Loading Petitions fixtures ...</info>');
 
         $links = [
+            'https://chng.it/WsyDDYK9L6',
+            'https://chng.it/swGpbcXGQs',
+            'https://chng.it/hdp8dV5F2p',
+            'https://chng.it/sdrm9cPdFK',
             'https://chng.it/WsyDDYK9L6',
             'https://chng.it/swGpbcXGQs',
             'https://chng.it/hdp8dV5F2p',
@@ -486,11 +470,7 @@ class AppFixtures extends Fixture
                 $article[$i]->setFkTeam($this->getRandomReference('App\Entity\Team', $manager));
             }
             $manager->persist($article[$i]);
-            if ($i > round(($i/$nb)*33)) {
-                $progressBar->setMessage("All right :)", 'status');
-            } elseif($i > round(($i/$nb)*66)) {
-                $progressBar->setMessage("Almost there...", 'status');
-            }
+            $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
         $progressBar->setMessage("Jobs Done !", 'status');
@@ -520,11 +500,7 @@ class AppFixtures extends Fixture
                 $media[$i][$j]->setFile('logo' . rand(1, 10) . '.jpg');
                 $media[$i][$j]->setFkArticle($article);
                 $manager->persist($media[$i][$j]);
-                if ($i > round(($i/$nb)*33)) {
-                    $progressBar->setMessage("All right :)", 'status');
-                } elseif($i > round(($i/$nb)*66)) {
-                    $progressBar->setMessage("Almost there...", 'status');
-                }
+                $progressBar->setMessage("Job in progress...", 'status');
                 $progressBar->advance();
             }
         }

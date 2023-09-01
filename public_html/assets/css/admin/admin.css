@@ -17,6 +17,9 @@ body.bg-gradient-primary {
     background-image: linear-gradient(180deg, #232427 20%, #224abe 100%);
     min-height: 100vh;
 }
+.no_cursor {
+    cursor: default !important;
+}
 
 /************** admin login **************/
 .card-boby {
@@ -87,7 +90,7 @@ label.required:after {
 
 /************* alertes ************/
 .alert {
-    position: absolute;
+    position: fixed;
     z-index: 10000;
     top: 15px;
     right: 15px;

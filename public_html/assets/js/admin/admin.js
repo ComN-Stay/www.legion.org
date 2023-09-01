@@ -106,38 +106,104 @@ document.addEventListener("DOMContentLoaded", function(){
 
 /********* entities activation ***********/
 
-$('body').on('change', '._activeButton', function (e) {
+$('body').on('click', '._activeButton', function (e) {
     let id = $(this).data('id');
     let entity = $(this).data('entity');
-    if($(this).prop("checked") == true){
-        var status = 1;
-    } else {
-        var status = 0;
-    }
-    let message = (status == 1) ? 'Activation effectuée' : 'Désactivation effectuée';
-    $.ajax({
-        url: '/admin/' + entity + '/activation',
-        type: 'POST',
-        data: 'id=' + id + '&status=' + status,
-        dataType: false,
-        cache: false
-    })
-    .done(function(s) {
-        $('#jsAlertBox').removeClass('success');
-        $('#jsAlertBox').removeClass('error');
-        $('#jsAlertBox').removeClass('notice');
-        $('#jsAlertBox').removeClass('wait');
-        var res = jQuery.parseJSON(s);
-        if (res.result == 'success') {
-            $('#successIcon').show();
-            $('#alertMessage').html(message);
-            $('#jsAlertBox').addClass('success');
-        } else {
-            $('#errorIcon').show();
-            $('#alertMessage').html('Une erreur s\'est produite');
-            $('#jsAlertBox').addClass('error');
+    let entityAff = (entity == 'adverts') ? 'cette annonce' : 'cet article';
+    $.confirm({
+        theme: 'supervan',
+        icon: 'fa-solid fa-triangle-exclamation fa-2xl text-red',
+        title: '',
+        content: 'Activer ' + entityAff + ' ?',
+        buttons: {
+            confirm: {
+                text: "Oui",
+                action: function() {
+                    $.ajax({
+                        url: '/admin/' + entity + '/activation',
+                        type: 'POST',
+                        data: 'id=' + id,
+                        dataType: false,
+                        cache: false
+                    })
+                    .done(function(s) {
+                        $('#jsAlertBox').removeClass('success');
+                        $('#jsAlertBox').removeClass('error');
+                        $('#jsAlertBox').removeClass('notice');
+                        $('#jsAlertBox').removeClass('wait');
+                        var res = jQuery.parseJSON(s);
+                        if (res.result == 'success') {
+                            $('#successIcon').show();
+                            $('#alertMessage').html('Activation effectuée');
+                            $('#jsAlertBox').addClass('success');
+                        } else {
+                            $('#errorIcon').show();
+                            $('#alertMessage').html('Une erreur s\'est produite');
+                            $('#jsAlertBox').addClass('error');
+                        }
+                        $('#jsAlertBox').show();
+                        setTimeout(function() { 
+                            window.location.replace('/admin/' + entity + '/list/1')
+                        }, 2000);
+                    });
+                }
+            },
+            cancel: {
+                text: "Non"
+            }
         }
-        $('#jsAlertBox').show();
+    });
+});
+
+/********* entities rejected ***********/
+
+$('body').on('click', '._rejectedButton', function (e) {
+    $(this).attr('disabled', 'disabled').addClass('disabled')
+    let id = $(this).data('id');
+    let entity = $(this).data('entity');
+    let entityAff = (entity == 'adverts') ? 'cette annonce' : 'cet article';
+    $.confirm({
+        theme: 'supervan',
+        icon: 'fa-solid fa-triangle-exclamation fa-2xl text-red',
+        title: '',
+        content: 'Refuser ' + entityAff + ' ?',
+        buttons: {
+            confirm: {
+                text: "Oui",
+                action: function() {
+                    $.ajax({
+                        url: '/admin/' + entity + '/rejected',
+                        type: 'POST',
+                        data: 'id=' + id,
+                        dataType: false,
+                        cache: false
+                    })
+                    .done(function(s) {
+                        $('#jsAlertBox').removeClass('success');
+                        $('#jsAlertBox').removeClass('error');
+                        $('#jsAlertBox').removeClass('notice');
+                        $('#jsAlertBox').removeClass('wait');
+                        var res = jQuery.parseJSON(s);
+                        if (res.result == 'success') {
+                            $('#successIcon').show();
+                            $('#alertMessage').html('Refus signifié');
+                            $('#jsAlertBox').addClass('success');
+                        } else {
+                            $('#errorIcon').show();
+                            $('#alertMessage').html('Une erreur s\'est produite');
+                            $('#jsAlertBox').addClass('error');
+                        }
+                        $('#jsAlertBox').show();
+                        setTimeout(function() { 
+                            window.location.replace('/admin/' + entity + '/list/1')
+                        }, 2000);
+                    });
+                }
+            },
+            cancel: {
+                text: "Non"
+            }
+        }
     });
 });
 

@@ -22,7 +22,7 @@
                 <td>{{ article.shortDescription }}</td>
                 <td>{{ article.visits }}</td>
                 <td>
-                    <input type="checkbox" class="_activeButton" data-id="{{ article.id }}" data-entity="articles" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="En ligne" data-off="En attente" {{ article.status ? 'checked' : '' }}>
+                    <span class="btn btn-sm {% if article.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no_cursor">{% if article.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
                 </td>
                 <td class="action_cell">
                     <a class="form_list" href="{{ path('app_articles_admin_show', {'id': article.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>

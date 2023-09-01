@@ -17,6 +17,18 @@
     <table class="table">
         <tbody>
             <tr>
+                <th>Auteur</th>
+                <td>
+                    {% if article.fkTeam is not null %}
+                        {{ article.fkTeam.firstname }} {{ article.fkTeam.lastname }}
+                    {% elseif article.fkUser is not null %}
+                        {{ article.fkUser.firstname }} {{ article.fkUser.lastname }}
+                    {% else %}
+                        Anonyme
+                    {% endif %}
+                    </td>
+            </tr>
+            <tr>
                 <th>Résumé</th>
                 <td>{{ article.shortDescription }}</td>
             </tr>
@@ -34,7 +46,7 @@
             </tr>
             <tr>
                 <th>Statut</th>
-                <td>{{ article.status ? 'En ligne' : 'En attente' }}</td>
+                <td>{{ article.fkStatus.name }}</td>
             </tr>
             <tr>
                 <th>Meta title</th>
@@ -68,7 +80,8 @@
     <a href="{{ path('app_articles_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
 <div class="d-flex mt-3">
     <a href="{{ path('app_articles_admin_edit', {'id': article.id}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-pen-to-square fa-lg mr-3"></i>Editer</a>
-
+    <button data-id="{{ article.id }}" data-entity="articles" class="btn btn-success mr-3 _activeButton"><i class="fa-solid fa-check fa-xl mr-3"></i>Valider l'article</button>
+    <button data-id="{{ article.id }}" data-entity="articles" class="btn btn-warning mr-3 _rejectedButton"><i class="fa-solid fa-xmark fa-xl mr-3"></i>Refuser l'article</button>
     {{ include('admin/articles_admin/_delete_form.html.twig') }}
 </div>
 {% endblock %}

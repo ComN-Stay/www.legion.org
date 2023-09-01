@@ -2,32 +2,42 @@
 
 namespace App\Controller\Admin;
 
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Service\FileUploaderService;
-use App\Repository\TagsRepository;
-use App\Repository\ArticlesRepository;
-use App\Form\ArticlesType;
-use App\Form\ArticlesMediasType;
-use App\Entity\ArticlesMedias;
 use App\Entity\Articles;
+use App\Form\ArticlesType;
+use App\Entity\ArticlesMedias;
+use App\Form\ArticlesMediasType;
+use App\Repository\TagsRepository;
+use App\Repository\StatusRepository;
+use App\Service\FileUploaderService;
+use App\Repository\ArticlesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ArticlesMediasRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/admin/articles')]
 class ArticlesAdminController extends AbstractController
 {
     #[Route('/list/{status?}', name: 'app_articles_admin_index', methods: ['GET'])]
-    public function index(ArticlesRepository $articlesRepository, $status): Response
+    public function index(
+        ArticlesRepository $articlesRepository, 
+        StatusRepository $statusRepository,
+        Security $security,
+        $status
+        ): Response
     {
-        if($status === null) {
-            $articles = $articlesRepository->findAll();
+        $stat = $statusRepository->find(2);
+        $stat = $statusRepository->find(3);
+        $redac = $statusRepository->find(1);
+        if($status == 1) {
+            $articles = $articlesRepository->findBy(['fk_status' => $redac, 'fk_team' => $security->getUser()]);
         } else {
-            $articles = $articlesRepository->findBy(['status' => false]);
+            $articles = $articlesRepository->findBy(['fk_status' => $stat]);
         }
         return $this->render('admin/articles_admin/index.html.twig', [
             'articles' => $articles,
@@ -36,7 +46,12 @@ class ArticlesAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_articles_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, FileUploaderService $fileUploader, SluggerInterface $sluggerInterface): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        FileUploaderService $fileUploader, 
+        SluggerInterface $sluggerInterface
+        ): Response
     {
         $article = new Articles();
         $form = $this->createForm(ArticlesType::class, $article);
@@ -64,13 +79,13 @@ class ArticlesAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/activation', name: 'app_adverts_admin_activation', methods: ['GET', 'POST'])]
+    #[Route('/activation', name: 'app_articles_admin_activation', methods: ['GET', 'POST'])]
     public function activation(Request $request, ArticlesRepository $articlesRepository, EntityManagerInterface $entityManager): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
             $article = $articlesRepository->find($request->request->get('id'));
-            $article->setStatus($request->request->get('status'));
+            $article->setFkStatus($request->request->get('status'));
             $entityManager->persist($article);
             $res['result'] = 'success';
             $entityManager->flush();

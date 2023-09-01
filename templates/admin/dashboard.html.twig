@@ -5,7 +5,7 @@
 {% block body %}
     <div class="card mb-3">
         <div class="card-header bg-gradient-primary text-white">
-            <h3>Statistiques</h3>
+            <h5>Statistiques</h5>
         </div>
         <div class="card-body">
             <div class="row">
@@ -13,8 +13,8 @@
                     <p class="card-text"><b>{{ associations }}</b> association{% if associations > 1 %}s{% endif %} active{% if associations > 1 %}s{% endif %}</p>
                     <p class="card-text"><b>{{ eleveurs }}</b> éleveur{% if eleveurs > 1 %}s{% endif %} actif{% if eleveurs > 1 %}s{% endif %}</p>
                     <p class="card-text"><b>{{ adverts }}</b> annonce{% if adverts > 1 %}s{% endif %} en ligne</p>
+                    <p class="card-text"><b>{{ articles }}</b> article{% if articles > 1 %}s{% endif %} en ligne</p>
                     <p class="card-text"><b>{{ petitions }}</b> pétition{% if petitions > 1 %}s{% endif %} en ligne</p>
-                    <p class="card-text">Autre statistique</p>
                     <p class="card-text">Autre statistique</p>
                 </div>
                 <div class="col-9">
@@ -41,13 +41,13 @@
         {% if boxes.associations is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Associations</h3>
+                    <h5>Associations</h5>
                     <a href="{{ path('app_company_admin_index', {'idType': 1, 'status': 0}) }}">
                         <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
                     </a>
                 </div>
                 <div class="card-body text-center">
-                    <h4>{{ boxes.associations }}</h4>
+                    <h5>{{ boxes.associations }}</h5>
                     <p class="card-text"> association{% if boxes.associations > 1 %}s{% endif %} en attente de validation</p>
                 </div>
             </div>
@@ -56,13 +56,13 @@
         {% if boxes.eleveurs is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Eleveurs</h3>
+                    <h5>Eleveurs</h5>
                     <a href="{{ path('app_company_admin_index', {'idType': 2, 'status': 0}) }}">    
                         <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
                     </a>
                 </div>
                 <div class="card-body text-center">
-                    <h4>{{ boxes.eleveurs }}</h4>
+                    <h5>{{ boxes.eleveurs }}</h5>
                     <p class="card-text"> éleveur{% if boxes.eleveurs > 1 %}s{% endif %} en attente de validation</p>
                 </div>
             </div>
@@ -71,14 +71,29 @@
         {% if boxes.adverts is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Annonces</h3>
+                    <h5>Annonces</h5>
                     <a href="{{ path('app_adverts_admin_index') }}/1">
                         <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
                     </a>
                 </div>
                 <div class="card-body text-center">
-                    <h4>{{ boxes.adverts }}</h4>
+                    <h5>{{ boxes.adverts }}</h5>
                     <p class="card-text"> annonce{% if boxes.adverts > 1 %}s{% endif %} en attente de validation</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if boxes.articles is not null %}
+            <div class="card">
+                <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
+                    <h5>Articles</h5>
+                    <a href="{{ path('app_articles_admin_index') }}/1">
+                        <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
+                    </a>
+                </div>
+                <div class="card-body text-center">
+                    <h5>{{ boxes.articles }}</h5>
+                    <p class="card-text"> article{% if boxes.articles > 1 %}s{% endif %} en attente de validation</p>
                 </div>
             </div>
         {% endif %}
@@ -86,13 +101,13 @@
         {% if boxes.petitions is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Pétitions</h3>
+                    <h5>Pétitions</h5>
                     <a href="{{ path('app_petitions_admin_index') }}/1">
                         <i class="fa-solid fa-arrow-up-right-from-square fa-xl text-white"></i>
                     </a>
                 </div>
                 <div class="card-body text-center">
-                    <h4>{{ boxes.petitions }}</h4>
+                    <h5>{{ boxes.petitions }}</h5>
                     <p class="card-text"> pétition{% if boxes.petitions > 1 %}s{% endif %} en attente de validation</p>
                 </div>
             </div>
@@ -103,10 +118,15 @@
         {% if boxes.bestAdverts is not null %}
             <div class="card">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Meilleures annonces</h3>
+                    <h5>Meilleures annonces</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
+                        <tr>
+                            <th>Visites</th>
+                            <th>Titre</th>
+                            <th>Organisation</th>
+                        </th>
                         {% for ads in boxes.bestAdverts %}
                             <tr>
                                 <td>{{ ads.visits }}</td>
@@ -121,10 +141,15 @@
         {% if boxes.bestArticles is not null %}
             <div class="card mr-2">
                 <div class="card-header bg-gradient-primary text-white d-flex justify-content-between">
-                    <h3>Meilleurs articles</h3>
+                    <h5>Meilleurs articles</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
+                        <tr>
+                            <th>Visites</th>
+                            <th>Titre</th>
+                            <th>Auteur</th>
+                        </tr>
                         {% for article in boxes.bestArticles %}
                             <tr>
                                 <td>{{ article.visits }}</td>

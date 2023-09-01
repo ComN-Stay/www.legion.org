@@ -11,7 +11,7 @@
                 <th>Titre</th>
                 <th>Résumé</th>
                 <th>Lof</th>
-                <th>Type d'annonce</th>
+                <th>Type</th>
                 <th>Statut</th>
                 <th>Actions</th>
             </tr>
@@ -24,7 +24,7 @@
                 <td>{{ advert.lof ? 'Oui' : 'Non' }}</td>
                 <td>{{ advert.isPro ? 'Pro' : 'Asso' }}</td>
                 <td>
-                    <input type="checkbox" class="_activeButton" data-id="{{ advert.id }}" data-entity="adverts" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="Activée" data-off="En attente" {{ advert.status ? 'checked' : '' }}>
+                    <span class="btn btn-sm {% if advert.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no_cursor">{% if advert.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
                 </td>
                 <td class="action_cell">
                     <a href="{{ path('app_adverts_admin_show', {'id': advert.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>

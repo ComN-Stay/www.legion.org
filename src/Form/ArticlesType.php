@@ -2,19 +2,20 @@
 
 namespace App\Form;
 
+use App\Entity\Tags;
+use App\Entity\Team;
+use App\Entity\User;
+use App\Entity\Status;
+use App\Entity\Articles;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\User;
-use App\Entity\Team;
-use App\Entity\Tags;
-use App\Entity\Articles;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class ArticlesType extends AbstractType
 {
@@ -81,11 +82,9 @@ class ArticlesType extends AbstractType
                 'label' => 'Utilisateur',
                 'required' => false
             ])
-            ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Publié' => true, 
-                    'En attente de publication' => false
-                    ],
+            ->add('fk_status', EntityType::class, [
+                'class' => Status::class,
+                'choice_label' => 'name',
                 'label' => 'Statut',
                 'required' => true
             ])

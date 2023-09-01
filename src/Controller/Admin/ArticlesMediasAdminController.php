@@ -13,14 +13,18 @@ use App\Repository\ArticlesRepository;
 use App\Repository\ArticlesMediasRepository;
 use App\Form\ArticlesMediasType;
 use App\Entity\ArticlesMedias;
-use App\Entity\Articles;
 
 #[Route('/admin/articlesMedias')]
 class ArticlesMediasAdminController extends AbstractController
 {
 
     #[Route('/new', name: 'app_articles_medias_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ArticlesRepository $articlesRepository, FileUploaderService $fileUploader): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        ArticlesRepository $articlesRepository, 
+        FileUploaderService $fileUploader
+    ): Response
     {
         $articlesMedia = new ArticlesMedias();
         $form = $this->createForm(ArticlesMediasType::class, $articlesMedia);
@@ -47,7 +51,12 @@ class ArticlesMediasAdminController extends AbstractController
     
 
     #[Route('/deleteLogo', name: 'app_articles_media_admin_delete_logo', methods: ['GET', 'POST'])]
-    public function deleteLogo(Request $request, ArticlesMediasRepository $articlesMediasRepository, EntityManagerInterface $entityManager, $kernelUploadDir): JsonResponse
+    public function deleteLogo(
+        Request $request, 
+        ArticlesMediasRepository $articlesMediasRepository, 
+        EntityManagerInterface $entityManager, 
+        $kernelUploadDir
+    ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';

@@ -20,7 +20,11 @@ use App\Entity\Company;
 class CompanyController extends AbstractController
 {
     #[Route('/list/{type}', name: 'app_company_index', methods: ['GET'])]
-    public function index(CompanyRepository $companyRepository, CompanyTypeRepository $companyTypeRepository, $type): Response
+    public function index(
+        CompanyRepository $companyRepository, 
+        CompanyTypeRepository $companyTypeRepository, 
+        $type
+    ): Response
     {
         $idType = ($type == 'associations') ? 1 : 2;
         $type = $companyTypeRepository->find($idType);
@@ -38,7 +42,8 @@ class CompanyController extends AbstractController
         CallGoogleApiService $callGoogleApiService,
         UserRepository $userRepository,
         MailService $mail,
-        $typeId, $userToken): Response
+        $typeId, $userToken
+    ): Response
     {
         $company = new Company();
         $form = $this->createForm(CompanyType::class, $company);
@@ -93,7 +98,10 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
-    public function show(Company $company, $googleApiKey): Response
+    public function show(
+        Company $company, 
+        $googleApiKey
+    ): Response
     {
         return $this->render('front/company/show.html.twig', [
             'company' => $company,

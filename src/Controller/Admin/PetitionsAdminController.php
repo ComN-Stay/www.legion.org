@@ -16,7 +16,10 @@ use App\Entity\Petitions;
 class PetitionsAdminController extends AbstractController
 {
     #[Route('/list/{status?}', name: 'app_petitions_admin_index', methods: ['GET'])]
-    public function index(PetitionsRepository $petitionsRepository, $status, $publicUploadDir): Response
+    public function index(
+        PetitionsRepository $petitionsRepository, 
+        $status, $publicUploadDir
+    ): Response
     {
         if($status !== null) {
             $petitions = $petitionsRepository->findBy(['status' => false]);
@@ -31,7 +34,11 @@ class PetitionsAdminController extends AbstractController
     }
 
     #[Route('/activation', name: 'app_petitions_admin_activation', methods: ['GET', 'POST'])]
-    public function activation(Request $request, PetitionsRepository $petitionsRepository, EntityManagerInterface $entityManager): JsonResponse
+    public function activation(
+        Request $request, 
+        PetitionsRepository $petitionsRepository, 
+        EntityManagerInterface $entityManager
+    ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
@@ -47,7 +54,10 @@ class PetitionsAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_petitions_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $petition = new Petitions();
         $form = $this->createForm(PetitionsType::class, $petition);
@@ -69,7 +79,11 @@ class PetitionsAdminController extends AbstractController
 
 
     #[Route('/{id}', name: 'app_petitions_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Petitions $petition, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request, 
+        Petitions $petition, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$petition->getId(), $request->request->get('_token'))) {
             $entityManager->remove($petition);

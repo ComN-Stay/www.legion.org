@@ -15,7 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class PetsTypeAdminController extends AbstractController
 {
     #[Route('/', name: 'app_pets_type_admin_index', methods: ['GET'])]
-    public function index(PetsTypeRepository $petsTypeRepository): Response
+    public function index(
+        PetsTypeRepository $petsTypeRepository
+    ): Response
     {
         return $this->render('admin/pets_type_admin/index.html.twig', [
             'pets_types' => $petsTypeRepository->findAll(),
@@ -24,7 +26,10 @@ class PetsTypeAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_pets_type_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $petsType = new PetsType();
         $form = $this->createForm(PetsTypeType::class, $petsType);
@@ -46,7 +51,9 @@ class PetsTypeAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_pets_type_admin_show', methods: ['GET'])]
-    public function show(PetsType $petsType): Response
+    public function show(
+        PetsType $petsType
+    ): Response
     {
         return $this->render('admin/pets_type_admin/show.html.twig', [
             'pets_type' => $petsType,
@@ -75,7 +82,11 @@ class PetsTypeAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_pets_type_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, PetsType $petsType, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request, 
+        PetsType $petsType, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$petsType->getId(), $request->request->get('_token'))) {
             $entityManager->remove($petsType);

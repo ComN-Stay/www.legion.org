@@ -17,7 +17,9 @@ class SecurityTeamController extends AbstractController
     }
     
     #[Route(path: '/login', name: 'admin_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(
+        AuthenticationUtils $authenticationUtils
+    ): Response
     {
         // if ($this->getUser()) {
         //     return $this->redirectToRoute('target_path');

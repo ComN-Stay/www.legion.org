@@ -12,7 +12,10 @@ use App\Repository\StatisticsRepository;
 class StatisticsAdminController extends AbstractController
 {
     #[Route('/admin/statistics', name: 'app_statistics_admin', methods: ['GET', 'POST'])]
-    public function index(StatisticsRepository $statisticsRepository, Request $request)
+    public function index(
+        StatisticsRepository $statisticsRepository, 
+        Request $request
+    )
     {
         if($request->request->get('start') === null) {
             $start = new \DateTime(date('Y-m-d', strtotime('-1 month')));

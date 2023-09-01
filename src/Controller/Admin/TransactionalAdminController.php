@@ -11,8 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TransactionalRepository;
 use App\Form\TransactionalType;
 use App\Entity\Transactional;
-use App\Repository\UserRepository;
-use App\Service\MailService;
 
 #[Route('/admin/transactional')]
 class TransactionalAdminController extends AbstractController
@@ -20,14 +18,19 @@ class TransactionalAdminController extends AbstractController
     private $em;
     protected $transacFolder;
 
-    public function __construct(EntityManagerInterface $em, $transacFolder)
+    public function __construct(
+        EntityManagerInterface $em, 
+        $transacFolder
+    )
     {
         $this->em = $em;
         $this->transacFolder = $transacFolder;
     }
     
     #[Route('/', name: 'app_transactional_admin_index', methods: ['GET'])]
-    public function index(TransactionalRepository $transactionalRepository, MailService $mailService, UserRepository $userRepository): Response
+    public function index(
+        TransactionalRepository $transactionalRepository, 
+    ): Response
     {
         return $this->render('admin/transactional_admin/index.html.twig', [
             'transactionals' => $transactionalRepository->findAll(),
@@ -36,7 +39,9 @@ class TransactionalAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_transactional_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request): Response
+    public function new(
+        Request $request
+    ): Response
     {
         $transactional = new Transactional();
         $form = $this->createForm(TransactionalType::class, $transactional);
@@ -63,7 +68,9 @@ class TransactionalAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_transactional_admin_show', methods: ['GET'])]
-    public function show(Transactional $transactional): Response
+    public function show(
+        Transactional $transactional
+    ): Response
     {
         $template = $this->renderView('emails/base_email.html.twig', [
             'content' => $transactional->getContent(),
@@ -76,7 +83,10 @@ class TransactionalAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_transactional_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Transactional $transactional): Response
+    public function edit(
+        Request $request, 
+        Transactional $transactional
+    ): Response
     {
         $form = $this->createForm(TransactionalType::class, $transactional);
         $form->handleRequest($request);
@@ -102,7 +112,10 @@ class TransactionalAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_transactional_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Transactional $transactional): Response
+    public function delete(
+        Request $request, 
+        Transactional $transactional
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$transactional->getId(), $request->request->get('_token'))) {
             $this->em->remove($transactional);
@@ -114,7 +127,7 @@ class TransactionalAdminController extends AbstractController
 
     private function listTables() {
         $allMetadata = $this->em->getMetadataFactory()->getAllMetadata();
-        $schemaManager = $this->em->getConnection()->getSchemaManager();
+        $schemaManager = $this->em->getConnection()->createSchemaManager();
         $tableNames = array_map(
             function(ClassMetadata $meta) {
                 return $meta->getTableName();

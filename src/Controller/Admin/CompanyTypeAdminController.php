@@ -15,7 +15,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class CompanyTypeAdminController extends AbstractController
 {
     #[Route('/', name: 'app_company_type_admin_index', methods: ['GET'])]
-    public function index(CompanyTypeRepository $companyTypeRepository): Response
+    public function index(
+        CompanyTypeRepository $companyTypeRepository
+    ): Response
     {
         return $this->render('admin/company_type_admin/index.html.twig', [
             'company_types' => $companyTypeRepository->findAll(),
@@ -24,7 +26,10 @@ class CompanyTypeAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_company_type_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         $companyType = new CompanyType();
         $form = $this->createForm(CompanyTypeType::class, $companyType);
@@ -46,7 +51,9 @@ class CompanyTypeAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_type_admin_show', methods: ['GET'])]
-    public function show(CompanyType $companyType): Response
+    public function show(
+        CompanyType $companyType
+    ): Response
     {
         return $this->render('admin/company_type_admin/show.html.twig', [
             'company_type' => $companyType,
@@ -75,7 +82,11 @@ class CompanyTypeAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_type_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, CompanyType $companyType, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request, 
+        CompanyType $companyType, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$companyType->getId(), $request->request->get('_token'))) {
             $entityManager->remove($companyType);

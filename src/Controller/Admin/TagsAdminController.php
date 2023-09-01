@@ -16,7 +16,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class TagsAdminController extends AbstractController
 {
     #[Route('/', name: 'app_tags_admin_index', methods: ['GET'])]
-    public function index(TagsRepository $tagsRepository): Response
+    public function index(
+        TagsRepository $tagsRepository
+    ): Response
     {
         return $this->render('admin/tags_admin/index.html.twig', [
             'tags' => $tagsRepository->findAll(),
@@ -25,7 +27,11 @@ class TagsAdminController extends AbstractController
     }
 
     #[Route('/new', name: 'app_tags_admin_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function new(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        SluggerInterface $slugger
+    ): Response
     {
         $tag = new Tags();
         $form = $this->createForm(TagsType::class, $tag);
@@ -52,7 +58,12 @@ class TagsAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_tags_admin_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Tags $tag, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function edit(
+        Request $request, 
+        Tags $tag, 
+        EntityManagerInterface $entityManager, 
+        SluggerInterface $slugger
+    ): Response
     {
         $form = $this->createForm(TagsType::class, $tag);
         $form->handleRequest($request);
@@ -76,7 +87,11 @@ class TagsAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_tags_admin_delete', methods: ['POST'])]
-    public function delete(Request $request, Tags $tag, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request, 
+        Tags $tag, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$tag->getId(), $request->request->get('_token'))) {
             $entityManager->remove($tag);

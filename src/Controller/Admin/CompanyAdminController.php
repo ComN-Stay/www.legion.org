@@ -23,7 +23,11 @@ use App\Repository\UserRepository;
 class CompanyAdminController extends AbstractController
 {
     #[Route('/list/{idType}/{status?}', name: 'app_company_admin_index', methods: ['GET'])]
-    public function index(CompanyRepository $companyRepository, CompanyTypeRepository $companyTypeRepository, $idType, $status): Response
+    public function index(
+        CompanyRepository $companyRepository, 
+        CompanyTypeRepository $companyTypeRepository, 
+        $idType, $status
+    ): Response
     {
         $type = $companyTypeRepository->find($idType);
         $conditions = ['fk_company_type' => $type];
@@ -86,7 +90,10 @@ class CompanyAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_company_admin_show', methods: ['GET'])]
-    public function show(Company $company, $publicUploadDir): Response
+    public function show(
+        Company $company, 
+        $publicUploadDir
+    ): Response
     {
         return $this->render('admin/company_admin/show.html.twig', [
             'idType' => $company->getFkCompanyType()->getId(),
@@ -138,7 +145,7 @@ class CompanyAdminController extends AbstractController
         FileUploaderService $fileUploader, 
         CallGoogleApiService $callGoogleApiService,
         $kernelUploadDir
-        ): Response
+    ): Response
     {
         $form = $this->createForm(CompanyType::class, $company);
         $form->handleRequest($request);
@@ -186,7 +193,7 @@ class CompanyAdminController extends AbstractController
         MediasRepository $mediasRepository, 
         AdvertsRepository $advertsRepository, 
         $kernelUploadDir
-        ): Response
+    ): Response
     {
         $idType = $company->getFkCompanyType()->getId();
         $logo = $company->getLogo();

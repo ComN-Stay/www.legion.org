@@ -23,7 +23,7 @@ class AdvertsAdminController extends AbstractController
         AdvertsRepository $advertsRepository, 
         StatusRepository $statusRepository,
         $status
-        ): Response
+    ): Response
     {
         $pending = $statusRepository->find(2);
         $online = $statusRepository->find(3);
@@ -47,7 +47,7 @@ class AdvertsAdminController extends AbstractController
         StatusRepository $statusRepository,
         CompanyRepository $companyRepository,
         MailService $mail,
-        ): JsonResponse
+    ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
@@ -78,7 +78,7 @@ class AdvertsAdminController extends AbstractController
         StatusRepository $statusRepository,
         CompanyRepository $companyRepository,
         MailService $mail,
-        ): JsonResponse
+    ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
@@ -121,7 +121,7 @@ class AdvertsAdminController extends AbstractController
         CompanyRepository $companyRepository,
         MailService $mail,
         $kernelUploadDir
-        ): Response
+    ): Response
     {
         $parameters = ($advert->getFkStatus() == 3) ? [] : ['status' => 1];
         $medias = $mediasRepository->findBy(['fk_advert' => $advert->getId()]);

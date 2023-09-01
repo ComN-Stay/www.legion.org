@@ -15,7 +15,11 @@ class FrontController extends AbstractController
     private $visitorsRepository;
     private $em;
 
-    public function __construct(StatisticsRepository $statisticsRepository, VisitorsRepository $visitorsRepository, EntityManagerInterface $em)
+    public function __construct(
+        StatisticsRepository $statisticsRepository, 
+        VisitorsRepository $visitorsRepository, 
+        EntityManagerInterface $em
+    )
     {
         $this->statisticsRepository = $statisticsRepository;
         $this->visitorsRepository = $visitorsRepository;

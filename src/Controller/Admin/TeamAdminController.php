@@ -18,7 +18,9 @@ use App\Service\MailService;
 class TeamAdminController extends AbstractController
 {
     #[Route('/', name: 'app_team_index', methods: ['GET'])]
-    public function index(TeamRepository $teamRepository): Response
+    public function index(
+        TeamRepository $teamRepository
+    ): Response
     {
         return $this->render('admin/team/index.html.twig', [
             'teams' => $teamRepository->findAll(),
@@ -33,7 +35,7 @@ class TeamAdminController extends AbstractController
         UserPasswordHasherInterface $passwordHasher, 
         ResetPasswordHelperInterface $resetPasswordHelper,
         MailService $mail
-        ): Response
+    ): Response
     {
         $team = new Team();
         $form = $this->createForm(TeamType::class, $team);
@@ -72,7 +74,12 @@ class TeamAdminController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_team_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Team $team, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(
+        Request $request, 
+        Team $team, 
+        EntityManagerInterface $entityManager, 
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
     {
         $form = $this->createForm(TeamType::class, $team);
         $form->handleRequest($request);
@@ -97,7 +104,11 @@ class TeamAdminController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_team_delete', methods: ['POST'])]
-    public function delete(Request $request, Team $team, EntityManagerInterface $entityManager): Response
+    public function delete(
+        Request $request, 
+        Team $team, 
+        EntityManagerInterface $entityManager
+    ): Response
     {
         if ($this->isCsrfTokenValid('delete'.$team->getId(), $request->request->get('_token'))) {
             $entityManager->remove($team);

@@ -12,8 +12,10 @@
             {{ form_row(form.meta_name) }}
             {{ form_row(form.meta_description) }}
             {{ form_row(form.meta_keywords) }}
-            {{ form_row(form.fk_team) }}
-            {{ form_row(form.fk_user) }}
+            {% if article.id is not null %}
+                {{ form_row(form.fk_team) }}
+                {{ form_row(form.fk_user) }}
+            {% endif %}
         </div>
         <div class="col-9">
             {{ form_row(form.title) }}
@@ -28,19 +30,20 @@
     <button class="btn btn-success mt-1 mb-3">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}
 
-<h4>Médias</h4>
-<form name="articles_medias" method="post" enctype="multipart/form-data" action="{{ path('app_articles_medias_admin_new') }}">
-    <div class="row">
-        <div class="col-6">
-            {{ form_row(formMedia.title) }}
+{% if formMedia is not null %}
+    <h4>Médias</h4>
+    <form name="articles_medias" method="post" enctype="multipart/form-data" action="{{ path('app_articles_medias_admin_new') }}">
+        <div class="row">
+            <div class="col-6">
+                {{ form_row(formMedia.title) }}
+            </div>
+            <div class="col-6">
+                {{ form_row(formMedia.file) }}
+            </div>
         </div>
-        <div class="col-6">
-            {{ form_row(formMedia.file) }}
-        </div>
-    </div>
-    <input type="hidden" name="fk_article" value="{{ article.id }}">
-    <button class="btn btn-success mb-3">Enregistrer ce média</button>
-{{ form_end(formMedia) }}    
+        <input type="hidden" name="fk_article" value="{{ article.id }}">
+        <button class="btn btn-success mb-3">Enregistrer ce média</button>
+    {{ form_end(formMedia) }}    
     <div class="d-flex">
         {% for media in medias %}
             <div>
@@ -49,3 +52,4 @@
             </div>
         {% endfor %}
     </div>
+{% endif %}

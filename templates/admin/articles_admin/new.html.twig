@@ -1,11 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/base_admin.html.twig' %}
 
-{% block title %}New Articles{% endblock %}
+{% block title %}Nouvel article{% endblock %}
 
 {% block body %}
-    <h1>Create new Articles</h1>
 
-    {{ include('articles_admin/_form.html.twig') }}
+    {{ include('admin/articles_admin/_form.html.twig') }}
 
-    <a href="{{ path('app_articles_admin_index') }}">back to list</a>
+    <a href="{{ path('app_articles_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
 {% endblock %}

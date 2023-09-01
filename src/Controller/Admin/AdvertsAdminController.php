@@ -3,9 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Adverts;
-use App\Form\AdvertsType;
 use App\Service\MailService;
-use App\Repository\UserRepository;
 use App\Repository\MediasRepository;
 use App\Repository\StatusRepository;
 use App\Repository\AdvertsRepository;

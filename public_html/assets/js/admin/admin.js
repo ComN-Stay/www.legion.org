@@ -9,9 +9,9 @@ new DataTable('._datatable', {
         'targets': [$('thead tr th').length -1],
         'orderable': false, 
     }],
-    fnDrawCallback: function() {
+    /*fnDrawCallback: function() {
         $('._activeButton').bootstrapToggle();
-    }
+    }*/
 });
 
 /********* TinyMCE ************/
@@ -109,12 +109,11 @@ document.addEventListener("DOMContentLoaded", function(){
 $('body').on('click', '._activeButton', function (e) {
     let id = $(this).data('id');
     let entity = $(this).data('entity');
-    let entityAff = (entity == 'adverts') ? 'cette annonce' : 'cet article';
     $.confirm({
         theme: 'supervan',
         icon: 'fa-solid fa-triangle-exclamation fa-2xl text-red',
         title: '',
-        content: 'Activer ' + entityAff + ' ?',
+        content: 'Mettre en ligne ?',
         buttons: {
             confirm: {
                 text: "Oui",

@@ -37,13 +37,13 @@ class PetitionsAdminController extends AbstractController
     public function activation(
         Request $request, 
         PetitionsRepository $petitionsRepository, 
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): JsonResponse
     {
         if ($request->isXMLHttpRequest()) {
             $res['result'] = 'error';
             $petitions = $petitionsRepository->find($request->request->get('id'));
-            $petitions->setStatus($request->request->get('status'));
+            $petitions->setStatus(true);
             $entityManager->persist($petitions);
             $res['result'] = 'success';
             $entityManager->flush();

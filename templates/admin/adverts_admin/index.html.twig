@@ -24,7 +24,7 @@
                 <td>{{ advert.lof ? 'Oui' : 'Non' }}</td>
                 <td>{{ advert.isPro ? 'Pro' : 'Asso' }}</td>
                 <td>
-                    <span class="btn btn-sm {% if advert.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no_cursor">{% if advert.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
+                    <span class="btn btn-sm {% if advert.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no-cursor">{% if advert.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
                 </td>
                 <td class="action_cell">
                     <a href="{{ path('app_adverts_admin_show', {'id': advert.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>

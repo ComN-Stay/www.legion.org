@@ -32,10 +32,14 @@
                 <td><a href="{{ petition.link }}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a></td>
                 <td>{{ petition.dateAdd ? petition.dateAdd|date('d/m/Y') : '' }}</td>
                 <td>
-                    <input type="checkbox" class="_activeButton" data-id="{{ petition.id }}" data-entity="petitions" data-toggle="toggle" data-onstyle="success" data-offstyle="danger" data-on="Activée" data-off="En attente" {{ petition.status ? 'checked' : '' }}>
+                    {% if petition.status == true %}
+                        <span class="btn btn-success no-cursor">Validée</span>
+                    {% else %}
+                        <span data-id="{{ petition.id }}" data-entity="petitions" class="btn btn-danger _activeButton">En attente</span>
+                    {% endif %}
                 </td>
                 <td class="action_cell">
-                    <form method="post" action="{{ path('app_petitions_admin_delete', {'id': petition.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <form method="post" action="{{ path('app_petitions_admin_delete', {'id': petition.id}) }}">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ petition.id) }}">
                         <button class="btn  _deleteBtn"><i class="fa-solid fa-trash-can fa-lg"></i></button>
                     </form>

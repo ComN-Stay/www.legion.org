@@ -22,7 +22,7 @@
                 <td>{{ article.shortDescription }}</td>
                 <td>{{ article.visits }}</td>
                 <td>
-                    <span class="btn btn-sm {% if article.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no_cursor">{% if article.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
+                    <span class="btn btn-sm {% if article.fkStatus.id == 3 %}btn-success{% else %}btn-danger{% endif %} no-cursor">{% if article.fkStatus.id == 3 %}En ligne{% else %}En attente{% endif %}</span>
                 </td>
                 <td class="action_cell">
                     <a class="form_list" href="{{ path('app_articles_admin_show', {'id': article.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>

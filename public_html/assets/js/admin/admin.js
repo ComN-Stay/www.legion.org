@@ -271,3 +271,37 @@ $(document).on('click', '._deleteLogo', function(){
         }
     });
 })
+
+/*********** transactional variables validation ************/
+$(document).on('click', '#validVars', function(){
+    let tab = new Array;
+    $('input[type=checkbox]').each(function(){
+        if($(this).prop('checked') == true) {
+            let subTab = new Array;
+            subTab.push($(this).attr('id'));
+            let text = $(this).parent('td').next('td').find('input[type=text]');
+            subTab.push(text.val());
+            tab.push(subTab);
+        }
+    })
+    $.ajax({
+        url: '/admin/transactional/manageVars',
+        type: 'POST',
+        data: 'tab=' + JSON.stringify(tab),
+        dataType: 'json',
+        cache: false
+    })
+    .done(function(res) {
+        if (res.result == 'success') {
+            $('#successIcon').show();
+            $('#alertMessage').html('Mise à jour effectuée');
+            $('#jsAlertBox').addClass('success');
+            $('#jsAlertBox').show();
+        } else {
+            $('#errorIcon').show();
+            $('#alertMessage').html('Une erreur s\'est produite');
+            $('#jsAlertBox').addClass('error');
+            $('#jsAlertBox').show();
+        }
+    });
+});

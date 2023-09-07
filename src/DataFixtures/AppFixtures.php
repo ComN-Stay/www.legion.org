@@ -39,7 +39,11 @@ class AppFixtures extends Fixture
     private $kernel;
     private $articlesRepository;
     
-    public function __construct(UserPasswordHasherInterface $passwordHasher, SluggerInterface $sluggerInterface, ParameterBagInterface $params, KernelInterface $kernel, ArticlesRepository $articlesRepository)
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher, 
+        SluggerInterface $sluggerInterface, 
+        KernelInterface $kernel, 
+        ArticlesRepository $articlesRepository)
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create('fr_FR');
@@ -549,6 +553,7 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `articles_medias`;
             DROP TABLE IF EXISTS `articles_tags`;
             DROP TABLE IF EXISTS `status`;
+            DROP TABLE IF EXISTS `pages`;
             SET FOREIGN_KEY_CHECKS=1;
             ';
 

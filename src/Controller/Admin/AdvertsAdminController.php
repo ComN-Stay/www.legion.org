@@ -137,7 +137,7 @@ class AdvertsAdminController extends AbstractController
             $this->addFlash('success', 'Annonce Supprimée');
             $mail->sendMail([
                 'to' => $company->getEmail(),
-                'tpl' => 'active_advert',
+                'tpl' => 'delete_advert',
                 'vars' => [
                     'advert' => $current,
                 ]

@@ -70,6 +70,7 @@ class AppFixtures extends Fixture
             $this->statisticsFixtures($manager);
             $this->petitionsFixtures($manager);
             $this->tagsFixtures($manager);
+            $this->transactionalVarsFixtures($manager);
             $this->transactionalFixtures($manager);
             $this->ArticlesFixtures($manager, 200);
             $this->ArticleMediasFixtures($manager);
@@ -418,6 +419,33 @@ class AppFixtures extends Fixture
         $this->output->writeln('<info>Tags fixtures loaded</info>');
     }
 
+    public function transactionalVarsFixtures($manager): void
+    {
+        $this->output->writeln('<info>Loading Transactionals vars fixtures ...</info>');
+
+        $db = $manager->getConnection();
+        $db->beginTransaction();
+
+        $sql = "INSERT INTO `transactional_vars` (`id`, `var_table`, `var_field`, `description`) VALUES
+        (6, 'team', 'email', 'Email de l\'administrateur'),
+        (7, 'team', 'lastname', 'Nom de l\'administrateur'),
+        (8, 'user', 'email', 'Email de l\'utilisateur'),
+        (9, 'user', 'firstname', 'Prénom de l\'utilisateur'),
+        (10, 'user', 'lastname', 'Nom de l\'utilisateur'),
+        (11, 'petitions', 'title', 'Titre de la pétition'),
+        (12, 'petitions', 'link', 'Lien de la pétition'),
+        (13, 'company', 'name', 'Nom de l\'entité'),
+        (14, 'company', 'email', 'Email de l\'entité'),
+        (15, 'articles', 'title', 'Titre de l\'article'),
+        (16, 'adverts', 'title', 'Titre de l\'annonce');";
+        
+        $db->prepare($sql);
+        $db->executeQuery($sql);
+        $db->commit();
+        $db->beginTransaction();
+        $this->output->writeln('<info>Transactionals vars fixtures loaded</info>');
+    }
+
     public function transactionalFixtures($manager): void
     {
         $this->output->writeln('<info>Loading Transactionals fixtures ...</info>');
@@ -430,7 +458,11 @@ class AppFixtures extends Fixture
         (2, 'Email envoyé lors de la création d\'un compte admin', 'admin_password_create', 'Création de votre compte administrateur sur Légion', '<p>Bonjour {{ team.firstname }},</p>\r\n<p>Ton compte administrateur vient d\'&ecirc;tre cr&eacute;&eacute; sur L&eacute;gion !</p>\r\n<p>Il ne te reste plus qu\'&agrave; suivre ce lien pour cr&eacute;er ton mot de passe :</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset/{{%20resetToken%20}}\">Cr&eacute;er mon mot de passe</a></p>\r\n<div>\r\n<div>Attention, ce lien n\'est valide que durant 1 heure</div>\r\n</div>'),
         (3, 'Mail envoyé pour la réinitialisation du mot de passe (users et admins)', 'reset_password', 'Réinitialisation de votre mot de passe', '<p>Bonjour,</p>\r\n<p>vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe.</p>\r\n<p>Suivez le len ci-dessous afin de le r&eacute;initialiser</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset-password/reset/{{%20resetToken.token%20}}\">R&eacute;initialiser mon mot de passe</a></p>\r\n<p>Attention, ce lien n\'est valide que durant 1 heure</p>'),
         (4, 'Mail envoyé à l\'internaute lors de la création du compte d\'une structure', 'welcome_company', 'Bienvenue sur Légion !', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Votre compte a &eacute;t&eacute; cr&eacute;&eacute; sur L&eacute;gion, vous pouvez d&eacute;sormais vous connecter et commencer &agrave; g&eacute;rer votre structure \"{{ company.name }}\" !</p>\r\n<p>Celle ci n\'est pas encore active, vous recevrez un email lors de son activation par un administrateur.</p>'),
-        (5, 'Mail envoyé à l\'administrateur principal d\'une structure lors de son activation', 'company_activation', 'Activation de votre compte', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Nous avons le plaisir de vous informer que le compte de votre structure {{ company.name }} vient d\'&ecirc;tre activ&eacute; !</p>\r\n<p>Les internautes ont acc&egrave;s &agrave; sa fiche et peuvent voir vos annonces, p&eacute;titions et autres articles !</p>');
+        (5, 'Mail envoyé à l\'administrateur principal d\'une structure lors de son activation', 'company_activation', 'Activation de votre compte', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Nous avons le plaisir de vous informer que le compte de votre structure {{ company.name }} vient d\'&ecirc;tre activ&eacute; !</p>\r\n<p>Les internautes ont acc&egrave;s &agrave; sa fiche et peuvent voir vos annonces, p&eacute;titions et autres articles !</p>'),
+        (6, 'Mail envoyé lors de l\'a mise en ligne d\'une annonce', 'active_advert', 'Activation de votre annonce', '<p>Bonjour,</p>\r\n<p>G&eacute;nial !!!</p>\r\n<p>Votre annonce {{ adverts.title }} est en ligne !</p>'),
+        (7, 'Mail envoyé lors du refus de mise en ligne d\'une annonce', 'advert_rejected', 'Refus de votre annonce', '<p>Bonjour,</p>\r\n<p>OUPSSSSS ...</p>\r\n<p>Il semblerai que votre anonce {{ adverts.title }} ne correspondent pas aux standards de la communaut&eacute;.</p>\r\n<p>Nous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation</p>'),
+        (8, 'Mail envoyé lors du refus de mise en ligne d\'un article', 'article_rejected', 'Refus de votre article', '<p>Bonjour,</p>\r\n<p>OUPSSSSS ...</p>\r\n<p>Il semblerai que votre article {{ articles.title }} ne correspondent pas aux standards de la communaut&eacute;.</p>\r\n<p>Nous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation</p>'),
+        (9, 'Mail envoyé lors de la suppression d\'une annonce', 'delete_advert', 'Suppression de votre annonce', '<p>Bonjour,</p>\r\n<p>Votre annonce {{ adverts.title }} a bien &eacute;t&eacute; supprim&eacute;e</p>');
         ";
         
         $db->prepare($sql);
@@ -546,6 +578,7 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `statistics`; 
             DROP TABLE IF EXISTS `tags`; 
             DROP TABLE IF EXISTS `team`; 
+            DROP TABLE IF EXISTS `transactional_vars`;
             DROP TABLE IF EXISTS `transactional`; 
             DROP TABLE IF EXISTS `user`; 
             DROP TABLE IF EXISTS `visitors`;

@@ -44,14 +44,14 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown no-arrow">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ path('app_team_edit', {'id': app.user.id })}}">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ app.user.firstname }} {{ app.user.lastname }}</span>
                                 <i class="fa-solid fa-user"></i> 
                             </a>
                         </li>
 
-                        <li class="nav-item dropdown no-arrow">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ path('admin_logout') }}">
                                 <i class="fa-solid fa-right-from-bracket"></i>  
                             </a>

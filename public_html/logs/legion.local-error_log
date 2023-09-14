@@ -1,0 +1,1 @@
+[Sun Sep 10 08:27:02.655052 2023] [php:notice] [pid 2340] [client ::1:54068] 2023-09-10T06:27:02+00:00 [critical] Uncaught Error: syntax error, unexpected variable "$petsTypes", referer: http://legion.local/adverts/

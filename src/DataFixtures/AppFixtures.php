@@ -194,7 +194,7 @@ class AppFixtures extends Fixture
             $company[$i]->setName($this->faker->company());
             $company[$i]->setEmail('company' . $i . '@comnstay.fr');
             $company[$i]->setAddress($this->faker->streetAddress());
-            $company[$i]->setZipCode($this->faker->postcode());
+            $company[$i]->setZipCode(str_replace(' ', '', $this->faker->postcode()));
             $company[$i]->setTown($this->faker->city());
             $company[$i]->setStatus(($i % 2 == 0) ? false : true);
             $company[$i]->setFkCompanyType($this->getRandomReference('App\Entity\CompanyType', $manager));
@@ -295,6 +295,9 @@ class AppFixtures extends Fixture
             $ad[$i]->setFkStatus($this->getRandomReference('App\Entity\Status', $manager));
             $ad[$i]->setLof(false);
             $ad[$i]->setVisits(rand(4, 1521));
+            $ad[$i]->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
+            $price =  ($i % 3 == 0) ? 0 : rand(50, 500);
+            $ad[$i]->setPrice($price);
             $manager->persist($ad[$i]);
             $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
@@ -427,17 +430,17 @@ class AppFixtures extends Fixture
         $db->beginTransaction();
 
         $sql = "INSERT INTO `transactional_vars` (`id`, `var_table`, `var_field`, `description`) VALUES
-        (6, 'team', 'email', 'Email de l\'administrateur'),
-        (7, 'team', 'lastname', 'Nom de l\'administrateur'),
-        (8, 'user', 'email', 'Email de l\'utilisateur'),
-        (9, 'user', 'firstname', 'Prénom de l\'utilisateur'),
-        (10, 'user', 'lastname', 'Nom de l\'utilisateur'),
-        (11, 'petitions', 'title', 'Titre de la pétition'),
-        (12, 'petitions', 'link', 'Lien de la pétition'),
-        (13, 'company', 'name', 'Nom de l\'entité'),
-        (14, 'company', 'email', 'Email de l\'entité'),
-        (15, 'articles', 'title', 'Titre de l\'article'),
-        (16, 'adverts', 'title', 'Titre de l\'annonce');";
+        (1, 'team', 'email', 'Email de l\'administrateur'),
+        (2, 'team', 'lastname', 'Nom de l\'administrateur'),
+        (3, 'user', 'email', 'Email de l\'utilisateur'),
+        (4, 'user', 'firstname', 'Prénom de l\'utilisateur'),
+        (5, 'user', 'lastname', 'Nom de l\'utilisateur'),
+        (6, 'petitions', 'title', 'Titre de la pétition'),
+        (7, 'petitions', 'link', 'Lien de la pétition'),
+        (8, 'company', 'name', 'Nom de l\'entité'),
+        (9, 'company', 'email', 'Email de l\'entité'),
+        (10, 'articles', 'title', 'Titre de l\'article'),
+        (11, 'adverts', 'title', 'Titre de l\'annonce');";
         
         $db->prepare($sql);
         $db->executeQuery($sql);

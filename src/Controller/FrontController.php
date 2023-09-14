@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Repository\VisitorsRepository;
-use App\Repository\StatisticsRepository;
 use App\Entity\Visitors;
 use App\Entity\Statistics;
+use App\Repository\VisitorsRepository;
+use App\Repository\StatisticsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class FrontController extends AbstractController
 {

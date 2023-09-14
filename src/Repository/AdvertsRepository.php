@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Adverts;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Adverts>
@@ -21,28 +22,47 @@ class AdvertsRepository extends ServiceEntityRepository
         parent::__construct($registry, Adverts::class);
     }
 
-//    /**
-//     * @return Adverts[] Returns an array of Adverts objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function createOrderedByDateQueryBuilder($status, $localization, $types, $min_price, $max_price, $order_by, $order_way): QueryBuilder
+    {
+        $queryBuilder = $this->addOrderByDateQueryBuilder();
+        if ($status) {
+            $queryBuilder->andWhere('a.fk_status = :fk_status')
+                ->setParameter('fk_status', $status);
+        }
+        if ($types) {
+            $queryBuilder->andWhere('a.fk_pets_type in (:fk_pets_type)')
+                ->setParameter('fk_pets_type', $types);
+        }
+        if ($min_price && $max_price === null) {
+            $queryBuilder->andWhere('a.price > :price')
+                ->setParameter('price', $min_price);
+        } elseif($min_price && $max_price) {
+            $queryBuilder->andWhere('a.price between :min_price and :max_price')
+                ->setParameter('min_price', $min_price)
+                ->setParameter('max_price', $max_price);
+        }
 
-//    public function findOneBySomeField($value): ?Adverts
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if($localization && intval($localization) != 0 && strlen($localization) == 2) {
+            $queryBuilder->andWhere('c.zip_code like :localization')
+                ->setParameter('localization', intval($localization).'%');
+        } elseif($localization && intval($localization) != 0 && strlen($localization) > 2) {
+            $queryBuilder->andWhere('c.zip_code = :localization')
+                ->setParameter('localization', intval($localization));
+        } elseif($localization && intval($localization) == 0) {
+            $queryBuilder->andWhere('c.town = :localization')
+                ->setParameter('localization', $localization);
+        }
+
+        $queryBuilder->orderBy('a.' . $order_by, $order_way);
+        
+        return $queryBuilder;
+    }
+
+    private function addOrderByDateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        $queryBuilder = $queryBuilder ?? $this->createQueryBuilder('a');
+        $queryBuilder
+            ->join('a.fk_company', 'c');
+        return $queryBuilder;
+    }
 }

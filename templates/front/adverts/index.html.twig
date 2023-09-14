@@ -1,0 +1,85 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Annonces{% endblock %}
+
+{% block body %}
+        
+        <form name="form" method="post" action="{{ path('app_adverts_index') }}">
+            <div class="d-flex">
+                <div>
+                    Type d'animaux
+                    <ul>
+                        {% for type in types %}
+                            <li><input name="fk_type[]" type="checkbox" value="{{ type.id }}" {% if type.id in app.session.get('types') %}checked{% endif %}> {{ type.name }}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div>
+                    Localisation<br >
+                    <input type="text" name="localization" placeholder="Ville ou code postal" value="{{ app.session.get('localization') ?? null }}" />
+                </div>
+                <div>
+                    Prix Min <input type="number" min="0" name="min_price" value="{{ app.session.get('min_price') ?? null }}" /> €<br >
+                    Prix Max <input type="number" min="0" name="max_price" value="{{ app.session.get('max_price') ?? null }}" /> €
+                </div>
+                <div>
+                    <select name="order">
+                        <option value="price-ASC" {% if app.session.get('order') == "price-ASC" %}selected{% endif %}>Prix croissant</option>
+                        <option value="price-DESC" {% if app.session.get('order') == "price-DESC" %}selected{% endif %}>Prix décroissant</option>
+                        <option value="date_add-ASC" {% if app.session.get('order') == "date_add-ASC" %}selected{% endif %}>Plus anciennes</option>
+                        <option value="date_add-DESC" {% if app.session.get('order') == "date_add-DESC" %}selected{% endif %}>Plus récentes</option>
+                    </select>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-info">Rechercher</button><br/>
+                    <a href="{{ path('app_adverts_reset') }}" class="btn btn-sm btn-info mt-2">Effacer les filtres</a>
+                </div>
+            </div>
+        </form>
+        
+        {% for advert in pager %}
+            <div>
+                {% if advert.isPro == true %}
+                    <div>Pro</div>
+                {% endif %}
+
+                {% if advert.lof == true %}
+                    <div>LOF</div>
+                {% endif %}
+                <div class="d-flex">
+                    <div>
+                        {% if advert.firstMedia is not null %}
+                            <img src="/uploads/{{ advert.firstMedia.filename }}" title="{{ advert.Title }}" width="300px" height="auto" />
+                        {% else %}
+                            No photo
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h4>
+                            <a href="{{ path('app_adverts_show', {'id': advert.id}) }}">{{ advert.Title }}</a>
+                        </h4>
+
+                        <p>{{ advert.shortDescription|raw }}</p>
+
+                        <p>
+                            {{ advert.fkCompany.zipCode }} {{ advert.fkCompany.town }}<br />
+                            {{ advert.fkCompany.name }}<br />
+                            {{ advert.fkPetsType.name }}<br />
+                            {% if advert.price > 0 %}
+                                {{ advert.price|number_format(2, ',', '') }} €
+                            {% else %}
+                                Don
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div>
+                Aucun résultat ne correspond à votre recherche
+            </div>
+        {% endfor %}
+        <div class="mt-3">
+            {{ pagerfanta(pager) }}
+        </div>
+{% endblock %}

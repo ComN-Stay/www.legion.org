@@ -72,7 +72,7 @@ class Adverts
     #[ORM\Column]
     private ?bool $is_pro = null;
 
-    #[ORM\OneToMany(mappedBy: 'fk_advert', targetEntity: Medias::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'fk_advert', targetEntity: Medias::class, orphanRemoval: true, fetch: 'EAGER')]
     private Collection $medias;
 
     #[ORM\Column(type: Types::SMALLINT)]
@@ -81,6 +81,9 @@ class Adverts
     #[ORM\ManyToOne(inversedBy: 'adverts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $fk_status = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $date_add = null;
 
     public function __construct()
     {
@@ -316,6 +319,11 @@ class Adverts
         return $this->medias;
     }
 
+    public function getFirstMedia()
+    {
+        return $this->medias[0];
+    }
+
     public function addMedia(Medias $media): static
     {
         if (!$this->medias->contains($media)) {
@@ -358,6 +366,18 @@ class Adverts
     public function setFkStatus(?Status $status): static
     {
         $this->fk_status = $status;
+
+        return $this;
+    }
+
+    public function getDateAdd(): ?\DateTimeInterface
+    {
+        return $this->date_add;
+    }
+
+    public function setDateAdd(\DateTimeInterface $date_add): static
+    {
+        $this->date_add = $date_add;
 
         return $this;
     }

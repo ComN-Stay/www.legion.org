@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adverts{% endblock %}
+
+{% block body %}
+    <h1>Adverts</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ advert.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ advert.Title }}</td>
+            </tr>
+            <tr>
+                <th>Short_description</th>
+                <td>{{ advert.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ advert.description }}</td>
+            </tr>
+            <tr>
+                <th>Lof</th>
+                <td>{{ advert.lof ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Lof_number</th>
+                <td>{{ advert.lofNumber }}</td>
+            </tr>
+            <tr>
+                <th>Lof_identifier</th>
+                <td>{{ advert.lofIdentifier }}</td>
+            </tr>
+            <tr>
+                <th>Lof_father_name</th>
+                <td>{{ advert.lofFatherName }}</td>
+            </tr>
+            <tr>
+                <th>Lof_father_identifier</th>
+                <td>{{ advert.lofFatherIdentifier }}</td>
+            </tr>
+            <tr>
+                <th>Lof_mother_name</th>
+                <td>{{ advert.lofMotherName }}</td>
+            </tr>
+            <tr>
+                <th>Lof_mother_identifier</th>
+                <td>{{ advert.lofMotherIdentifier }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ advert.name }}</td>
+            </tr>
+            <tr>
+                <th>Birth_date</th>
+                <td>{{ advert.birthDate ? advert.birthDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Identified</th>
+                <td>{{ advert.identified ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Vaccinated</th>
+                <td>{{ advert.vaccinated ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ advert.price }}</td>
+            </tr>
+            <tr>
+                <th>Is_pro</th>
+                <td>{{ advert.isPro ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Visits</th>
+                <td>{{ advert.visits }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_adverts_index') }}">back to list</a>
+
+    <a href="{{ path('app_adverts_edit', {'id': advert.id}) }}">edit</a>
+
+    {{ include('adverts/_delete_form.html.twig') }}
+{% endblock %}

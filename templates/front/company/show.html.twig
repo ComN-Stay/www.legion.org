@@ -11,7 +11,7 @@
         {% else %}
             <img src="/assets/img/logo.png" width="200px" height="auto" alt="{{ company.name }}">
         {% endif %}
-        <p>{{ company.description }}</p>
+        <p>{{ company.description|raw }}</p>
         <p>
             {{ company.address }}<br />
             {% if company.additionalAddress != '' %}
@@ -47,7 +47,7 @@
             const { Map } = await google.maps.importLibrary("maps");
             const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
             map = new Map(document.getElementById("map"), {
-                zoom: 8,
+                zoom: 15,
                 center: position,
                 mapId: "legionMap",
             });

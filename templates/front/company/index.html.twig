@@ -15,7 +15,7 @@
             </p>
             <p>{{ company.name }}</p>
             <p>{{ company.zipCode }} {{ company.town }}</p>
-            <p>{{ company.shortDescription }}</p>
+            <p>{{ company.shortDescription|raw }}</p>
             <p>
                 <a href="{{ path('app_company_show', {'id': company.id }) }}">Voir</a>
             </p>

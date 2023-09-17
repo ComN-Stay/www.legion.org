@@ -27,7 +27,16 @@ class CompanyType extends AbstractType
             ])
             ->add('address', TextType::class, [
                 'label' => 'Adresse',
-                'required' => true
+                'required' => true,
+                'attr' => [
+                    'dir' => 'ltr',
+                    'spellcheck' => 'false',
+                    'autocorrect' => 'off',
+                    'autocomplete' => 'off',
+                    'autocapitalize' => 'off',
+                    'aria-controls' => 'autoComplete_list', 
+                    'aria-autocomplete' => 'both'
+                ]
             ])
             ->add('additional_address', TextType::class, [
                 'label' => 'Complément d\'adresse',

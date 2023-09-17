@@ -39,7 +39,6 @@ class CompanyController extends AbstractController
         CompanyTypeRepository $companyTypeRepository, 
         EntityManagerInterface $entityManager, 
         FileUploaderService $fileUploader,
-        CallGoogleApiService $callGoogleApiService,
         UserRepository $userRepository,
         MailService $mail,
         $typeId, $userToken
@@ -61,12 +60,7 @@ class CompanyController extends AbstractController
                     $company->setLogo($fileName);
                 }
             }
-            $address = urlencode($company->getAddress() . ' ' . $company->getZipCode() . ' ' . $company->getTown());
-            $geolocalization = $callGoogleApiService->getGeolocalization($address);
-            if($geolocalization['status'] == 'OK') {
-                $company->setLatitude($geolocalization['results'][0]['geometry']['location']['lat']);
-                $company->setLongitude($geolocalization['results'][0]['geometry']['location']['lng']);
-            }
+            
             $entityManager->persist($company);
             $entityManager->flush();
 

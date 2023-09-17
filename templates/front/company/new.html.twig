@@ -10,6 +10,7 @@
     {{ form_start(form) }}
         {{ form_row(form.name) }}
         {{ form_row(form.address) }}
+        <div id="result"></div>
         {{ form_row(form.additional_address) }}
         {{ form_row(form.zip_code) }}
         {{ form_row(form.town) }}
@@ -23,6 +24,8 @@
         {{ form_row(form.instagram) }}
         {{ form_row(form.agreeTerms) }}
         {{ form_row(form._token) }}
+        <input type="hidden" id="company_longitude" name="company[longitude]" value="">
+        <input type="hidden" id="company_latitude" name="company[latitude]" value="">
         <input type="hidden" id="company_type_id" name="company[type_id]" value="{{ typeId }}">
         <input type="hidden" id="company_userToken" name="company[userToken]" value="{{ userToken }}">
         <button class="btn">Créer le compte de ma structure</button>

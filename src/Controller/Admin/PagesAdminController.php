@@ -76,6 +76,7 @@ class PagesAdminController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $page->setSlug($sluggerInterface->slug($page->getTitle()));
             $entityManager->flush();
 
             return $this->redirectToRoute('app_pages_admin_index', [], Response::HTTP_SEE_OTHER);

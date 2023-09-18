@@ -3,11 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Pages;
+use App\Entity\PagesTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class PagesType extends AbstractType
@@ -26,17 +27,11 @@ class PagesType extends AbstractType
                     'class' => 'tinymce',
                     ],
             ])
-            ->add('type', ChoiceType::class, [
+            ->add('fk_type', EntityType::class, [
                 'label' => 'Type de page',
                 'required' => true,
-                'choices' => [
-                    'Mentions légales' => 'ml',
-                    'Conditions générales d\'utilisation' => 'CGU',
-                    'Conditions générales de vente' => 'CGV',
-                    'Politique de protection des données' => 'RGPD',
-                    'Pages du site' => 'Pages',
-                    'Block texte' => 'block'
-                ]
+                'class' => PagesTypes::class,
+                'choice_label' => 'name'
             ])
             ->add('meta_title', TextType::class, [
                 'label' => 'Meta title',

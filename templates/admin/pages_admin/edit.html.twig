@@ -8,7 +8,8 @@
 
 <div class="d-flex mt-3">
     <a href="{{ path('app_pages_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
-
+{% if page.fkType.hasVersion == 0 %}
     {{ include('admin/pages_admin/_delete_form.html.twig') }}
+{% endif %}
 </div>
 {% endblock %}

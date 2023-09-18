@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230902142527 extends AbstractMigration
+final class Version20230918082705 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,16 @@ final class Version20230902142527 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE pages ADD type VARCHAR(255) NOT NULL');
+        $this->addSql('ALTER TABLE pages ADD fk_type_id INT NOT NULL');
+        $this->addSql('ALTER TABLE pages ADD CONSTRAINT FK_2074E5753563B1BF FOREIGN KEY (fk_type_id) REFERENCES pages_types (id)');
+        $this->addSql('CREATE INDEX IDX_2074E5753563B1BF ON pages (fk_type_id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE pages DROP type');
+        $this->addSql('ALTER TABLE pages DROP FOREIGN KEY FK_2074E5753563B1BF');
+        $this->addSql('DROP INDEX IDX_2074E5753563B1BF ON pages');
+        $this->addSql('ALTER TABLE pages DROP fk_type_id');
     }
 }

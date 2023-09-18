@@ -92,3 +92,5 @@ nb-configuration.xml
 /logs/*
 
 ###< app & os files ###
+*.local-error_log
+public_html/logs/legion.local-error_log

@@ -35,8 +35,9 @@ class Pages
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_add = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    #[ORM\ManyToOne(inversedBy: 'pages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PagesTypes $fk_type = null;
 
     public function getId(): ?int
     {
@@ -127,14 +128,14 @@ class Pages
         return $this;
     }
 
-    public function getType(): ?string
+    public function getFkType(): ?PagesTypes
     {
-        return $this->type;
+        return $this->fk_type;
     }
 
-    public function setType(string $type): static
+    public function setFkType(?PagesTypes $fk_type): static
     {
-        $this->type = $type;
+        $this->fk_type = $fk_type;
 
         return $this;
     }

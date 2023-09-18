@@ -2,33 +2,34 @@
 
 namespace App\DataFixtures;
 
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Faker\Factory;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use App\Repository\ArticlesRepository;
-use App\Entity\User;
-use App\Entity\Team;
 use App\Entity\Tags;
+use App\Entity\Team;
+use App\Entity\User;
+use App\Entity\Gender;
+use App\Entity\Medias;
 use App\Entity\Status;
-use App\Entity\Statistics;
+use App\Entity\Adverts;
+use App\Entity\Company;
+use App\Entity\Articles;
+// use App\Entity\Consents;
 use App\Entity\PetsType;
 use App\Entity\Petitions;
-use App\Entity\Medias;
-use App\Entity\Gender;
+use App\Entity\PagesTypes;
+use App\Entity\Statistics;
 use App\Entity\CompanyType;
-use App\Entity\Company;
 use App\Entity\ArticlesMedias;
-use App\Entity\Articles;
-use App\Entity\Adverts;
+use App\Repository\ArticlesRepository;
+use Doctrine\Persistence\ObjectManager;
+use App\Repository\PagesTypesRepository;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
@@ -38,18 +39,21 @@ class AppFixtures extends Fixture
     private $output;
     private $kernel;
     private $articlesRepository;
+    private $pagesTypesRepository;
     
     public function __construct(
         UserPasswordHasherInterface $passwordHasher, 
         SluggerInterface $sluggerInterface, 
         KernelInterface $kernel, 
-        ArticlesRepository $articlesRepository)
+        ArticlesRepository $articlesRepository,
+        PagesTypesRepository $pagesTypesRepository)
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create('fr_FR');
         $this->slugger = $sluggerInterface;
         $this->kernel = $kernel;
         $this->articlesRepository = $articlesRepository;
+        $this->pagesTypesRepository = $pagesTypesRepository;
     }
 
     public function load(ObjectManager $manager): void
@@ -74,6 +78,8 @@ class AppFixtures extends Fixture
             $this->transactionalFixtures($manager);
             $this->ArticlesFixtures($manager, 200);
             $this->ArticleMediasFixtures($manager);
+            $this->PagesTypeFixtures($manager);
+            $this->PagesFixtures($manager);
             $this->output->writeln('<info>Done ! fixtures loaded.</info>');
         }
     }
@@ -239,10 +245,23 @@ class AppFixtures extends Fixture
             $user[$i]->setRoles([$role]);
             $user[$i]->setIsCompanyAdmin(($role == 'ROLE_ADMIN_CUSTOMER') ? 1 : 0);
             if($role != 'ROLE_IDENTIFIED') {
-                $user[$i]->setFkCompany($this->getRandomReference('App\Entity\Company', $manager));
+                $company = $this->getRandomReference('App\Entity\Company', $manager);
+                $user[$i]->setFkCompany($company);
             }
             $user[$i]->setToken(bin2hex(random_bytes(60)));
             $manager->persist($user[$i]);
+            $id = $user[$i]->getId();
+            /*$PagesTypes = ['cgu_user', 'cgu_company', 'cgv', 'news', 'rgpd'];
+            foreach($PagesTypes as $PagesType) {
+                $consentType = $this->pagesTypesRepository->findOneBy(['type' => $PagesType], ['date_add' => 'DESC']);
+                $consents = new Consents;
+                $consents->setFkUser($user[$i]);
+                $consents->setFkType($consentType);
+                $consents->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
+                if($consentType->isHasVersion() == true) {
+                    $consents->setVersion($consentType->getdate)
+                }
+            }*/
             $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
@@ -550,6 +569,53 @@ class AppFixtures extends Fixture
         $this->output->writeln('<info>Articles medias fixtures loaded</info>');
     }
 
+    public function PagesTypeFixtures($manager)
+    {
+        $sql = "INSERT INTO `pages_types` (`id`, `name`, `type`, `has_version`) VALUES
+        (1, 'Conditions générales d\'utilisation utilisateur', 'cgu_user', 1),
+        (2, 'Conditions générales d\'utilisation company', 'cgu_company', 1),
+        (3, 'Conditions générales de vente', 'cgv', 1),
+        (4, 'Newsletter', 'news', 0),
+        (5, 'Politique de protection des données', 'rgpd', 1);";
+    
+        $this->output->writeln('<info>Loading PagesType fixtures ...</info>');
+    
+        $db = $manager->getConnection();
+        $db->beginTransaction();
+        $db->prepare($sql);
+        $db->executeQuery($sql);
+        $db->commit();
+        $db->beginTransaction();
+        $this->output->writeln('<info>PagesType fixtures loaded</info>');
+    }
+
+    public function PagesFixtures($manager)
+    {
+        $type1 = $this->getReferencedObject(PagesTypes::class, 1, $manager);
+        $type2 = $this->getReferencedObject(PagesTypes::class, 2, $manager);
+        $type3 = $this->getReferencedObject(PagesTypes::class, 3, $manager);
+        $type4 = $this->getReferencedObject(PagesTypes::class, 4, $manager);
+        $type5 = $this->getReferencedObject(PagesTypes::class, 5, $manager);
+        $type6 = $this->getReferencedObject(PagesTypes::class, 6, $manager);
+        $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`) VALUES
+        (1, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-18', {$type1}),
+        (2, 'Conditions de services', '<p>Conditions de services</p>', 'Conditions-de-services', 'Conditions de services', 'Conditions de services', 'Conditions de services', '2023-09-18', {$type2}),
+        (3, 'Conditions générales de vente', '<p>Conditions g&eacute;n&eacute;rales de vente</p>', 'Conditions-generales-de-vente', 'Conditions générales de vente', 'Conditions générales de vente', 'Conditions générales de vente', '2023-09-18', {$type3}),
+        (4, 'Politique de protection des données', '<p>Politique de protection des donn&eacute;es</p>', 'Politique-de-protection-des-donnees', 'Politique de protection des données', 'Politique de protection des données', 'Politique de protection des données', '2023-09-18', {$type5}),
+        (5, 'Qui sommes nous', '<p>Qui sommes nous</p>', 'Qui-sommes-nous', 'Qui sommes nous', 'Qui sommes nous', 'Qui sommes nous', '2023-09-18', {$type6});";
+
+        $this->output->writeln('<info>Loading Pages fixtures ...</info>');
+
+        $db = $manager->getConnection();
+        $db->beginTransaction();
+        $db->prepare($sql);
+        $db->executeQuery($sql);
+        $db->commit();
+        $db->beginTransaction();
+        $this->output->writeln('<info>Pages fixtures loaded</info>');
+    }
+
+
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);
     }
@@ -590,6 +656,8 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `articles_tags`;
             DROP TABLE IF EXISTS `status`;
             DROP TABLE IF EXISTS `pages`;
+            DROP TABLE IF EXISTS `pages_types`;
+            DROP TABLE IF EXISTS `consents`;
             SET FOREIGN_KEY_CHECKS=1;
             ';
 

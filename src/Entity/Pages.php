@@ -39,6 +39,13 @@ class Pages
     #[ORM\JoinColumn(nullable: false)]
     private ?PagesTypes $fk_type = null;
 
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $version = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Status $fk_status = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -136,6 +143,30 @@ class Pages
     public function setFkType(?PagesTypes $fk_type): static
     {
         $this->fk_type = $fk_type;
+
+        return $this;
+    }
+
+    public function getVersion(): ?int
+    {
+        return $this->version;
+    }
+
+    public function setVersion(int $version): static
+    {
+        $this->version = $version;
+
+        return $this;
+    }
+
+    public function getFkStatus(): ?Status
+    {
+        return $this->fk_status;
+    }
+
+    public function setFkStatus(?Status $fk_status): static
+    {
+        $this->fk_status = $fk_status;
 
         return $this;
     }

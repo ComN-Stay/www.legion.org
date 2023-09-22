@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Pages;
+use App\Entity\Status;
 use App\Entity\PagesTypes;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,6 +45,12 @@ class PagesType extends AbstractType
             ->add('meta_keywords', TextType::class, [
                 'label' => 'Meta mots clés',
                 'required' => false
+            ])
+            ->add('fk_status', EntityType::class, [
+                'label' => 'Statut',
+                'required' => true,
+                'class' => Status::class,
+                'choice_label' => 'name'
             ])
         ;
     }

@@ -67,6 +67,8 @@ class AppFixtures extends Fixture
             $this->teamFixtures($manager);
             $this->companyTypeFixtures($manager);
             $this->companyFixtures($manager, 30);
+            $this->PagesTypeFixtures($manager);
+            $this->PagesFixtures($manager);
             $this->usersFixtures($manager, 100);
             $this->petsTypeFixtures($manager);
             $this->adsFixtures($manager, 500);
@@ -78,8 +80,6 @@ class AppFixtures extends Fixture
             $this->transactionalFixtures($manager);
             $this->ArticlesFixtures($manager, 200);
             $this->ArticleMediasFixtures($manager);
-            $this->PagesTypeFixtures($manager);
-            $this->PagesFixtures($manager);
             $this->output->writeln('<info>Done ! fixtures loaded.</info>');
         }
     }
@@ -88,12 +88,13 @@ class AppFixtures extends Fixture
     {
         $this->output->writeln('<info>Loading Status fixtures ...</info>');
 
-        $statuses = ['En cours de rédaction', 'En attente de publication', 'En ligne', 'refusé'];
+        $statuses = ['En cours de rédaction', 'En attente de publication', 'En ligne', 'refusé', 'Archivé'];
         $i = 1;
         foreach($statuses as $status) {
             $st[$i] = new Status;
             $st[$i]->setName($status);
             $manager->persist($st[$i]);
+            $i++;
         }
         $manager->flush();
         $this->output->writeln('<info>Status fixtures loaded</info>');
@@ -476,15 +477,15 @@ class AppFixtures extends Fixture
         $db->beginTransaction();
 
         $sql = "INSERT INTO `transactional` (`id`, `description`, `template`, `subject`, `content`) VALUES
-        (1, 'Mail envoyé lors de l\'inscription d\'un internaute', 'welcome_user', 'Bienvenue sur Légion', '<p>Bonjour {{ user.firstname }} {{ user.lastname }},</p>\r\n<p>Bienvenue sur L&eacute;gion !</p>'),
-        (2, 'Email envoyé lors de la création d\'un compte admin', 'admin_password_create', 'Création de votre compte administrateur sur Légion', '<p>Bonjour {{ team.firstname }},</p>\r\n<p>Ton compte administrateur vient d\'&ecirc;tre cr&eacute;&eacute; sur L&eacute;gion !</p>\r\n<p>Il ne te reste plus qu\'&agrave; suivre ce lien pour cr&eacute;er ton mot de passe :</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset/{{%20resetToken%20}}\">Cr&eacute;er mon mot de passe</a></p>\r\n<div>\r\n<div>Attention, ce lien n\'est valide que durant 1 heure</div>\r\n</div>'),
-        (3, 'Mail envoyé pour la réinitialisation du mot de passe (users et admins)', 'reset_password', 'Réinitialisation de votre mot de passe', '<p>Bonjour,</p>\r\n<p>vous avez demand&eacute; la r&eacute;initialisation de votre mot de passe.</p>\r\n<p>Suivez le len ci-dessous afin de le r&eacute;initialiser</p>\r\n<p><a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset-password/reset/{{%20resetToken.token%20}}\">R&eacute;initialiser mon mot de passe</a></p>\r\n<p>Attention, ce lien n\'est valide que durant 1 heure</p>'),
-        (4, 'Mail envoyé à l\'internaute lors de la création du compte d\'une structure', 'welcome_company', 'Bienvenue sur Légion !', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Votre compte a &eacute;t&eacute; cr&eacute;&eacute; sur L&eacute;gion, vous pouvez d&eacute;sormais vous connecter et commencer &agrave; g&eacute;rer votre structure \"{{ company.name }}\" !</p>\r\n<p>Celle ci n\'est pas encore active, vous recevrez un email lors de son activation par un administrateur.</p>'),
-        (5, 'Mail envoyé à l\'administrateur principal d\'une structure lors de son activation', 'company_activation', 'Activation de votre compte', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Nous avons le plaisir de vous informer que le compte de votre structure {{ company.name }} vient d\'&ecirc;tre activ&eacute; !</p>\r\n<p>Les internautes ont acc&egrave;s &agrave; sa fiche et peuvent voir vos annonces, p&eacute;titions et autres articles !</p>'),
-        (6, 'Mail envoyé lors de l\'a mise en ligne d\'une annonce', 'active_advert', 'Activation de votre annonce', '<p>Bonjour,</p>\r\n<p>G&eacute;nial !!!</p>\r\n<p>Votre annonce {{ adverts.title }} est en ligne !</p>'),
-        (7, 'Mail envoyé lors du refus de mise en ligne d\'une annonce', 'advert_rejected', 'Refus de votre annonce', '<p>Bonjour,</p>\r\n<p>OUPSSSSS ...</p>\r\n<p>Il semblerai que votre anonce {{ adverts.title }} ne correspondent pas aux standards de la communaut&eacute;.</p>\r\n<p>Nous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation</p>'),
-        (8, 'Mail envoyé lors du refus de mise en ligne d\'un article', 'article_rejected', 'Refus de votre article', '<p>Bonjour,</p>\r\n<p>OUPSSSSS ...</p>\r\n<p>Il semblerai que votre article {{ articles.title }} ne correspondent pas aux standards de la communaut&eacute;.</p>\r\n<p>Nous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation</p>'),
-        (9, 'Mail envoyé lors de la suppression d\'une annonce', 'delete_advert', 'Suppression de votre annonce', '<p>Bonjour,</p>\r\n<p>Votre annonce {{ adverts.title }} a bien &eacute;t&eacute; supprim&eacute;e</p>');
+        (1, 'Mail envoyé lors de l\'inscription d\'un internaute', 'welcome_user', 'Bienvenue sur Légion', 'Bonjour {{ user.firstname }} {{ user.lastname }},\r\nBienvenue sur L&eacute;gion !'),
+        (2, 'Email envoyé lors de la création d\'un compte admin', 'admin_password_create', 'Création de votre compte administrateur sur Légion', 'Bonjour {{ team.firstname }},\r\nTon compte administrateur vient d\'&ecirc;tre cr&eacute;&eacute; sur L&eacute;gion !\r\nIl ne te reste plus qu\'&agrave; suivre ce lien pour cr&eacute;er ton mot de passe :\r\n<a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset/{{%20resetToken%20}}\">Cr&eacute;er mon mot de passe</a>\r\n<div>\r\n<div>Attention, ce lien n\'est valide que durant 1 heure</div>\r\n</div>'),
+        (3, 'Mail envoyé pour la réinitialisation du mot de passe (users et admins)', 'reset_password', 'Réinitialisation de votre mot de passe', 'Bonjour,\r\nvous avez demand&eacute; la r&eacute;initialisation de votre mot de passe.\r\nSuivez le len ci-dessous afin de le r&eacute;initialiser\r\n<a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset-password/reset/{{%20resetToken.token%20}}\">R&eacute;initialiser mon mot de passe</a>\r\nAttention, ce lien n\'est valide que durant 1 heure'),
+        (4, 'Mail envoyé à l\'internaute lors de la création du compte d\'une structure', 'welcome_company', 'Bienvenue sur Légion !', 'Bonjour {{ user.firstname }},\r\nVotre compte a &eacute;t&eacute; cr&eacute;&eacute; sur L&eacute;gion, vous pouvez d&eacute;sormais vous connecter et commencer &agrave; g&eacute;rer votre structure \"{{ company.name }}\" !\r\nCelle ci n\'est pas encore active, vous recevrez un email lors de son activation par un administrateur.'),
+        (5, 'Mail envoyé à l\'administrateur principal d\'une structure lors de son activation', 'company_activation', 'Activation de votre compte', 'Bonjour {{ user.firstname }},\r\nNous avons le plaisir de vous informer que le compte de votre structure {{ company.name }} vient d\'&ecirc;tre activ&eacute; !\r\nLes internautes ont acc&egrave;s &agrave; sa fiche et peuvent voir vos annonces, p&eacute;titions et autres articles !'),
+        (6, 'Mail envoyé lors de l\'a mise en ligne d\'une annonce', 'active_advert', 'Activation de votre annonce', 'Bonjour,\r\nG&eacute;nial !!!\r\nVotre annonce {{ adverts.title }} est en ligne !'),
+        (7, 'Mail envoyé lors du refus de mise en ligne d\'une annonce', 'advert_rejected', 'Refus de votre annonce', 'Bonjour,\r\nOUPSSSSS ...\r\nIl semblerai que votre anonce {{ adverts.title }} ne correspondent pas aux standards de la communaut&eacute;.\r\nNous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation'),
+        (8, 'Mail envoyé lors du refus de mise en ligne d\'un article', 'article_rejected', 'Refus de votre article', 'Bonjour,\r\nOUPSSSSS ...\r\nIl semblerai que votre article {{ articles.title }} ne correspondent pas aux standards de la communaut&eacute;.\r\nNous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation'),
+        (9, 'Mail envoyé lors de la suppression d\'une annonce', 'delete_advert', 'Suppression de votre annonce', 'Bonjour,\r\nVotre annonce {{ adverts.title }} a bien &eacute;t&eacute; supprim&eacute;e');
         ";
         
         $db->prepare($sql);
@@ -591,30 +592,19 @@ class AppFixtures extends Fixture
 
     public function PagesFixtures($manager)
     {
-        $type1 = $this->getReferencedObject(PagesTypes::class, 1, $manager);
-        $type2 = $this->getReferencedObject(PagesTypes::class, 2, $manager);
-        $type3 = $this->getReferencedObject(PagesTypes::class, 3, $manager);
-        $type4 = $this->getReferencedObject(PagesTypes::class, 4, $manager);
-        $type5 = $this->getReferencedObject(PagesTypes::class, 5, $manager);
-        $type6 = $this->getReferencedObject(PagesTypes::class, 6, $manager);
-        $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`) VALUES
-        (1, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-18', {$type1}),
-        (2, 'Conditions de services', '<p>Conditions de services</p>', 'Conditions-de-services', 'Conditions de services', 'Conditions de services', 'Conditions de services', '2023-09-18', {$type2}),
-        (3, 'Conditions générales de vente', '<p>Conditions g&eacute;n&eacute;rales de vente</p>', 'Conditions-generales-de-vente', 'Conditions générales de vente', 'Conditions générales de vente', 'Conditions générales de vente', '2023-09-18', {$type3}),
-        (4, 'Politique de protection des données', '<p>Politique de protection des donn&eacute;es</p>', 'Politique-de-protection-des-donnees', 'Politique de protection des données', 'Politique de protection des données', 'Politique de protection des données', '2023-09-18', {$type5}),
-        (5, 'Qui sommes nous', '<p>Qui sommes nous</p>', 'Qui-sommes-nous', 'Qui sommes nous', 'Qui sommes nous', 'Qui sommes nous', '2023-09-18', {$type6});";
+        $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`, `version`, , `fk_status_id`) VALUES
+        (1, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-20', 1, 1, 1);";
 
         $this->output->writeln('<info>Loading Pages fixtures ...</info>');
 
-        $db = $manager->getConnection();
+        /*$db = $manager->getConnection();
         $db->beginTransaction();
         $db->prepare($sql);
         $db->executeQuery($sql);
         $db->commit();
-        $db->beginTransaction();
+        $db->beginTransaction();*/
         $this->output->writeln('<info>Pages fixtures loaded</info>');
     }
-
 
     protected function getReferencedObject(string $className, int $id, object $manager) {
         return $manager->find($className, $id);

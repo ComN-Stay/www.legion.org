@@ -50,7 +50,7 @@ class PagesAdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if($page->getFkType()->isHasVersion() == true && $page->getFkStatus()->getId() == 3) {
                 $status = $statusRepository->find(3);
-                $onlineDoc = $pagesRepository->findOneBy(['fk_type' => $page->getFkType(), 'fk_status' => $status]);dd($onlineDoc);
+                $onlineDoc = $pagesRepository->findOneBy(['fk_type' => $page->getFkType(), 'fk_status' => $status]);
                 $version = ($onlineDoc === null) ? 1 : $onlineDoc->getVersion() + 1;
                 $page->setVersion($version);
                 if($onlineDoc !== null) {

@@ -12,13 +12,15 @@ use App\Entity\Status;
 use App\Entity\Adverts;
 use App\Entity\Company;
 use App\Entity\Articles;
-// use App\Entity\Consents;
+use App\Entity\Consents;
 use App\Entity\PetsType;
 use App\Entity\Petitions;
 use App\Entity\PagesTypes;
 use App\Entity\Statistics;
 use App\Entity\CompanyType;
 use App\Entity\ArticlesMedias;
+use App\Repository\PagesRepository;
+use App\Repository\StatusRepository;
 use App\Repository\ArticlesRepository;
 use Doctrine\Persistence\ObjectManager;
 use App\Repository\PagesTypesRepository;
@@ -39,6 +41,8 @@ class AppFixtures extends Fixture
     private $output;
     private $kernel;
     private $articlesRepository;
+    private $pagesRepository;
+    private $statusRepository;
     private $pagesTypesRepository;
     
     public function __construct(
@@ -46,13 +50,18 @@ class AppFixtures extends Fixture
         SluggerInterface $sluggerInterface, 
         KernelInterface $kernel, 
         ArticlesRepository $articlesRepository,
-        PagesTypesRepository $pagesTypesRepository)
+        PagesRepository $pagesRepository,
+        StatusRepository $statusRepository,
+        PagesTypesRepository $pagesTypesRepository
+    )
     {
         $this->passwordHasher = $passwordHasher;
         $this->faker = Factory::create('fr_FR');
         $this->slugger = $sluggerInterface;
         $this->kernel = $kernel;
         $this->articlesRepository = $articlesRepository;
+        $this->pagesRepository = $pagesRepository;
+        $this->statusRepository = $statusRepository;
         $this->pagesTypesRepository = $pagesTypesRepository;
     }
 
@@ -252,17 +261,17 @@ class AppFixtures extends Fixture
             $user[$i]->setToken(bin2hex(random_bytes(60)));
             $manager->persist($user[$i]);
             $id = $user[$i]->getId();
-            /*$PagesTypes = ['cgu_user', 'cgu_company', 'cgv', 'news', 'rgpd'];
-            foreach($PagesTypes as $PagesType) {
-                $consentType = $this->pagesTypesRepository->findOneBy(['type' => $PagesType], ['date_add' => 'DESC']);
-                $consents = new Consents;
-                $consents->setFkUser($user[$i]);
-                $consents->setFkType($consentType);
-                $consents->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
-                if($consentType->isHasVersion() == true) {
-                    $consents->setVersion($consentType->getdate)
-                }
-            }*/
+            
+            $status = $this->statusRepository->find(3);
+            $pageType = $this->pagesTypesRepository->find(1);
+            $consentType = $this->pagesRepository->findOneBy(['fk_type' => $pageType, 'fk_status' => $status]);
+            $consents = new Consents;
+            $consents->setFkUser($user[$i]);
+            $consents->setFkType($consentType->getFkType());
+            $consents->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
+            $consents->setVersion($consentType->getVersion());
+            $consents->setVersionDate($consentType->getdateAdd());
+            
             $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
         }
@@ -592,17 +601,19 @@ class AppFixtures extends Fixture
 
     public function PagesFixtures($manager)
     {
-        $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`, `version`, , `fk_status_id`) VALUES
-        (1, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-20', 1, 1, 1);";
+        $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`, `version`, `fk_status_id`) VALUES
+        (2, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-21', 1, 1, 5),
+        (3, 'Conditions générales d\'utilisation V2', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation-V2', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-22', 1, 2, 5),
+        (4, 'Conditions générales d\'utilisation V3', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation-V3', NULL, NULL, NULL, '2023-09-22', 1, 3, 3);";
 
         $this->output->writeln('<info>Loading Pages fixtures ...</info>');
 
-        /*$db = $manager->getConnection();
+        $db = $manager->getConnection();
         $db->beginTransaction();
         $db->prepare($sql);
         $db->executeQuery($sql);
         $db->commit();
-        $db->beginTransaction();*/
+        $db->beginTransaction();
         $this->output->writeln('<info>Pages fixtures loaded</info>');
     }
 

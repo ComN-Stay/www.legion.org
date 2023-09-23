@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +47,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $is_company_admin = null;
+
+    #[ORM\OneToMany(mappedBy: 'fk_user', targetEntity: Consents::class, orphanRemoval: true)]
+    private Collection $consents;
+
+    public function __construct()
+    {
+        $this->consents = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -189,6 +199,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsCompanyAdmin(bool $is_company_admin): static
     {
         $this->is_company_admin = $is_company_admin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Consents>
+     */
+    public function getConsents(): Collection
+    {
+        return $this->consents;
+    }
+
+    public function addConsent(Consents $consent): static
+    {
+        if (!$this->consents->contains($consent)) {
+            $this->consents->add($consent);
+            $consent->setFkUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConsent(Consents $consent): static
+    {
+        if ($this->consents->removeElement($consent)) {
+            // set the owning side to null (unless already changed)
+            if ($consent->getFkUser() === $this) {
+                $consent->setFkUser(null);
+            }
+        }
 
         return $this;
     }

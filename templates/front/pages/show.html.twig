@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ page.metaTitle }}{% endblock %}
+{% block metadescription %}{{ page.metaDescription }}{% endblock %}
+{% block metakeywords %}{{ page.metaKeywords }}{% endblock %}
+
+{% block body %}
+    <h1>{{ page.title }}</h1>
+    {% if page.FkType.isHasVersion == true %}
+        <p>Version {{ page.version }} du {{ page.dateAdd|date('d/m/Y') }}</p>
+    {% endif %}
+    {{ page.description|raw }}
+
+{% endblock %}

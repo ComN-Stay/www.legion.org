@@ -63,6 +63,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $petitions_auth = null;
 
+    #[ORM\Column]
+    private ?bool $bo_access_auth = null;
+
     public function __construct()
     {
         $this->consents = new ArrayCollection();
@@ -289,6 +292,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPetitionsAuth(bool $petitions_auth): static
     {
         $this->petitions_auth = $petitions_auth;
+
+        return $this;
+    }
+
+    public function isBoAccessAuth(): ?bool
+    {
+        return $this->bo_access_auth;
+    }
+
+    public function setBoAccessAuth(bool $bo_access_auth): static
+    {
+        $this->bo_access_auth = $bo_access_auth;
 
         return $this;
     }

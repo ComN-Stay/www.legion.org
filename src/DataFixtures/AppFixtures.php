@@ -258,6 +258,10 @@ class AppFixtures extends Fixture
                 $company = $this->getRandomReference('App\Entity\Company', $manager);
                 $user[$i]->setFkCompany($company);
             }
+            $user[$i]->setAdvertsAuth(($role == 'ROLE_IDENTIFIED') ? 0 : 1);
+            $user[$i]->setArticlesAuth(true);
+            $user[$i]->setPetitionsAuth(($role == 'ROLE_IDENTIFIED') ? 0 : 1);
+            $user[$i]->setBoAccessAuth(($role == 'ROLE_IDENTIFIED') ? 0 : 1);
             $user[$i]->setToken(bin2hex(random_bytes(60)));
             $manager->persist($user[$i]);
             $id = $user[$i]->getId();

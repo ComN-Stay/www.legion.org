@@ -1,0 +1,44 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Gestion utilisateurs{% endblock %}
+
+{% block body %}
+
+    <table class="table _datatable table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Admin client</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles.0|lower|replace({'role_':'', '_':' '}) : '' }}</td>
+                <td>{{ user.isCompanyAdmin ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('app_user_admin_show', {'id': user.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a>
+                    <a href="{{ path('app_user_admin_edit', {'id': user.id}) }}"><i class="fa-solid fa-pen-to-square fa-xl"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucun résultat</td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_admin_new') }}" class="btn btn-success btn-lg">Nouvel utilisateur</a>
+{% endblock %}

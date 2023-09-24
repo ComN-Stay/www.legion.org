@@ -1,0 +1,81 @@
+{% extends 'admin/base_admin.html.twig' %}
+
+{% block title %}Fiche {{ user.firstname }} {{ user.lastname }}{% endblock %}
+
+{% block body %}
+
+    <ul class="nav nav-tabs" id="userTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="user" aria-selected="true">Infos utilisateur</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="articles-tab" data-bs-toggle="tab" data-bs-target="#articles" type="button" role="tab" aria-controls="articles" aria-selected="false">Articles</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="rgpd-tab" data-bs-toggle="tab" data-bs-target="#rgpd" type="button" role="tab" aria-controls="rgpd" aria-selected="false">RGPD</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="userContent">
+        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+            <table id="infoTable" class="table _datatable table-striped table-bordered">
+                <tbody>
+                    <tr>
+                        <td>Prénom</td>
+                        <td>{{ user.firstname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nom</td>
+                        <td>{{ user.lastname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Role</td>
+                        <td>{{ user.roles ? user.roles.0|lower|replace({'role_':'', '_':' '}) : '' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Admin client</td>
+                        <td>{{ user.isCompanyAdmin ? 'Oui' : 'Non' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <a href="{{ path('app_user_admin_index') }}" class="btn btn-info mr-3"><i class="fa-solid fa-chevron-left fa-sm mr-3"></i>Retour</a>
+            <div class="d-flex mt-3">
+                <a href="{{ path('app_user_admin_edit', {'id': user.id}) }}" class="btn btn-info mr-3"><i class="fa-solid fa-pen-to-square fa-lg mr-3"></i>Editer</a>
+
+                {{ include('admin/user_admin/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        <div class="tab-pane fade show" id="articles" role="tabpanel" aria-labelledby="articles-tab">
+
+        </div>
+
+        <div class="tab-pane fade show" id="rgpd" role="tabpanel" aria-labelledby="rgpd-tab">
+            <table id="consentsTable" class="table _datatable table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Version</th>
+                        <th>Date version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consent in consents %}
+                        <tr>
+                            <td>{{ consent.dateAdd|date('d/m/Y') }}</td>
+                            <td>{{ consent.fkType.name }}</td>
+                            <td>{{ consent.version }}</td>
+                            <td>{{ consent.versionDate|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

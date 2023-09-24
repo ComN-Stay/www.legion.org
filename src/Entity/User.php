@@ -51,6 +51,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'fk_user', targetEntity: Consents::class, orphanRemoval: true)]
     private Collection $consents;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
+    #[ORM\Column]
+    private ?bool $adverts_auth = null;
+
+    #[ORM\Column]
+    private ?bool $articles_auth = null;
+
+    #[ORM\Column]
+    private ?bool $petitions_auth = null;
+
     public function __construct()
     {
         $this->consents = new ArrayCollection();
@@ -229,6 +241,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $consent->setFkUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
+
+    public function isAdvertsAuth(): ?bool
+    {
+        return $this->adverts_auth;
+    }
+
+    public function setAdvertsAuth(bool $adverts_auth): static
+    {
+        $this->adverts_auth = $adverts_auth;
+
+        return $this;
+    }
+
+    public function isArticlesAuth(): ?bool
+    {
+        return $this->articles_auth;
+    }
+
+    public function setArticlesAuth(bool $articles_auth): static
+    {
+        $this->articles_auth = $articles_auth;
+
+        return $this;
+    }
+
+    public function isPetitionsAuth(): ?bool
+    {
+        return $this->petitions_auth;
+    }
+
+    public function setPetitionsAuth(bool $petitions_auth): static
+    {
+        $this->petitions_auth = $petitions_auth;
 
         return $this;
     }

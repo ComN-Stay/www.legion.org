@@ -2,16 +2,17 @@
 
 namespace App\Controller\Account;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
+use App\Form\UserType;
 use App\Service\MailService;
 use App\Repository\UserRepository;
-use App\Form\UserType;
-use App\Entity\User;
+use App\Service\FileUploaderService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/account/user')]
 class UserAccountController extends AbstractController
@@ -31,6 +32,7 @@ class UserAccountController extends AbstractController
         Request $request, 
         EntityManagerInterface $entityManager, 
         UserPasswordHasherInterface $passwordHasher, 
+        FileUploaderService $fileUploader,
         MailService $mail
     ): Response
     {
@@ -39,8 +41,27 @@ class UserAccountController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
             $type = $form->get('type')->getData();
             $role = ($type == 'perso') ? 'ROLE_IDENTIFIED' : 'ROLE_ADMIN_CUSTOMER';
+            if($role == 'ROLE_IDENTIFIED') {
+                $user->setAdvertsAuth(false);
+                $user->setArticlesAuth(true);
+                $user->setPetitionsAuth(true);
+                $user->setBoAccessAuth(false);
+            } elseif($role == 'ROLE_ADMIN_CUSTOMER') {
+                $user->setAdvertsAuth(true);
+                $user->setArticlesAuth(true);
+                $user->setPetitionsAuth(true);
+                $user->setBoAccessAuth(true);
+            }
+            $file = $form['picture']->getData();
+            if ($file) {
+                $fileName = $fileUploader->upload($file);
+                if (null !== $fileName) {
+                    $user->setPicture($fileName);
+                }
+            }
             $token = bin2hex(random_bytes(60));
             $user->setRoles([$role]);
             $hashPassword = $passwordHasher->hashPassword($user, $user->getPassword());

@@ -30,12 +30,13 @@ class PagesController extends AbstractController
         PagesTypesRepository $pagesTypesRepository,
         PagesRepository $pagesRepository,
         StatusRepository $statusRepository
-    )
+    ): Response
     {
         $typeId = $request->attributes->get('id');
         $status = $statusRepository->find(3);
         $type = $pagesTypesRepository->find($typeId);
         $page = $pagesRepository->findOneBy(['fk_type' => $type, 'fk_status' => $status]);
-        return new Response('/page/' . $page->getSlug());
+        
+        return new Response(($page !== null) ? '/page/' . $page->getSlug() : null);
     }
 }

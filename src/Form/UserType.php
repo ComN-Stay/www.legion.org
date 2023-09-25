@@ -2,18 +2,20 @@
 
 namespace App\Form;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Entity\User;
+use App\Entity\Gender;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\User;
-use App\Entity\Gender;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -65,6 +67,24 @@ class UserType extends AbstractType
                     'label' => 'Confirmation du mot de passe'
                 ],
                 'help' => 'Le mot de passe doit contenir au minimum 10 caractères avec au minimum 1 minuscule, 1 majuscule, 1 chiffre et un caractère spécial parmis @ ! ? * + - _ ~',
+            ])
+            ->add('picture', FileType::class, [
+                'data_class' => null,
+                'label' => 'Avatar',
+                'required' => false,
+                'help' => 'Fichier jpg, jpeg, png ou webp ne dépassant pas 1 Mo',
+                'constraints' => [
+                    new File([ 
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'Votre fichier ne doit pas dépasser les 1 M0',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp'
+                        ],
+                        'mimeTypesMessage' => "Merci de télécharger une photo valide.",
+                    ]),
+                ]
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,

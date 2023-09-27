@@ -86,14 +86,24 @@ class Adverts
     private ?\DateTimeInterface $date_add = null;
 
     #[ORM\Column]
-    private ?int $likes = null;
+    private ?int $nb_likes = null;
 
     #[ORM\Column]
-    private ?int $shares = null;
+    private ?int $nb_shares = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinTable(name: 'adverts_likes')]
+    private Collection $likes;
+
+    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\JoinTable(name: 'adverts_shares')]
+    private Collection $shares;
 
     public function __construct()
     {
         $this->medias = new ArrayCollection();
+        $this->likes = new ArrayCollection();
+        $this->shares = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -388,26 +398,74 @@ class Adverts
         return $this;
     }
 
-    public function getLikes(): ?int
+    public function getNbLikes(): ?int
     {
-        return $this->likes;
+        return $this->nb_likes;
     }
 
-    public function setLikes(int $likes): static
+    public function setNbLikes(int $nb_likes): static
     {
-        $this->likes = $likes;
+        $this->nb_likes = $nb_likes;
 
         return $this;
     }
 
-    public function getShares(): ?int
+    public function getNbShares(): ?int
+    {
+        return $this->nb_shares;
+    }
+
+    public function setNbShares(int $nb_shares): static
+    {
+        $this->nb_shares = $nb_shares;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(User $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(User $like): static
+    {
+        $this->likes->removeElement($like);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getShares(): Collection
     {
         return $this->shares;
     }
 
-    public function setShares(int $shares): static
+    public function addShare(?User $share): static
     {
-        $this->shares = $shares;
+        if (!$this->likes->contains($share)) {
+            $this->likes->add($share);
+        }
+
+        return $this;
+    }
+
+    public function removeShare(User $share): static
+    {
+        $this->likes->removeElement($share);
 
         return $this;
     }

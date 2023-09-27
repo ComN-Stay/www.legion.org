@@ -15,7 +15,6 @@ use App\Entity\Articles;
 use App\Entity\Consents;
 use App\Entity\PetsType;
 use App\Entity\Petitions;
-use App\Entity\PagesTypes;
 use App\Entity\Statistics;
 use App\Entity\CompanyType;
 use App\Entity\ArticlesMedias;
@@ -500,7 +499,8 @@ class AppFixtures extends Fixture
         (6, 'Mail envoyé lors de l\'a mise en ligne d\'une annonce', 'active_advert', 'Activation de votre annonce', 'Bonjour,\r\nG&eacute;nial !!!\r\nVotre annonce {{ adverts.title }} est en ligne !'),
         (7, 'Mail envoyé lors du refus de mise en ligne d\'une annonce', 'advert_rejected', 'Refus de votre annonce', 'Bonjour,\r\nOUPSSSSS ...\r\nIl semblerai que votre anonce {{ adverts.title }} ne correspondent pas aux standards de la communaut&eacute;.\r\nNous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation'),
         (8, 'Mail envoyé lors du refus de mise en ligne d\'un article', 'article_rejected', 'Refus de votre article', 'Bonjour,\r\nOUPSSSSS ...\r\nIl semblerai que votre article {{ articles.title }} ne correspondent pas aux standards de la communaut&eacute;.\r\nNous avons donc d&eacute;cid&eacute; de ne pas la mettre en ligne telle qu\'elle, vous pouvez la modifier et la proposer de nouveau &agrave; l\'&eacute;valuation'),
-        (9, 'Mail envoyé lors de la suppression d\'une annonce', 'delete_advert', 'Suppression de votre annonce', 'Bonjour,\r\nVotre annonce {{ adverts.title }} a bien &eacute;t&eacute; supprim&eacute;e');
+        (9, 'Mail envoyé lors de la suppression d\'une annonce', 'delete_advert', 'Suppression de votre annonce', 'Bonjour,\r\nVotre annonce {{ adverts.title }} a bien &eacute;t&eacute; supprim&eacute;e'),
+        (10, 'Mail envoyé aux utilisateurs créés par un admin client', 'company_team_user_create', 'Votre compte a été créé sur Légion', '<p>Bonjour {{ user.firstname }},</p>\r\n<p>Ton compte vient d\'&ecirc;tre cr&eacute;&eacute; sur L&eacute;gion par l\'administrateur de &nbsp;{{ company.name }} !</p>\r\n<p>Il ne te reste plus qu\'&agrave; suivre ce lien pour cr&eacute;er ton mot de passe : <a href=\"{{%20app.request.schemeAndHttpHost%20}}/reset/{{%20resetToken%20}}\">Cr&eacute;er mon mot de passe</a></p>\r\n<div>\r\n<div>Attention, ce lien n\'est valide que durant 1 heure</div>\r\n</div>');
         ";
         
         $db->prepare($sql);

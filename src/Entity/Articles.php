@@ -62,6 +62,12 @@ class Articles
     #[ORM\JoinColumn(nullable: false)]
     private ?Status $fk_status = null;
 
+    #[ORM\Column]
+    private ?int $likes = null;
+
+    #[ORM\Column]
+    private ?int $shares = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -279,6 +285,30 @@ class Articles
     public function setFkStatus(?Status $status): static
     {
         $this->fk_status = $status;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): static
+    {
+        $this->likes = $likes;
+
+        return $this;
+    }
+
+    public function getShares(): ?int
+    {
+        return $this->shares;
+    }
+
+    public function setShares(int $shares): static
+    {
+        $this->shares = $shares;
 
         return $this;
     }

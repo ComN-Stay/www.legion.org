@@ -85,6 +85,12 @@ class Adverts
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date_add = null;
 
+    #[ORM\Column]
+    private ?int $likes = null;
+
+    #[ORM\Column]
+    private ?int $shares = null;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
@@ -378,6 +384,30 @@ class Adverts
     public function setDateAdd(\DateTimeInterface $date_add): static
     {
         $this->date_add = $date_add;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(int $likes): static
+    {
+        $this->likes = $likes;
+
+        return $this;
+    }
+
+    public function getShares(): ?int
+    {
+        return $this->shares;
+    }
+
+    public function setShares(int $shares): static
+    {
+        $this->shares = $shares;
 
         return $this;
     }

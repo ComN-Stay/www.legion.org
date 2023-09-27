@@ -7,31 +7,36 @@ use App\Form\UserType;
 use App\Service\MailService;
 use App\Repository\UserRepository;
 use App\Service\FileUploaderService;
+use App\Repository\CompanyRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/account/user')]
 class UserAccountController extends AbstractController
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
+    #[Route('/', name: 'app_user_account_index', methods: ['GET'])]
     public function index(
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        Security $security,
     ): Response
     {
-        return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+        return $this->render('account/user/index.html.twig', [
+            'users' => $userRepository->findBy(['fk_company' => $security->getUser()->getFkCompany()]),
         ]);
     }
 
-    #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'app_user_account_new', methods: ['GET', 'POST'])]
     public function new(
         Request $request, 
         EntityManagerInterface $entityManager, 
-        UserPasswordHasherInterface $passwordHasher, 
+        ResetPasswordHelperInterface $resetPasswordHelper, 
+        CompanyRepository $companyRepository,
         FileUploaderService $fileUploader,
         MailService $mail
     ): Response
@@ -41,20 +46,8 @@ class UserAccountController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $company = $companyRepository->find($user->getFkCompany()->getId());
             $type = $form->get('type')->getData();
-            $role = ($type == 'perso') ? 'ROLE_IDENTIFIED' : 'ROLE_ADMIN_CUSTOMER';
-            if($role == 'ROLE_IDENTIFIED') {
-                $user->setAdvertsAuth(false);
-                $user->setArticlesAuth(true);
-                $user->setPetitionsAuth(true);
-                $user->setBoAccessAuth(false);
-            } elseif($role == 'ROLE_ADMIN_CUSTOMER') {
-                $user->setAdvertsAuth(true);
-                $user->setArticlesAuth(true);
-                $user->setPetitionsAuth(true);
-                $user->setBoAccessAuth(true);
-            }
             $file = $form['picture']->getData();
             if ($file) {
                 $fileName = $fileUploader->upload($file);
@@ -63,62 +56,83 @@ class UserAccountController extends AbstractController
                 }
             }
             $token = bin2hex(random_bytes(60));
-            $user->setRoles([$role]);
-            $hashPassword = $passwordHasher->hashPassword($user, $user->getPassword());
-            $user->setPassword($hashPassword);
             $user->setToken($token);
             $user->setIsCompanyAdmin(false);
+            $user->setFkCompany($company);
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->addFlash('success', 'Votre compte a été créé');
-            if($type == 'perso') {
-                $mail->sendMail([
-                    'to' => $user->getEmail(),
-                    'tpl' => 'welcome_user',
-                    'vars' => [
-                        'user' => $user,
+            $resetToken = $resetPasswordHelper->generateResetToken($user);
+            $mail->sendMail([
+                'to' => $user->getEmail(),
+                'tpl' => 'company_team_user_create',
+                'vars' => [
+                    'user' => $user,
+                    'resetToken' => $resetToken,
+                    'company' => $company
                     ]
                 ]);
-                return $this->redirectToRoute('account_login', [], Response::HTTP_SEE_OTHER);
-            } else {
-                $typeId = ($type == 'asso') ? 1 : 2;
-                return $this->redirectToRoute('app_company_new', ['typeId' => $typeId, 'userToken' => $token], Response::HTTP_SEE_OTHER);
-            }
+            $this->addFlash('success', 'Compte créé avec succès');
+            return $this->redirectToRoute('app_user_account_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('front/user/new.html.twig', [
+        return $this->render('account/user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_user_account_show', methods: ['GET'])]
     public function show(
         User $user
     ): Response
     {
-        return $this->render('user/show.html.twig', [
+        return $this->render('account/user/show.html.twig', [
             'user' => $user,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_user_account_edit', methods: ['GET', 'POST'])]
     public function edit(
         Request $request, 
         User $user, 
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        FileUploaderService $fileUploader,
+        CompanyRepository $companyRepository,
+        Security $security,
+        $kernelUploadDir
     ): Response
     {
+        $company = $companyRepository->find($user->getFkCompany()->getId());
+        if(($security->getUser() != $user && $security->getUser()->getRoles()[0] != 'ROLE_ADMIN_CUSTOMER') || $security->getUser()->getFkCompany()->getId() != $company->getId()) {
+            $this->addFlash('error', 'Vous n\'avez pas accès à cette ressource');
+            return $this->redirectToRoute('app_account', [], Response::HTTP_SEE_OTHER);
+        }
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $uow = $entityManager->getUnitOfWork();
+            $oldValues = $uow->getOriginalEntityData($user);
+            $file = $form['picture']->getData();
+            if ($file) {
+                $fileName = $fileUploader->upload($file);
+                if (null !== $fileName) {
+                    $user->setPicture($fileName);
+                }
+                unlink($kernelUploadDir . '/' . $oldValues['picture']);
+            }
+            if($user->getPassword() == null) {
+                $user->setPassword($oldValues['password']);
+            }
+            
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', 'Compte mis à jour');
+
+            return $this->redirectToRoute('app_user_account_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('user/edit.html.twig', [
+        return $this->render('account/user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);

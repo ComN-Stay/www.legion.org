@@ -13,7 +13,7 @@ $(document).on('keyup', '#company_address', function(){
         async: true,
         success: function (result)
         {
-			let res = result;console.log(res);
+			let res = result;
             $('#result').html('').show();
 			let list = '';
 			for (i=0; i<res['features'].length; i++) {
@@ -35,4 +35,16 @@ $(document).on('click', '.resultTerm', function(){
     $('#company_longitude').val($(this).data('lng'));
     $('#company_latitude').val($(this).data('lat'));
     $('#result').hide().html('');
+});
+
+/*********** check all checkboxes on user form when is_admin is checked *************/
+$(document).on('click', '#user_is_admin', function(){
+    let checked = $(this).prop('checked');
+    $('input[type=checkbox]').each(function(){
+        if(checked == true) {
+            $(this).prop('checked', true);
+        } else {
+            $(this).prop('checked', false);
+        }
+    });
 });

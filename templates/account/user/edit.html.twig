@@ -1,0 +1,9 @@
+{% extends 'account/base_account.html.twig' %}
+
+{% block title %}Edition fiche {{ user.firstname }} {{ user.lastname }}{% endblock %}
+
+{% block content %}
+
+    {{ include('account/user/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+
+{% endblock %}

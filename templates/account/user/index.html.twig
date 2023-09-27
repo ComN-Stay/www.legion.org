@@ -1,0 +1,39 @@
+{% extends 'account/base_account.html.twig' %}
+
+{% block title %}Mon équipe{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Role</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }} {{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.roles.0 == 'ROLE_ADMIN_CUSTOMER' ? 'Administrateur' : 'Equipier' }}</td>
+                <td>
+                    <a href="{{ path('app_user_account_show', {'id': user.id}) }}">Voir la fiche</a>
+                    <a href="{{ path('app_user_account_edit', {'id': user.id}) }}">Editer</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">Aucun résultat</td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+                <td style="display:none"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_account_new') }}">Nouvel équipier</a>
+{% endblock %}

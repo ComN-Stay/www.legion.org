@@ -40,6 +40,17 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $type = $form->get('type')->getData();
             $role = ($type == 'perso') ? 'ROLE_IDENTIFIED' : 'ROLE_ADMIN_CUSTOMER';
+            if($role == 'ROLE_IDENTIFIED') {
+                $user->setAdvertsAuth(false);
+                $user->setArticlesAuth(true);
+                $user->setPetitionsAuth(true);
+                $user->setBoAccessAuth(false);
+            } elseif($role == 'ROLE_ADMIN_CUSTOMER') {
+                $user->setAdvertsAuth(true);
+                $user->setArticlesAuth(true);
+                $user->setPetitionsAuth(true);
+                $user->setBoAccessAuth(true);
+            }
             $token = bin2hex(random_bytes(60));
             $user->setRoles([$role]);
             $hashPassword = $passwordHasher->hashPassword($user, $user->getPassword());

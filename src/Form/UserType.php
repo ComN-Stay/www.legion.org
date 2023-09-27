@@ -7,6 +7,7 @@ use App\Entity\Gender;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,7 +16,6 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Validator\Constraints\File;
 
 class UserType extends AbstractType
 {
@@ -67,6 +67,7 @@ class UserType extends AbstractType
                     'label' => 'Confirmation du mot de passe'
                 ],
                 'help' => 'Le mot de passe doit contenir au minimum 10 caractères avec au minimum 1 minuscule, 1 majuscule, 1 chiffre et un caractère spécial parmis @ ! ? * + - _ ~',
+                'empty_data' => ''
             ])
             ->add('picture', FileType::class, [
                 'data_class' => null,
@@ -86,10 +87,31 @@ class UserType extends AbstractType
                     ]),
                 ]
             ])
+            ->add('bo_access_auth', CheckboxType::class, [
+                'label' => 'Autoriser l\'accès au back-office',
+                'required' => false
+                ])
+            ->add('articles_auth', CheckboxType::class, [
+                'label' => 'Autoriser la rédaction d\'articles',
+                'required' => false
+                ])
+            ->add('adverts_auth', CheckboxType::class, [
+                'label' => 'Autoriser la rédaction d\'annonces',
+                'required' => false
+                ])
+            ->add('petitions_auth', CheckboxType::class, [
+                'label' => 'Autoriser la proposition de pétitions',
+                'required' => false
+                ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'En cochant cette case je reconnais avoir pris connaissance des conditions générales de Légion',
                 'required' => true
+                ])
+            ->add('is_admin', CheckboxType::class, [
+                'label' => 'Administrateur',
+                'required' => false,
+                'mapped' => false
                 ])
         ;
     }

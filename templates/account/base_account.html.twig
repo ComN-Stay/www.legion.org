@@ -5,18 +5,25 @@
 {% block body %}
 <div>
     <ul>
-        <li><a href="">Mon profil</a></li>
-        <li><a href="">Mes articles</a></li>
-        {% if 'ROLE_CUSTOMER' in app.user.roles or 'ROLE_ADMIN_CUSTOMER' in app.user.roles %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.articlesAuth == true %}
+            <li><a href="">Mes articles</a></li>
+            <li><a href="">Nouvel article</a></li>
+        {% endif %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.advertsAuth == true %}
             <li><a href="">Mes annonces</a></li>
             <li><a href="">Déposer une annonce</a></li>
+        {% endif %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.petitionsAuth == true %}
             <li><a href="">Mes pétitions</a></li>
             <li><a href="">Proposer une pétition</a></li>
         {% endif %}
         {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles %}
-            <li><a href="{{ path('app_company_edit')}}">Mon organisation</a></li>
+            <li><a href="{{ path('app_company_edit') }}">Mon organisation</a></li>
+            <li><a href="{{ path('app_user_account_index') }}">Mon équipe</a></li>
             <li><a href="">Mon abonnement</a></li>
         {% endif %}
+        <li><a href="{{ path('app_user_account_edit', {'id': app.user.id })}}">Mon profil</a></li>
+        <li><a href="">Mes données personnelles</a></li>
     </ul>
 </div>
 {% block content %}{% endblock %}

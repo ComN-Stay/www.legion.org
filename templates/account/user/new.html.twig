@@ -1,0 +1,10 @@
+{% extends 'account/base_account.html.twig' %}
+
+{% block title %}Nouvel équipier{% endblock %}
+
+{% block content %}
+
+    {{ include('account/user/_form.html.twig') }}
+
+    <a href="{{ path('app_user_account_index') }}">Retour</a>
+{% endblock %}

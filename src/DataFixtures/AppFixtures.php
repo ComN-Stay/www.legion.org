@@ -327,8 +327,8 @@ class AppFixtures extends Fixture
             $ad[$i]->setFkStatus($this->getRandomReference('App\Entity\Status', $manager));
             $ad[$i]->setLof(false);
             $ad[$i]->setVisits(rand(4, 1521));
-            $ad[$i]->setLikes(rand(0,1000));
-            $ad[$i]->setShares(rand(0,1000));
+            $ad[$i]->setNbLikes(rand(0,1000));
+            $ad[$i]->setNbShares(rand(0,1000));
             $ad[$i]->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
             $price =  ($i % 3 == 0) ? 0 : rand(50, 500);
             $ad[$i]->setPrice($price);
@@ -529,8 +529,8 @@ class AppFixtures extends Fixture
             $article[$i]->setContent($this->faker->paragraphs(rand(2, 4), true));
             $article[$i]->setDateAdd(new \DateTime(date('Y-m-d')));
             $article[$i]->setVisits(rand(3,658));
-            $article[$i]->setLikes(rand(0,1000));
-            $article[$i]->setShares(rand(0,1000));
+            $article[$i]->setNbLikes(rand(0,1000));
+            $article[$i]->setNbShares(rand(0,1000));
             $article[$i]->setFkStatus($this->getRandomReference('App\Entity\Status', $manager));
             $article[$i]->setSlug($this->slugger->slug($title));
             $article[$i]->setMetaName($title);
@@ -667,6 +667,10 @@ class AppFixtures extends Fixture
             DROP TABLE IF EXISTS `pages`;
             DROP TABLE IF EXISTS `pages_types`;
             DROP TABLE IF EXISTS `consents`;
+            DROP TABLE IF EXISTS `adverts_likes`;
+            DROP TABLE IF EXISTS `adverts_shares`;
+            DROP TABLE IF EXISTS `articles_likes`;
+            DROP TABLE IF EXISTS `articles_shares`;
             SET FOREIGN_KEY_CHECKS=1;
             ';
 

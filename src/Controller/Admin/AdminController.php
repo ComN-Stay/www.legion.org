@@ -29,33 +29,25 @@ class AdminController extends AbstractController
         $refused = $statusRepository->find(4);
         $boxes = [];
         $associations = count($companyRepository->findBy(['status' => false, 'fk_company_type' => 1]));
-        if($associations > 0) {
-            $boxes['associations'] = $associations;
-        }
+        $boxes['associations'] = ($associations > 0) ? $associations : null;
+        
         $eleveurs = count($companyRepository->findBy(['status' => false, 'fk_company_type' => 2]));
-        if($eleveurs > 0) {
-            $boxes['eleveurs'] = $eleveurs;
-        }
+        $boxes['eleveurs'] = ($eleveurs > 0) ? $eleveurs : null;
+        
         $adverts = count($advertsRepository->findBy(['fk_status' => $online]));
-        if($adverts > 0) {
-            $boxes['adverts'] = $adverts;
-        }
+        $boxes['adverts'] = ($adverts > 0) ? $adverts : null;
+        
         $articles = count($articlesRepository->findBy(['fk_status' => $online]));
-        if($articles > 0) {
-            $boxes['articles'] = $articles;
-        }
+        $boxes['articles'] = ($articles > 0) ? $articles : null;
+        
         $bestAdverts = $advertsRepository->findBy(['fk_status' => $online], ['visits' => 'DESC'], 5);
-        if($bestAdverts > 0) {
-            $boxes['bestAdverts'] = $bestAdverts;
-        }
+        $boxes['bestAdverts'] = ($bestAdverts > 0) ? $bestAdverts : null;
+        
         $bestArticles = $articlesRepository->findBy(['fk_status' => $online], ['visits' => 'DESC'], 5);
-        if($bestArticles > 0) {
-            $boxes['bestArticles'] = $bestArticles;
-        }
+        $boxes['bestArticles'] = ($bestArticles > 0) ? $bestArticles : null;
+        
         $petitions = count($petitionsRepository->findBy(['status' => 0]));
-        if($petitions > 0) {
-            $boxes['petitions'] = $petitions;
-        }
+        $boxes['petitions'] = ($petitions > 0) ? $petitions : null;
         
         return $this->render('admin/dashboard.html.twig', [
             'sidebar' => '',

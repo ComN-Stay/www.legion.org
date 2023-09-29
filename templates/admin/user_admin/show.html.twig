@@ -21,23 +21,23 @@
             <table id="infoTable" class="table _datatable table-striped table-bordered">
                 <tbody>
                     <tr>
-                        <td>Prénom</td>
+                        <th>Prénom</th>
                         <td>{{ user.firstname }}</td>
                     </tr>
                     <tr>
-                        <td>Nom</td>
+                        <th>Nom</th>
                         <td>{{ user.lastname }}</td>
                     </tr>
                     <tr>
-                        <td>Email</td>
+                        <th>Email</th>
                         <td>{{ user.email }}</td>
                     </tr>
                     <tr>
-                        <td>Role</td>
+                        <th>Role</th>
                         <td>{{ user.roles ? user.roles.0|lower|replace({'role_':'', '_':' '}) : '' }}</td>
                     </tr>
                     <tr>
-                        <td>Admin client</td>
+                        <th>Admin client</th>
                         <td>{{ user.isCompanyAdmin ? 'Oui' : 'Non' }}</td>
                     </tr>
                 </tbody>
@@ -52,7 +52,26 @@
         </div>
 
         <div class="tab-pane fade show" id="articles" role="tabpanel" aria-labelledby="articles-tab">
-
+            <table id="articlesTable" class="table _datatable table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Status</th>
+                        <th>Visites</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for article in articles %}
+                        <tr>
+                            <td>{{ article.title }}</td>
+                            <td>{{ article.fkStatus.name }}</td>
+                            <td>{{ article.visits }}</td>
+                            <td><a href="{{ path('app_articles_admin_show', {'id': article.id}) }}"><i class="fa-solid fa-eye fa-lg"></i></a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
         <div class="tab-pane fade show" id="rgpd" role="tabpanel" aria-labelledby="rgpd-tab">

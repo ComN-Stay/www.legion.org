@@ -274,6 +274,17 @@ class AppFixtures extends Fixture
             $consents->setDateAdd(new \DateTime(date('Y-m-d H:i:s')));
             $consents->setVersion($consentType->getVersion());
             $consents->setVersionDate($consentType->getdateAdd());
+            $manager->persist($consents);
+            
+            $rgpdConsent = $this->pagesTypesRepository->find(5);
+            $rgpdFile = $this->pagesRepository->findOneBy(['fk_type' => $rgpdConsent, 'fk_status' => $status]);
+            $consents = new Consents;
+            $consents->setFkUser($user[$i]);
+            $consents->setFkType($rgpdFile->getFkType());
+            $consents->setDateAdd(new \DateTime(date('Y-m-d')));
+            $consents->setVersion($rgpdFile->getVersion());
+            $consents->setVersionDate($rgpdFile->getdateAdd());
+            $manager->persist($consents);
             
             $progressBar->setMessage("Job in progress...", 'status');
             $progressBar->advance();
@@ -612,7 +623,9 @@ class AppFixtures extends Fixture
         $sql = "INSERT INTO `pages` (`id`, `title`, `description`, `slug`, `meta_title`, `meta_description`, `meta_keywords`, `date_add`, `fk_type_id`, `version`, `fk_status_id`) VALUES
         (2, 'Conditions générales d\'utilisation', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-21', 1, 1, 5),
         (3, 'Conditions générales d\'utilisation V2', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation-V2', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', 'Conditions générales d\'utilisation', '2023-09-22', 1, 2, 5),
-        (4, 'Conditions générales d\'utilisation V3', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation-V3', NULL, NULL, NULL, '2023-09-22', 1, 3, 3);";
+        (4, 'Conditions générales d\'utilisation V3', '<p>Conditions g&eacute;n&eacute;rales d\'utilisation</p>', 'Conditions-generales-d-utilisation-V3', NULL, NULL, NULL, '2023-09-22', 1, 3, 3),
+        (5, 'Politique de protection des données', '<p>Politique de protection des donn&eacute;es</p>', 'Politique-de-protection-des-donnees', NULL, NULL, NULL, '2023-09-29', 5, 1, 3);
+        ";
 
         $this->output->writeln('<info>Loading Pages fixtures ...</info>');
 

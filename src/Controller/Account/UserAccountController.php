@@ -38,16 +38,25 @@ class UserAccountController extends AbstractController
         ResetPasswordHelperInterface $resetPasswordHelper, 
         CompanyRepository $companyRepository,
         FileUploaderService $fileUploader,
+        Security $security,
         MailService $mail
     ): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
+        $company = $companyRepository->find($security->getUser()->getFkCompany()->getId());
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $company = $companyRepository->find($user->getFkCompany()->getId());
-            $type = $form->get('type')->getData();
+            if($form->get('bo_access_auth')->getData()) {
+                if($form->get('is_admin')->getData()) {
+                    $user->setRoles(['ROLE_ADMIN_CUSTOMER']);
+                } else {
+                    $user->setRoles(['ROLE_CUSTOMER']);
+                }
+            } else {
+                $user->setRoles(['ROLE_IDENTIFIED']);
+            }
             $file = $form['picture']->getData();
             if ($file) {
                 $fileName = $fileUploader->upload($file);
@@ -59,6 +68,7 @@ class UserAccountController extends AbstractController
             $user->setToken($token);
             $user->setIsCompanyAdmin(false);
             $user->setFkCompany($company);
+            $user->setPassword('@');
             $entityManager->persist($user);
             $entityManager->flush();
             $resetToken = $resetPasswordHelper->generateResetToken($user);
@@ -78,6 +88,7 @@ class UserAccountController extends AbstractController
         return $this->render('account/user/new.html.twig', [
             'user' => $user,
             'form' => $form,
+            'company'
         ]);
     }
 
@@ -124,12 +135,23 @@ class UserAccountController extends AbstractController
             if($user->getPassword() == null) {
                 $user->setPassword($oldValues['password']);
             }
+            if($security->getUser() != $user) {
+                if($form->get('bo_access_auth')->getData()) {
+                    if($form->get('is_admin')->getData()) {
+                        $user->setRoles(['ROLE_ADMIN_CUSTOMER']);
+                    } else {
+                        $user->setRoles(['ROLE_CUSTOMER']);
+                    }
+                } else {
+                    $user->setRoles(['ROLE_IDENTIFIED']);
+                }
+            }
             
             $entityManager->flush();
 
             $this->addFlash('success', 'Compte mis à jour');
 
-            return $this->redirectToRoute('app_user_account_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_account_index', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('account/user/edit.html.twig', [

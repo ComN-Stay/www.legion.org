@@ -3,13 +3,15 @@
         {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}
         {{ form_row(form.email) }}
-        {{ form_row(form.picture) }}
-        {% if user.picture is not null %}
-            <div>
-                <img src="/uploads/{{ user.picture }}" />
-            </div>
+        {% if app.user.id == user.id %}
+            {{ form_row(form.picture) }}
+            {% if user.picture is not null %}
+                <div>
+                    <img src="/uploads/{{ user.picture }}" />
+                </div>
+            {% endif %}
+            {{ form_row(form.password) }}
         {% endif %}
-        {{ form_row(form.password) }}
         {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles and app.user.id != user.id %}
             {% if user is not null and 'ROLE_ADMIN_CUSTOMER' in user.roles %}
                 {{ form_row(form.is_admin, { 'attr': {'checked': 'checked'} }) }}
@@ -21,6 +23,6 @@
             {{ form_row(form.adverts_auth) }}
             {{ form_row(form.petitions_auth) }}
         {% endif %}
-        <button class="btn">Mettre à jour</button>
+        <button class="btn">{{ user.id is not null ? 'Mettre à jour' : 'Créer le compte' }}</button>
         {{ form_widget(form._token) }}
     {{ form_end(form, {render_rest: false}) }}

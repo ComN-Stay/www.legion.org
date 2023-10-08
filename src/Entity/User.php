@@ -66,6 +66,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $bo_access_auth = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $job = null;
+
     public function __construct()
     {
         $this->consents = new ArrayCollection();
@@ -304,6 +307,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setBoAccessAuth(bool $bo_access_auth): static
     {
         $this->bo_access_auth = $bo_access_auth;
+
+        return $this;
+    }
+
+    public function getJob(): ?string
+    {
+        return $this->job;
+    }
+
+    public function setJob(?string $job): static
+    {
+        $this->job = $job;
 
         return $this;
     }

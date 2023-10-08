@@ -2,9 +2,11 @@
 
 namespace App\Form;
 
+use App\Entity\Company;
 use App\Entity\User;
 use App\Entity\Gender;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\File;
@@ -19,24 +21,53 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 
 class UserType extends AbstractType
 {
+    private $security;
+    private $currentUser;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+        $this->currentUser = $this->security->getUser();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('type', ChoiceType::class, [
-                'mapped' => false,
-                'choices' => [
-                    'Compte personnel' => 'perso',
-                    'Compte pour une association' => 'asso',
-                    'Compte pour un éleveur' => 'pro'
+        if(is_null($builder->getData()->getId())) {
+            $builder
+                ->add('type', ChoiceType::class, [
+                    'mapped' => false,
+                    'choices' => [
+                        'Sélectionner' => '',
+                        'Compte personnel' => 'perso',
+                        'Compte pour une association' => 'asso',
+                        'Compte pour un éleveur' => 'pro'
+                        ],
+                    'label' => 'Type de compte',
+                    'required' => is_null($builder->getData()->getId()) ? true : false,
+                    ]);
+                }
+        if(!empty(array_intersect($this->currentUser->getRoles(), ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']))) {
+            $builder
+                ->add('fk_company', EntityType::class, [
+                    'class' => Company::class,
+                    'choice_label' => 'name',
+                    'label' => 'Organisation',
+                    'required' => false,
+                    'attr' => [
+                        'id' => 'fkCompany',
                     ],
-                'label' => 'Type de compte',
-                'required' => is_null($builder->getData()->getId()) ? true : false,
-            ])
+                    'group_by' => 'fk_company_type.name'
+                ]);
+        }
+        $builder
             ->add('fk_gender', EntityType::class, [
                 'class' => Gender::class,
                 'choice_label' => 'name',
                 'label' => 'Civilité',
-                'required' => true
+                'required' => true,
+                'attr' => [
+                    'id' => 'fkGender',
+                ]
             ])
             ->add('firstname', TextType::class, [
                     'label' => 'Prénom',
@@ -86,6 +117,10 @@ class UserType extends AbstractType
                         'mimeTypesMessage' => "Merci de télécharger une photo valide.",
                     ]),
                 ]
+            ])
+            ->add('job', TextType::class, [
+                'label' => 'Poste',
+                'required' => false,
             ])
             ->add('bo_access_auth', CheckboxType::class, [
                 'label' => 'Autoriser l\'accès au back-office',

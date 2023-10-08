@@ -13,6 +13,7 @@
             {{ form_row(form.password) }}
         {% endif %}
         {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles and app.user.id != user.id %}
+            {{ form_row(form.job) }}
             {% if user is not null and 'ROLE_ADMIN_CUSTOMER' in user.roles %}
                 {{ form_row(form.is_admin, { 'attr': {'checked': 'checked'} }) }}
             {% else %}

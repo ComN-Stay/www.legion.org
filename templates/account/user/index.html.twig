@@ -7,18 +7,47 @@
     <table class="table">
         <thead>
             <tr>
+                <th></th>
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Role</th>
+                <th>Autorisations</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for user in users %}
             <tr>
+                <td>
+                    {% if user.picture != '' %}
+                        <img src="/uploads/{{ user.picture }}" class="img-responsive ml-3" height="75px" width="auto">
+                    {% else %}
+                        <img src="/img/photo-defaut.png" class="img-responsive ml-3" height="75px" width="auto">
+                    {% endif %}
+                </td>
                 <td>{{ user.id }} {{ user.firstname }}</td>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.roles.0 == 'ROLE_ADMIN_CUSTOMER' ? 'Administrateur' : 'Equipier' }}</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td>Accès BO :</td>
+                            <td>{{ user.boAccessAuth == 1 ? 'oui' : 'non' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Rédaction articles :</td>
+                            <td>{{ user.articlesAuth == 1 ? 'oui' : 'non' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Rédaction d'annonces :</td>
+                            <td>{{ user.advertsAuth == 1 ? 'oui' : 'non' }}</td>
+                        </tr>
+                        <tr>
+                            <td>Proposition de pétitions :</td>
+                            <td>{{ user.petitionsAuth == 1 ? 'oui' : 'non' }}</td>
+                        </tr>
+                    </table>
+                </td>
                 <td>
                     <a href="{{ path('app_user_account_show', {'id': user.id}) }}">Voir la fiche</a>
                     <a href="{{ path('app_user_account_edit', {'id': user.id}) }}">Editer</a>

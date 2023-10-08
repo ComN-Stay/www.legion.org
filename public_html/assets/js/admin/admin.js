@@ -14,6 +14,22 @@ new DataTable('._datatable', {
     }*/
 });
 
+/************ "search" item on all selects ******************/
+$('select').each(function() {
+    let target = $(this).children(':first-child');
+    if(target.val() == '') {
+        $(this).children(':first-child').html('Sélectionner');
+    } 
+});
+
+/**************** Select with search **************/
+/*$('.form-select').each(function(){
+    let select = document.querySelector('#' + $(this).attr('id'));
+    dselect(select), {
+        search: true
+    };
+});*/ 
+
 /********* TinyMCE ************/
 
 var useDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -303,5 +319,34 @@ $(document).on('click', '#validVars', function(){
             $('#jsAlertBox').addClass('error');
             $('#jsAlertBox').show();
         }
+    });
+});
+
+/************ user auth manager ************/
+$(document).on('change', '#user_type', function(){
+    let value = $(this).val();
+    if(value == 'perso') {
+        $('#user_fk_company').parent().hide();
+    } else {
+        $('#user_fk_company').parent().show();
+        switch($(this).val()) {
+            case 'asso':
+                var type = 'Association';
+                break;
+            case 'pro':
+                var type = 'Eleveur';
+                break;
+        }
+        $('#user_fk_company').find('optgroup').each(function(){
+            $(this).css('display', 'none');
+        })
+        $('#user_fk_company').find('optgroup[label=' + type + ']').css('display','block');
+    }
+})
+
+$(document).on('click', '#user_is_admin', function(){
+    let check = ($(this).is(':checked')) ? true : false;
+    $('input[type=checkbox]').each(function(){
+        $(this).prop('checked', check);
     });
 });

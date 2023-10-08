@@ -4,7 +4,7 @@
 
 {% block body %}
     <h1>{{ company.name }}</h1>
-
+    <h2>A propos de nous</h2>
     <div>
         {% if company.logo != '' %}
             <img src="/uploads/{{ company.logo }}" width="200px" height="auto" alt="{{ company.name }}">
@@ -31,7 +31,22 @@
                 <a href="{{ company.instagram }}">instagram</a>
             {% endif %}
         <p>
+        <h2>Nous situer</h2>
         <div id="map"></div>
+        <h2>Notre équipe</h2>
+        <div>
+            {% for user in users %}
+                <div>
+                    {% if user.picture != '' %}
+                        <img src="/uploads/{{ user.picture }}" class="img-responsive ml-3" height="75px" width="auto">
+                    {% else %}
+                        <img src="/img/photo-defaut.png" class="img-responsive ml-3" height="75px" width="auto">
+                    {% endif %}
+                    <p>{{ user.fkGender.name }} {{ user.firstname }} {{ user.lastname }}</p>
+                    <p>Poste : </p>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

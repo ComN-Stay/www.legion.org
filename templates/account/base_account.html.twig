@@ -5,15 +5,15 @@
 {% block body %}
 <div>
     <ul>
-        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.articlesAuth == true %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.articlesAuth == 1 %}
             <li><a href="">Mes articles</a></li>
             <li><a href="">Nouvel article</a></li>
         {% endif %}
-        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.advertsAuth == true %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.advertsAuth == 1 %}
             <li><a href="">Mes annonces</a></li>
             <li><a href="">Déposer une annonce</a></li>
         {% endif %}
-        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.petitionsAuth == true %}
+        {% if 'ROLE_ADMIN_CUSTOMER' in app.user.roles or app.user.petitionsAuth == 1 %}
             <li><a href="">Mes pétitions</a></li>
             <li><a href="">Proposer une pétition</a></li>
         {% endif %}

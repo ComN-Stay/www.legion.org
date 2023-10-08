@@ -21,6 +21,23 @@ body.bg-gradient-primary {
     cursor: default !important;
 }
 
+.dselect-wrapper .form-select {
+    min-height: 2.4rem;
+}
+
+.dselect-wrapper .dropdown-menu {
+    width: 100%;
+}
+
+.dselect-items .dropdown-item {
+    padding-left: 15px;
+}
+
+.dselect-items .dropdown-header {
+    font-weight: bold;
+    color: #fff;
+    background-color: chocolate;
+}
 /************** admin login **************/
 .card-boby {
     padding: 1.25rem 0 !important;

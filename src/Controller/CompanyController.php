@@ -94,12 +94,14 @@ class CompanyController extends AbstractController
     #[Route('/{id}', name: 'app_company_show', methods: ['GET'])]
     public function show(
         Company $company, 
+        UserRepository $userRepository,
         $googleApiKey
     ): Response
     {
         return $this->render('front/company/show.html.twig', [
             'company' => $company,
-            'googleKey' => $googleApiKey
+            'googleKey' => $googleApiKey,
+            'users' => $userRepository->findBy(['fk_company' => $company])
         ]);
     }
 }

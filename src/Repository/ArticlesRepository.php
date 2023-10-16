@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Articles;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Articles>
@@ -21,28 +22,29 @@ class ArticlesRepository extends ServiceEntityRepository
         parent::__construct($registry, Articles::class);
     }
 
-//    /**
-//     * @return Articles[] Returns an array of Articles objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function createOrderedByDateQueryBuilder($status, $tag, $order_by, $order_way): QueryBuilder
+    {
+        $queryBuilder = $this->addOrderByDateQueryBuilder();
+        if ($status) {
+            $queryBuilder->andWhere('a.fk_status = :fk_status')
+                ->setParameter('fk_status', $status);
+        }
+        if ($tag) {
+            $queryBuilder->andWhere(':fk_tag MEMBER OF a.tags')
+                ->setParameter('fk_tag', $tag);
+        }
 
-//    public function findOneBySomeField($value): ?Articles
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $queryBuilder->orderBy('a.' . $order_by, $order_way)->getQuery()->getResult();
+        
+        return $queryBuilder;
+    }
+
+    private function addOrderByDateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        $queryBuilder = $queryBuilder ?? $this->createQueryBuilder('a');
+        $queryBuilder
+            ->leftJoin('a.fk_user', 'u')
+            ->leftJoin('a.fk_team', 't');
+        return $queryBuilder;
+    }
 }

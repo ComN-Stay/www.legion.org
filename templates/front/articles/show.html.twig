@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Articles{% endblock %}
+
+{% block body %}
+    <h1>Articles</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ article.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ article.title }}</td>
+            </tr>
+            <tr>
+                <th>Short_description</th>
+                <td>{{ article.shortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ article.content }}</td>
+            </tr>
+            <tr>
+                <th>Date_add</th>
+                <td>{{ article.dateAdd ? article.dateAdd|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Visits</th>
+                <td>{{ article.visits }}</td>
+            </tr>
+            <tr>
+                <th>Meta_name</th>
+                <td>{{ article.metaName }}</td>
+            </tr>
+            <tr>
+                <th>Meta_description</th>
+                <td>{{ article.metaDescription }}</td>
+            </tr>
+            <tr>
+                <th>Meta_keywords</th>
+                <td>{{ article.metaKeywords }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ article.slug }}</td>
+            </tr>
+            <tr>
+                <th>Logo</th>
+                <td>{{ article.logo }}</td>
+            </tr>
+            <tr>
+                <th>Nb_likes</th>
+                <td>{{ article.nbLikes }}</td>
+            </tr>
+            <tr>
+                <th>Nb_shares</th>
+                <td>{{ article.nbShares }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_articles_index') }}">back to list</a>
+
+    <a href="{{ path('app_articles_edit', {'id': article.id}) }}">edit</a>
+
+    {{ include('articles/_delete_form.html.twig') }}
+{% endblock %}
